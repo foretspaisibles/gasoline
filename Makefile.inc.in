@@ -1,0 +1,3 @@
+VERSION?=	@version@
+PREFIX?=	@prefix@
+DATADIR?=	@datadir@/${PACKAGE}

@@ -1,0 +1,45 @@
+#
+# OCaml object files
+#
+*.cmo
+*.cmx
+*.cmi
+*.cma
+*.cmxa
+.depend
+*.bc
+*.cn
+#
+# C object files
+#
+*.o
+*.a
+#
+# Autoconf files
+#
+autom4te.cache/
+config.log
+config.status
+configure
+meta/META
+Makefile.inc
+#
+# Manual files
+#
+*.odoc
+.cookie_doc_*
+#
+# TeX and METAPOST object files
+#
+.cookie.*
+*.aux
+*.log
+*.mps
+*.d
+*.mpx
+mpxerr.tex
+mpxerr.log
+#
+# Mac OS-X
+#
+.DS_Store
