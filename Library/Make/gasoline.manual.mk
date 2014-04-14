@@ -25,6 +25,9 @@ ODOC_HTML_CHARSET=	utf-8
 MANUAL+= gasoline_${module}.odoc
 .endfor
 
+test:
+	${NOP}
+
 .include "ocaml.manual.mk"
 
 ### End of file `gasoline.manual.mk'

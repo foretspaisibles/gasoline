@@ -1,9 +1,9 @@
-### gasoline.main.mk -- Project Makefile
+### Makefile -- Test suite
 
 # Author: Michael Grünewald
-# Date: Tue Apr 15 00:04:36 CEST 2014
+# Date: Mon Apr 14 23:52:37 CEST 2014
 
-# Gasoline (https://github.com/michipili/gasoline)
+# GIT-Toolkit (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
 #
 # Copyright © 2014 Michael Grünewald
@@ -14,15 +14,17 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-.include "gasoline.init.mk"
+SRCS+=		testUnitTest.ml
 
-SUBDIR+=	${PROJECTMODULE}
-SUBDIR+=	manual
-SUBDIR+=	testsuite
+SRCS+=		main.ml
+
+PKGS+=		unix
+
+OCAMLLFLAGS+=	-linkall
 
 test: all
-	@cd testsuite && ${MAKE} test
+	./unit-testing
 
-.include "bps.project.mk"
+.include "gasoline.program.mk"
 
-### End of file `gasoline.main.mk'
+### End of file `Makefile'

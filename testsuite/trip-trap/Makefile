@@ -1,12 +1,12 @@
-### gasoline.init.mk -- Initialisation
+### Makefile -- Trip & Trap
 
 # Author: Michael Grünewald
-# Date: Thu Nov  7 07:35:59 CET 2013
+# Date: Wed Apr 16 11:23:08 CEST 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
 #
-# Copyright © 2013 Michael Grünewald
+# Copyright © 2014 Michael Grünewald
 #
 # This file must be used under the terms of the CeCILL-B.
 # This source file is licensed as described in the file COPYING, which
@@ -14,14 +14,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROJECTMODULE=	testkit
-PROJECTMODULE+=	application
+SUBDIR+=	unittest
 
-.for module in ${PROJECTMODULE}
-DIRS+= ${PROJECTBASE}/${module}
-.endfor
+.include "gasoline.subdir.mk"
 
-PACKAGE=	gasoline
-PACKAGEDIR=	/${PACKAGE}
-
-### End of file `gasoline.init.mk'
+### End of file `Makefile'
