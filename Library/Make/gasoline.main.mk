@@ -1,12 +1,12 @@
-### Makefile -- Gasoline
+### gasoline.main.mk -- Project Makefile
 
 # Author: Michael Grünewald
-# Date: Tue Nov  5 22:37:27 CET 2013
+# Date: Tue Apr 15 00:04:36 CEST 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
 #
-# Copyright © 2013 Michael Grünewald
+# Copyright © 2014 Michael Grünewald
 #
 # This file must be used under the terms of the CeCILL-B.
 # This source file is licensed as described in the file COPYING, which
@@ -14,13 +14,13 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PACKAGE=	gasoline
-AUTHOR=		Michael Grünewald
+.include "gasoline.init.mk"
 
-CONFIGURE=	meta/gasoline.in
+SUBDIR+= ${PROJECTMODULE}
 
+test: all
+	@cd testsuite && ${MAKE} test
 
-.MAKEFLAGS: -I${.CURDIR}/Library/Make
-.include "gasoline.main.mk"
+.include "bps.project.mk"
 
-### End of file `Makefile'
+### End of file `gasoline.main.mk'
