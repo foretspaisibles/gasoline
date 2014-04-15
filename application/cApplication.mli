@@ -92,9 +92,9 @@ sig
   (** [make kind comp name default description] create a configuration
       item holding a value of type ['a].
 
-      @parameter flag the letter used for command line flag.
-      @parameter env the environment variable used to get a value.
-      @parameter shy flag governing description in the short help. *)
+      @param flag the letter used for command line flag.
+      @param env the environment variable used to get a value.
+      @param shy flag governing description in the short help. *)
 
   val get : 'a t -> 'a
   (** [get item] return the value of the given configuration [item]. *)
