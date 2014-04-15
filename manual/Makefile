@@ -1,7 +1,7 @@
-### gasoline.main.mk -- Project Makefile
+### Makefile -- Preparation of Gasoline reference manual
 
 # Author: Michael Grünewald
-# Date: Tue Apr 15 00:04:36 CEST 2014
+# Date: Tue Apr 15 07:20:08 CEST 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
@@ -14,14 +14,6 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-.include "gasoline.init.mk"
+.include "gasoline.manual.mk"
 
-SUBDIR+= ${PROJECTMODULE}
-SUBDIR+= manual
-
-test: all
-	@cd testsuite && ${MAKE} test
-
-.include "bps.project.mk"
-
-### End of file `gasoline.main.mk'
+### End of file `Makefile'

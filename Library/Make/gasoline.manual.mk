@@ -18,6 +18,8 @@
 
 ODOC_TITLE=		Gasoline library
 ODOC_HTML_CSS_FILE=	${PROJECTBASE}/Library/Data/gasoline.css
+ODOC_HTML_INTRO=	intro.text
+ODOC_HTML_CHARSET=	utf-8
 
 .for module in ${PROJECTMODULE}
 MANUAL+= gasoline_${module}.odoc
