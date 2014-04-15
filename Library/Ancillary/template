@@ -107,7 +107,7 @@ changequote(,)dnl
 EOF
 
     template_licence_blob \
-	| sed -e 's/^/# /'
+	| sed -e 's/^/# /' -e 's/  *$//'
 
     cat <<'EOF'
 
