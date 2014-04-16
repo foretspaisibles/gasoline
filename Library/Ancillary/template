@@ -133,6 +133,12 @@ EOF
 }
 
 
+template_shell()
+{
+    template_makefile "$@"
+}
+
+
 template_prepare_makefile()
 {
     template_makefile | template_m4 > "$FILENAME"
@@ -151,6 +157,11 @@ template_prepare_ocaml()
 }
 
 
+template_prepare_shell()
+{
+    template_shell | template_m4 > "$FILENAME"
+}
+
 template_help()
 {
     cat <<EOF
@@ -159,7 +170,7 @@ Usage: ${PROGNAME} [-h] [-t type] file description
 Options:
  -t type
     Choose the template to use for file generation. Valid choices are
-    ocaml or makefile.
+    ocaml, makefile or shell.
  -h Display a cheerful help message to you.
 EOF
 }
@@ -174,7 +185,8 @@ while getopts "ht:" OPTION; do
 done
 
 case "$FILETYPE" in
-    ocaml|makefile)	: Fine ;;
+    ocaml|makefile|shell)
+			: Fine ;;
     *)			exit 64;;
 esac
 
