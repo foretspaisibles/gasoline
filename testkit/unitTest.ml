@@ -714,6 +714,8 @@ Usage: %s [-h | -l | suite1 [suite2 [...]]]
 Options:
  -h Display a cheerful help message.
  -l List available primary test suites.
+ -a List all available test suites.
+ -x List all test cases marked as expected failures.
 Exit Status:
  The %s program exits 0 on success and 1 if a test case failed.
 " progname progname
