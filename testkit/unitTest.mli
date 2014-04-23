@@ -109,25 +109,25 @@ point result being close from an expected value with a given
 precision. *)
 
 val assert_exception: string -> exn -> ('a -> 'b) -> 'a -> t
-(** A test that succeeds only when the computed function raises the
+(** A test case that succeeds only when the computed function raises the
 given exception. *)
 
 
 (** {6 Compound test cases} *)
 
 val for_all: string -> t list -> t
-(** A test succeeding only if all the tests in the given list do.
+(** A test case succeeding only if all the tests in the given list do.
 The string identifies the test case. *)
 
 val exists: string -> t list -> t
-(** A test succeeding only if one of the tests in the given list does.
+(** A test case succeeding only if one of the tests in the given list does.
 The string identifies the test case. *)
 
 
 (** {6 Examining test cases} *)
 
 val ident: t -> string
-(** The string identifying a test. *)
+(** The string identifying a test case. *)
 
 
 (** {6 Test fixtures} *)
@@ -155,14 +155,14 @@ reference [r].
 The temporary file is created empty, with permissions [0o600]
 (readable and writable only by the file owner). The file is
 guaranteed to be different from any other file that existed when
-[temp_file] was called.
+[tmpfile] was called.
 
 @raise Sys_error if the file could not be created. *)
 
 val tmpdir : string -> string -> string ref -> fixture
-(** A test fixture creating a temporary directory and making it the active
-directory before running the test and moving back to the initial
-active directory then deleting the temporary directory after test
+(** A test fixture creating a temporary directory and making it the current
+working directory before running the test and moving back to the previous
+current working directory then deleting the temporary directory after test
 completion. *)
 
 
@@ -230,7 +230,7 @@ val with_registered_suite : ?fixture:fixture -> ?prerequisite:string list -> str
 (** [with_registered_suite name init] apply [init] on a fresh new,
 registered suite, called [name].
 
-Actually, init is only called when the suite runs for the first time.
+Actually, [init] is only called when the suite runs for the first time.
 
 @raise Failure if some prerequisite is not registered. *)
 
@@ -254,4 +254,4 @@ val run_all: ?supervisor:supervisor -> unit -> bool
 
 val main: unit -> unit
 (** Main procedure for unitary tests.  It analyses the command line
-and performs the appropriate tests. *)
+and performs the appropriate actions. *)
