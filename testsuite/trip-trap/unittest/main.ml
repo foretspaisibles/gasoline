@@ -32,21 +32,11 @@ module DatabaseSQLite =
 struct
   let init suite =
     List.iter (add_case suite) [
-      assert_success "insert 1000 entries";
+      assert_success "insert-1000-entries";
+      assert_true "drop-table"
+	~expected_failure:true (fun _ -> false) ();
     ]
   let () = with_registered_suite "sqlite" init
-end
-
-
-module Database =
-struct
-  let init suite =
-    ignore suite
-(*    List.iter (add_suite suite) [
-      "oracle";
-      "sqlite";
-    ] *)
-  let () = with_registered_suite "database" init
 end
 
 

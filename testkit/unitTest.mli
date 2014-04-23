@@ -70,6 +70,7 @@ val assert_failure: string -> t
 (** A test case that always fails, the string identifies the test case. *)
 
 val assert_equal: string ->
+  ?expected_failure:bool ->
   ?printer:('b printer) ->
   ?equal:('b -> 'b -> bool) -> ('a -> 'b) -> 'a -> 'b -> t
 (** [assert_equal ident f x y] creates a test case computing [f x] and comparing
@@ -84,13 +85,18 @@ Use of the [Format] module is encouraged.
 @param printer Printer function used to output values.
 *)
 
-val assert_true: string -> ('a -> bool) -> 'a -> t
+val assert_true: string ->
+  ?expected_failure:bool ->
+  ('a -> bool) -> 'a -> t
 (** Specialised version of [assert_equal] for [true]. *)
 
-val assert_false: string -> ('a -> bool) -> 'a -> t
+val assert_false: string ->
+  ?expected_failure:bool ->
+  ('a -> bool) -> 'a -> t
 (** Specialised version of [assert_equal] for [false]. *)
 
 val assert_for_all: string ->
+  ?expected_failure:bool ->
   ?printer:('a printer) ->
   ('a -> bool) -> 'a list -> t
 (** [assert_for_all ident predicate list] creates a test case
@@ -99,6 +105,7 @@ verifying that all the elements of [list] pass the predicate.
 @param printer Printer function used to output values. *)
 
 val assert_exists: string ->
+  ?expected_failure:bool ->
   ?printer:('a printer) ->
   ('a -> bool) -> 'a list -> t
 (** [assert_for_all ident predicate list] creates a test case
@@ -106,33 +113,43 @@ verifying that at least one element of [list] passes the predicate.
 
 @param printer Printer function used to output values. *)
 
-val assert_zero: string -> ('a -> int) -> 'a -> t
+val assert_zero: string ->
+  ?expected_failure:bool ->
+  ('a -> int) -> 'a -> t
 (** Specialised version of [assert_equal] for [0]. *)
 
-val assert_nonzero: string -> ('a -> int) -> 'a -> t
+val assert_nonzero: string ->
+  ?expected_failure:bool ->
+  ('a -> int) -> 'a -> t
 (** A test case similar to [assert_equal], testing for a non zero result. *)
 
-val assert_float: string -> ('a -> float) -> 'a -> float -> t
+val assert_float: string ->
+  ?expected_failure:bool ->
+  ('a -> float) -> 'a -> float -> t
 (** A test case similar to [assert_equal], testing for a floating
 point result being close from an expected value. *)
 
-val assert_precision: string -> int -> ('a -> float) -> 'a -> float -> t
+val assert_precision: string ->
+  ?expected_failure:bool ->
+  int -> ('a -> float) -> 'a -> float -> t
 (** A test case similar to [assert_float], testing for a floating
 point result being close from an expected value with a given
 precision. *)
 
-val assert_exception: string -> exn -> ('a -> 'b) -> 'a -> t
+val assert_exception: string ->
+  ?expected_failure:bool ->
+  exn -> ('a -> 'b) -> 'a -> t
 (** A test case that succeeds only when the computed function raises the
 given exception. *)
 
 
 (** {6 Compound test cases} *)
 
-val for_all: string -> t list -> t
+val for_all: string -> ?expected_failure:bool -> t list -> t
 (** A test case succeeding only if all the tests in the given list do.
 The string identifies the test case. *)
 
-val exists: string -> t list -> t
+val exists: string -> ?expected_failure:bool -> t list -> t
 (** A test case succeeding only if one of the tests in the given list does.
 The string identifies the test case. *)
 
