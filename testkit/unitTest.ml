@@ -185,7 +185,7 @@ let apply_fixture fixture f x =
   bracket fixture.setup f x fixture.tear_down
 
 
-let donada =
+let relax =
   make_fixture ignore ignore
 
 let pr_generator =
@@ -312,17 +312,17 @@ and suite = {
   mutable suite_init: (suite -> unit) option;
 }
 
-let make ?(fixture = donada) ?init ident = {
+let make ?(fixture = relax) ?init ident = {
   suite_ident = ident;
   suite_fixture = fixture;
   suite_queue = Queue.create();
   suite_init = init;
 }
 
-let add_case ?(fixture = donada) s case =
+let add_case ?(fixture = relax) s case =
   Queue.add (Case(fixture, case)) s.suite_queue
 
-let add_suite ?(fixture = donada) s suite =
+let add_suite ?(fixture = relax) s suite =
   Queue.add (Suite(fixture, suite)) s.suite_queue
 
 let suite_maybe_init s =

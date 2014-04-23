@@ -140,7 +140,7 @@ val make_fixture : (unit -> unit) -> (unit -> unit) -> fixture
 before a test and [tear_down] after its complextion, successful or
 not. *)
 
-val donada : fixture
+val relax : fixture
 (** A trivial test fixture, doing nothing. *)
 
 val tmpfile : string -> string -> string ref -> fixture
