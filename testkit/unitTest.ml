@@ -79,7 +79,39 @@ type t = {
   predicate: unit -> bool
 }
 
+type 'a printer =
+  Format.formatter -> 'a -> unit
+
+
 (* Creating tests *)
+
+let maybe_print_value printer header value =
+  let wrap_printer p out_channel x =
+    let open Format in
+    let formatter = formatter_of_out_channel out_channel in
+    p formatter x;
+    pp_print_flush formatter ()
+  in
+  match printer with
+  | Some p -> printf "%s: %a\n" header (wrap_printer p) value
+  | None -> ()
+
+
+let assert_equal ident ?printer ?(equal = (=)) f x y =
+  let maybe_print_log expected got =
+    maybe_print_value printer "Test-Expected" expected;
+    maybe_print_value printer "Test-Got" got;
+  in
+  let predicate () =
+    let expected = y in
+    let got = f x in
+    equal expected got || ( maybe_print_log expected got; false)
+  in
+  {
+    ident;
+    predicate;
+  }
+
 
 let assert_success ident = {
   ident;
@@ -101,26 +133,36 @@ let assert_false ident f x = {
   predicate = fun _ -> not (f x);
 }
 
-let assert_for_all ident p l = {
-  ident;
-  predicate = fun _ -> List.for_all p l;
-}
+let assert_for_all ident ?printer p l =
+  let wrap_predicate p x =
+    p x || (maybe_print_value printer "Test-For-All" x; false)
+  in
+  {
+    ident;
+    predicate = fun _ -> List.for_all (wrap_predicate p) l;
+  }
 
-let assert_exists ident p l = {
-  ident;
-  predicate = fun _ -> List.exists p l;
-}
-
-let assert_equal ident ?(equal = (=)) f x y = {
-  ident;
-  predicate = fun _ -> equal y (f x)
-}
+let assert_exists ident ?printer p l =
+  let wrap_predicate p x =
+    p x && (maybe_print_value printer "Test-Exists" x; true)
+  in
+  {
+    ident;
+    predicate = fun _ -> List.exists (wrap_predicate p) l;
+  }
 
 let assert_zero ident f x =
-  assert_equal ident f x 0
+  assert_equal
+    ident
+    ~printer:Format.pp_print_int
+    f x 0
 
 let assert_nonzero ident f x =
-  assert_equal ~equal:(!=) ident f x 0	(* Yes, it is perverse. *)
+  assert_equal
+    ident
+    ~printer:Format.pp_print_int
+    ~equal:(!=) 	(* Yes, it is perverse. *)
+    f x 0
 
 let assert_exception ident e f x = {
   ident;
@@ -130,7 +172,11 @@ let assert_exception ident e f x = {
 }
 
 let assert_float ident y f x =
-  assert_equal ~equal:equal_float ident y f x
+  assert_equal
+    ident
+    ~printer:Format.pp_print_float
+    ~equal:equal_float
+    y f x
 
 let float_to_precise_string n x =
   sprintf "%.*f" n x

@@ -58,6 +58,9 @@ type t
 (** The abstract type of test cases. *)
 
 
+type 'a printer = Format.formatter -> 'a -> unit
+(** The type of printers for values of type ['a]. *)
+
 (** {6 Simple test cases} *)
 
 val assert_success: string -> t
@@ -67,6 +70,7 @@ val assert_failure: string -> t
 (** A test case that always fails, the string identifies the test case. *)
 
 val assert_equal: string ->
+  ?printer:('b printer) ->
   ?equal:('b -> 'b -> bool) -> ('a -> 'b) -> 'a -> 'b -> t
 (** [assert_equal ident f x y] creates a test case computing [f x] and comparing
 the returned value with [y].  The test case succeeds if these values
@@ -77,6 +81,7 @@ by the test supervisor orchestrating the execution of the test case.
 Use of the [Format] module is encouraged.
 
 @param equal Predicate used to compare values (defaults to polymorphic [=]).
+@param printer Printer function used to output values.
 *)
 
 val assert_true: string -> ('a -> bool) -> 'a -> t
@@ -85,13 +90,21 @@ val assert_true: string -> ('a -> bool) -> 'a -> t
 val assert_false: string -> ('a -> bool) -> 'a -> t
 (** Specialised version of [assert_equal] for [false]. *)
 
-val assert_for_all: string -> ('a -> bool) -> 'a list -> t
+val assert_for_all: string ->
+  ?printer:('a printer) ->
+  ('a -> bool) -> 'a list -> t
 (** [assert_for_all ident predicate list] creates a test case
-verifying that all the elements of [list] pass the predicate. *)
+verifying that all the elements of [list] pass the predicate.
 
-val assert_exists: string -> ('a -> bool) -> 'a list -> t
+@param printer Printer function used to output values. *)
+
+val assert_exists: string ->
+  ?printer:('a printer) ->
+  ('a -> bool) -> 'a list -> t
 (** [assert_for_all ident predicate list] creates a test case
-verifying that at least one element of [list] passes the predicate. *)
+verifying that at least one element of [list] passes the predicate.
+
+@param printer Printer function used to output values. *)
 
 val assert_zero: string -> ('a -> int) -> 'a -> t
 (** Specialised version of [assert_equal] for [0]. *)
