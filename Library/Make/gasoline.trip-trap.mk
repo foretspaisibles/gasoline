@@ -40,4 +40,9 @@ ${test}.got:
 
 .endfor
 
+do-clean: do-clean-log
+
+do-clean-log:
+	${RM} -f *.log
+
 ### End of file `gasoline.trip-trap.mk'
