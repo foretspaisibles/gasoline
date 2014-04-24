@@ -14,7 +14,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-SRCS=	cApplication.ml
+SRCS+=	sysExits.ml
+SRCS+=	cApplication.ml
 
 
 .include "gasoline.library.mk"
