@@ -14,8 +14,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROJECTMODULE=	testkit
 PROJECTMODULE+=	application
+PROJECTMODULE+=	testkit
 
 .for module in ${PROJECTMODULE}
 DIRS+= ${PROJECTBASE}/${module}
