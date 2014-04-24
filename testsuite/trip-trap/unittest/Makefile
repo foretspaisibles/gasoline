@@ -21,20 +21,16 @@ SRCS+=		main.ml
 PKGS+=		unix
 
 TESTS=		test-help-screen
-TESTS+=		test-primary-suites-list
-TESTS+=		test-all-suites-list
+TESTS+=		test-suites-list
 TESTS+=		test-expected-failures-list
 
 test-help-screen.got: ${PROGRAM}
 	./${PROGRAM} -h 2> ${.TARGET}
 
-test-primary-suites-list.got: ${PROGRAM}
+test-suites-list.got: ${PROGRAM}
 	./${PROGRAM} -l > ${.TARGET}
 
-test-all-suites-list.got: ${PROGRAM}
-	./${PROGRAM} -a > ${.TARGET}
-
-test-expected-failures.got: ${PROGRAM}
+test-expected-failures-list.got: ${PROGRAM}
 	./${PROGRAM} -x > ${.TARGET}
 
 .include "gasoline.program.mk"
