@@ -58,6 +58,9 @@ type t
 (** The abstract type of test cases. *)
 
 
+type 'a printer = Format.formatter -> 'a -> unit
+(** The type of printers for values of type ['a]. *)
+
 (** {6 Simple test cases} *)
 
 val assert_success: string -> t
@@ -67,6 +70,8 @@ val assert_failure: string -> t
 (** A test case that always fails, the string identifies the test case. *)
 
 val assert_equal: string ->
+  ?expected_failure:bool ->
+  ?printer:('b printer) ->
   ?equal:('b -> 'b -> bool) -> ('a -> 'b) -> 'a -> 'b -> t
 (** [assert_equal ident f x y] creates a test case computing [f x] and comparing
 the returned value with [y].  The test case succeeds if these values
@@ -77,57 +82,82 @@ by the test supervisor orchestrating the execution of the test case.
 Use of the [Format] module is encouraged.
 
 @param equal Predicate used to compare values (defaults to polymorphic [=]).
+@param printer Printer function used to output values.
 *)
 
-val assert_true: string -> ('a -> bool) -> 'a -> t
+val assert_true: string ->
+  ?expected_failure:bool ->
+  ('a -> bool) -> 'a -> t
 (** Specialised version of [assert_equal] for [true]. *)
 
-val assert_false: string -> ('a -> bool) -> 'a -> t
+val assert_false: string ->
+  ?expected_failure:bool ->
+  ('a -> bool) -> 'a -> t
 (** Specialised version of [assert_equal] for [false]. *)
 
-val assert_for_all: string -> ('a -> bool) -> 'a list -> t
+val assert_for_all: string ->
+  ?expected_failure:bool ->
+  ?printer:('a printer) ->
+  ('a -> bool) -> 'a list -> t
 (** [assert_for_all ident predicate list] creates a test case
-verifying that all the elements of [list] pass the predicate. *)
+verifying that all the elements of [list] pass the predicate.
 
-val assert_exists: string -> ('a -> bool) -> 'a list -> t
+@param printer Printer function used to output values. *)
+
+val assert_exists: string ->
+  ?expected_failure:bool ->
+  ?printer:('a printer) ->
+  ('a -> bool) -> 'a list -> t
 (** [assert_for_all ident predicate list] creates a test case
-verifying that at least one element of [list] passes the predicate. *)
+verifying that at least one element of [list] passes the predicate.
 
-val assert_zero: string -> ('a -> int) -> 'a -> t
+@param printer Printer function used to output values. *)
+
+val assert_zero: string ->
+  ?expected_failure:bool ->
+  ('a -> int) -> 'a -> t
 (** Specialised version of [assert_equal] for [0]. *)
 
-val assert_nonzero: string -> ('a -> int) -> 'a -> t
+val assert_nonzero: string ->
+  ?expected_failure:bool ->
+  ('a -> int) -> 'a -> t
 (** A test case similar to [assert_equal], testing for a non zero result. *)
 
-val assert_float: string -> ('a -> float) -> 'a -> float -> t
+val assert_float: string ->
+  ?expected_failure:bool ->
+  ('a -> float) -> 'a -> float -> t
 (** A test case similar to [assert_equal], testing for a floating
 point result being close from an expected value. *)
 
-val assert_precision: string -> int -> ('a -> float) -> 'a -> float -> t
+val assert_precision: string ->
+  ?expected_failure:bool ->
+  int -> ('a -> float) -> 'a -> float -> t
 (** A test case similar to [assert_float], testing for a floating
 point result being close from an expected value with a given
 precision. *)
 
-val assert_exception: string -> exn -> ('a -> 'b) -> 'a -> t
-(** A test that succeeds only when the computed function raises the
+val assert_exception: string ->
+  ?expected_failure:bool ->
+  exn -> ('a -> 'b) -> 'a -> t
+(** A test case that succeeds only when the computed function raises the
 given exception. *)
 
 
 (** {6 Compound test cases} *)
 
-val for_all: string -> t list -> t
-(** A test succeeding only if all the tests in the given list do.
+val for_all: string -> ?expected_failure:bool -> t list -> t
+(** A test case succeeding only if all the tests in the given list do.
 The string identifies the test case. *)
 
-val exists: string -> t list -> t
-(** A test succeeding only if one of the tests in the given list does.
+val exists: string -> ?expected_failure:bool -> t list -> t
+(** A test case succeeding only if one of the tests in the given list does.
 The string identifies the test case. *)
 
 
 (** {6 Examining test cases} *)
 
 val ident: t -> string
-(** The string identifying a test. *)
+(** The string identifying a test case. *)
 
 
 (** {6 Test fixtures} *)
@@ -140,7 +170,7 @@ val make_fixture : (unit -> unit) -> (unit -> unit) -> fixture
 before a test and [tear_down] after its complextion, successful or
 not. *)
 
-val donada : fixture
+val relax : fixture
 (** A trivial test fixture, doing nothing. *)
 
 val tmpfile : string -> string -> string ref -> fixture
@@ -155,14 +185,14 @@ reference [r].
 The temporary file is created empty, with permissions [0o600]
 (readable and writable only by the file owner). The file is
 guaranteed to be different from any other file that existed when
-[temp_file] was called.
+[tmpfile] was called.
 
 @raise Sys_error if the file could not be created. *)
 
 val tmpdir : string -> string -> string ref -> fixture
-(** A test fixture creating a temporary directory and making it the active
-directory before running the test and moving back to the initial
-active directory then deleting the temporary directory after test
+(** A test fixture creating a temporary directory and making it the current
+working directory before running the test and moving back to the previous
+current working directory then deleting the temporary directory after test
 completion. *)
 
 
@@ -226,23 +256,26 @@ For instance if [A] uses [B] and [B] fails, the results for the
 testing of [A] are meaningless, so the tests for [A] have to be
 skept. *)
 
+val package : ?prerequisite:string list -> (string * (string list)) -> unit
+(** [package (name,subsuite)] create an register a test suite called
+[name] containing the test suites listed in [subsuite].
+
+@raise Failure if some prerequisite is not registered.
+@raise Failure is one of the subsuite is not known. *)
+
 val with_registered_suite : ?fixture:fixture -> ?prerequisite:string list -> string -> (suite -> unit) -> unit
 (** [with_registered_suite name init] apply [init] on a fresh new,
 registered suite, called [name].
 
-Actually, init is only called when the suite runs for the first time.
-
 @raise Failure if some prerequisite is not registered. *)
 
-val package : ?prerequisite:string list -> (string * (string list)) -> unit
-(** [package (name,subsuite)] create a test suite called [name]
-containing the test suites listed in [subsuite].
-
-@raise Failure is one of the subsuite is not known. *)
 
 
-val list: unit -> string list
-(** List of registered test suites. *)
+val list_expected_failures: unit -> string list
+(** List test cases which are expected to fail. *)
+
+val list_suites: unit -> string list
+(** List available test suites. *)
 
 val run: ?supervisor:supervisor -> string -> bool
 (** Run the given test suite. The return value indicates the success
@@ -254,4 +287,4 @@ val run_all: ?supervisor:supervisor -> unit -> bool
 
 val main: unit -> unit
 (** Main procedure for unitary tests.  It analyses the command line
-and performs the appropriate tests. *)
+and performs the appropriate actions. *)

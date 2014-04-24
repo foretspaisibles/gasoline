@@ -76,61 +76,101 @@ let equal_float ?(epsilon = epsilon_float) x y =
 
 type t = {
   ident: string;
-  predicate: unit -> bool
+  predicate: unit -> bool;
+  expected_failure: bool;
 }
+
+type 'a printer =
+  Format.formatter -> 'a -> unit
+
 
 (* Creating tests *)
 
-let assert_success ident = {
+let make_case ident ?(expected_failure = false) predicate = {
   ident;
-  predicate = fun _ -> true
+  predicate;
+  expected_failure;
 }
 
-let assert_failure ident = {
-  ident;
-  predicate = fun _ -> false
-}
+let maybe_print_value printer header value =
+  let wrap_printer p out_channel x =
+    let open Format in
+    let formatter = formatter_of_out_channel out_channel in
+    p formatter x;
+    pp_print_flush formatter ()
+  in
+  match printer with
+  | Some p -> printf "%s: %a\n" header (wrap_printer p) value
+  | None -> ()
 
-let assert_true ident f x  = {
-  ident;
-  predicate = fun _ -> f x;
-}
 
-let assert_false ident f x = {
-  ident;
-  predicate = fun _ -> not (f x);
-}
+let assert_equal ident ?expected_failure
+    ?printer ?(equal = (=)) f x y =
+  let maybe_print_log expected got =
+    maybe_print_value printer "Test-Expected" expected;
+    maybe_print_value printer "Test-Got" got;
+  in
+  let predicate () =
+    let expected = y in
+    let got = f x in
+    equal expected got || ( maybe_print_log expected got; false)
+  in
+  make_case ident ?expected_failure predicate
 
-let assert_for_all ident p l = {
-  ident;
-  predicate = fun _ -> List.for_all p l;
-}
+let assert_success ident =
+  make_case ident (fun _ -> true)
 
-let assert_exists ident p l = {
-  ident;
-  predicate = fun _ -> List.exists p l;
-}
+let assert_failure ident =
+  make_case ident (fun _ -> false)
 
-let assert_equal ident ?(equal = (=)) f x y = {
-  ident;
-  predicate = fun _ -> equal y (f x)
-}
+let assert_true ident ?expected_failure f x =
+  make_case ident ?expected_failure (fun _ -> f x)
 
-let assert_zero ident f x =
-  assert_equal ident f x 0
+let assert_false ident ?expected_failure f x =
+  make_case ident ?expected_failure (fun _ -> not (f x))
 
-let assert_nonzero ident f x =
-  assert_equal ~equal:(!=) ident f x 0	(* Yes, it is perverse. *)
+let assert_for_all ident ?expected_failure ?printer p l =
+  let wrap_predicate p x =
+    p x || (maybe_print_value printer "Test-For-All" x; false)
+  in
+  make_case ident ?expected_failure
+    (fun _ -> List.for_all (wrap_predicate p) l)
 
-let assert_exception ident e f x = {
-  ident;
-  predicate = fun _ ->
-    try ignore(f x); false
-    with except when except = e -> true
-}
+let assert_exists ident ?expected_failure ?printer p l =
+  let wrap_predicate p x =
+    p x && (maybe_print_value printer "Test-Exists" x; true)
+  in
+  make_case ident ?expected_failure
+    (fun _ -> List.exists (wrap_predicate p) l)
 
-let assert_float ident y f x =
-  assert_equal ~equal:equal_float ident y f x
+let assert_zero ident ?expected_failure f x =
+  assert_equal
+    ident
+    ?expected_failure
+    ~printer:Format.pp_print_int
+    f x 0
+
+let assert_nonzero ident ?expected_failure f x =
+  assert_equal
+    ident
+    ?expected_failure
+    ~printer:Format.pp_print_int
+    ~equal:(!=) 		(* Yes, it is perverse. *)
+    f x 0
+
+let assert_exception ident ?expected_failure e f x =
+  make_case ident ?expected_failure
+    (fun _ ->
+      try ignore(f x); false
+      with except when except = e -> true )
+
+let assert_float ident ?expected_failure y f x =
+  assert_equal
+    ident
+    ?expected_failure
+    ~printer:Format.pp_print_float
+    ~equal:equal_float
+    y f x
 
 let float_to_precise_string n x =
   sprintf "%.*f" n x
@@ -138,20 +178,19 @@ let float_to_precise_string n x =
 let equal_precision n x y =
   (float_to_precise_string n x) = (float_to_precise_string n y)
 
-let assert_precision label n f x y =
-  assert_equal ~equal:(equal_precision n) label f x y
+let assert_precision label ?expected_failure n f x y =
+  assert_equal ?expected_failure ~equal:(equal_precision n) label f x y
 
 (* Compound test cases *)
 
 let case_prepend prefix t = {
-  t with ident = prefix ^ "." ^ t.ident
+  t with ident = path_cat prefix t.ident
 }
 
-let case_combinator loop prefix list = {
-  ident = prefix;
-  predicate = fun _ ->
-    loop (fun t -> t.predicate()) (List.map (case_prepend prefix) list);
-}
+let case_combinator loop ident ?expected_failure list =
+  make_case ident ?expected_failure
+    (fun _ -> loop (fun t -> t.predicate())
+      (List.map (case_prepend ident) list))
 
 let exists =
   case_combinator List.exists
@@ -185,7 +224,7 @@ let apply_fixture fixture f x =
   bracket fixture.setup f x fixture.tear_down
 
 
-let donada =
+let relax =
   make_fixture ignore ignore
 
 let pr_generator =
@@ -280,11 +319,12 @@ let outcome_to_char = function
   | Skipped -> '>'
   | Exception _ -> '!'
 
-let outcome_to_string ident outcome =
+let outcome_to_string ident outcome expected_failure =
   let c = outcome_to_char outcome in
+  let x = if expected_failure then " (expected failure)" else "" in
   match outcome with
-    | Exception exn -> sprintf "%c %s %s" c ident (Printexc.to_string exn)
-    | _ -> sprintf "%c %s" c ident
+    | Exception exn -> sprintf "%c %s %s%s" c ident (Printexc.to_string exn) x
+    | _ -> sprintf "%c %s%s" c ident x
 
 let outcome_describe = function
   | Success -> "succeed"
@@ -299,6 +339,9 @@ let outcome_is_successful = function
   | Skipped -> true
   | _ -> false
 
+let is_expected_failure case outcome =
+  not(outcome_is_successful outcome) && case.expected_failure
+
 
 (* Test suites *)
 
@@ -309,26 +352,26 @@ and suite = {
   suite_ident: string;
   suite_fixture: fixture;
   suite_queue: suite_item Queue.t;
-  mutable suite_init: (suite -> unit) option;
 }
 
-let make ?(fixture = donada) ?init ident = {
-  suite_ident = ident;
-  suite_fixture = fixture;
-  suite_queue = Queue.create();
-  suite_init = init;
-}
+let make ?(fixture = relax) ?init ident =
+  let suite = {
+    suite_ident = ident;
+    suite_fixture = fixture;
+    suite_queue = Queue.create();
+  }
+  in
+  ( match init with
+  | Some f -> f suite
+  | None -> () );
+  suite
 
-let add_case ?(fixture = donada) s case =
+let add_case ?(fixture = relax) s case =
   Queue.add (Case(fixture, case)) s.suite_queue
 
-let add_suite ?(fixture = donada) s suite =
+let add_suite ?(fixture = relax) s suite =
   Queue.add (Suite(fixture, suite)) s.suite_queue
 
-let suite_maybe_init s =
-  match s.suite_init with
-  | Some callback -> (callback s; s.suite_init <- None)
-  | None -> ()
 
 (* Supervisor *)
 
@@ -394,7 +437,6 @@ object(self)
 
   method private really_suite_run ident setup s tear_down =
     let is_true b = b in
-    let _ = suite_maybe_init s in
     let _ = s.suite_fixture.setup () in
     let _ = setup () in
     let l = List.rev (Queue.fold (fun a x -> x :: a) [] s.suite_queue) in
@@ -433,17 +475,17 @@ object(self)
     let o = apply_fixture fixture run_case c in
     let _ = self#case_outcome path c o in
     let _ = self#case_end path c in
-      outcome_is_successful o
+      outcome_is_successful o || c.expected_failure
 
 end
 
 class outcome_memoizer = (* Keeping track of outcomes *)
-  let outcome_memoize : (string * outcome) Queue.t = Queue.create () in
+  let outcome_memoize : (string * outcome * bool) Queue.t = Queue.create () in
 object(self)
   method reset =
     Queue.clear outcome_memoize
-  method push ident outcome =
-    Queue.add (ident, outcome) outcome_memoize
+  method push ident outcome expected_failure =
+    Queue.add (ident, outcome, expected_failure) outcome_memoize
   method get =
     List.rev (Queue.fold (fun a x -> x :: a) [] outcome_memoize)
 end
@@ -470,15 +512,18 @@ object
     printf "=>  Test case %s\n" ident
 
   method case_outcome ident case outcome =
-    memo#push (path_cat ident case.ident) outcome;
-    printf "=> Test case %s %s\n" ident (outcome_describe outcome)
-
+    memo#push (path_cat ident case.ident) outcome case.expected_failure;
+    printf "=> Test case %s %s%s\n" ident (outcome_describe outcome)
+      (if is_expected_failure case outcome then
+	  " (expected failure)"
+       else
+	  "" )
   method case_end ident case =
     ()
 
   method summary () =
     flush stdout;
-    List.iter (fun (i,o) -> prerr_endline (outcome_to_string i o)) memo#get
+    List.iter (fun (i,o,x) -> prerr_endline (outcome_to_string i o x)) memo#get
 
 end
 
@@ -556,17 +601,19 @@ object(self)
     in
     printf "Test-Outcome-Brief: %c\n" outcome_brief;
     printf "Test-Outcome: %s\n" (outcome_describe outcome);
+    if is_expected_failure case outcome then
+      printf "Test-Outcome-Expected-Failure: yes\n";
     printf "\n";
-    memo#push (path_cat ident case.ident) outcome;
+    memo#push (path_cat ident case.ident) outcome case.expected_failure;
     prerr_char outcome_brief
 
   method case_end ident case =
     printf "\n"
 
   method summary () =
-    let prerr_outcome (i,o) =
+    let prerr_outcome (i,o,x) =
       if not (outcome_is_successful o) then
-	prerr_endline (outcome_to_string i o)
+	prerr_endline (outcome_to_string i o x)
     in begin
 	flush stdout;
 	flush stderr;
@@ -636,11 +683,33 @@ let set_of_list l =
 let set_to_list s =
   Ident.fold (fun h t -> h :: t) s []
 
-let list () =
-  let loop ident _ a = Ident.add ident a in
+let generic_list loop =
   let sort = List.sort String.compare in
   let root_registry_keys = Hashtbl.fold loop root_registry Ident.empty in
   sort(set_to_list root_registry_keys)
+
+let list_suites () =
+  let loop ident _ a = Ident.add ident a in
+  generic_list loop
+
+let list_expected_failures () =
+  let rec subloop prefix a item =
+    let conditionally_add_case case a =
+      if case.expected_failure then
+	Ident.add (path_cat prefix case.ident) a
+      else
+	a
+    in
+    match item with
+    | Case(_,c) -> conditionally_add_case c a
+    | Suite(_, suite) ->
+      let ident = path_cat prefix suite.suite_ident in
+      Queue.fold (subloop ident) a suite.suite_queue
+  in
+  let loop ident root a =
+    Queue.fold (subloop ident) a root.root_suite.suite_queue
+  in
+  generic_list loop
 
 let rec toposort
     n	(* Number of elements in u at the beginning of the last iteration *)
@@ -692,7 +761,7 @@ let run_several ?supervisor list =
   List.for_all is_true (List.map (run ?supervisor) list)
 
 let run_all ?supervisor () =
-  run_several ?supervisor (list())
+  run_several ?supervisor (list_suites())
 
 
 
@@ -713,7 +782,8 @@ Usage: %s [-h | -l | suite1 [suite2 [...]]]
  Run unitary tests
 Options:
  -h Display a cheerful help message.
- -l List available primary test suites.
+ -l List available test suites.
+ -x List all test cases marked as expected failures.
 Exit Status:
  The %s program exits 0 on success and 1 if a test case failed.
 " progname progname
@@ -732,7 +802,10 @@ let main () =
   else if Sys.argv.(1) = "-h" then
     help ()
   else if Sys.argv.(1) = "-l" then begin
-    List.iter print_endline (list ());
+    List.iter print_endline (list_suites ());
+    exit 0
+  end else if Sys.argv.(1) = "-x" then begin
+    List.iter print_endline (list_expected_failures ());
     exit 0
   end else
     exit (if run_several (List.tl (Array.to_list Sys.argv)) then 0 else 1)
