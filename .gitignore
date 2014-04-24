@@ -43,3 +43,7 @@ mpxerr.log
 # Mac OS-X
 #
 .DS_Store
+#
+# Wiki
+#
+Wiki/
