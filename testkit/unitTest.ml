@@ -15,6 +15,7 @@ are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 
 open Printf
+open SysExits
 
 (* Timestamp *)
 let timestamp s =
@@ -215,9 +216,15 @@ let make_fixture setup tear_down = {
 }
 
 let bracket setup f x tear_down =
-  let _ = setup () in
+  let supervise action =
+    try action ()
+    with exn -> (eprintf "UnitTest: fixture exception: %s\n"
+		   (Printexc.to_string exn);
+		 exit EXIT_UNAVAILABLE)
+  in
+  let _ = supervise setup in
   let a = f x in
-  let _ = tear_down () in
+  let _ = supervise tear_down in
     a
 
 let apply_fixture fixture f x =
@@ -753,7 +760,8 @@ let rec run ?(supervisor = concise) ident =
       (List.for_all run (dependencies ident))
       && (List.for_all supervise (Hashtbl.find_all root_registry ident))
     else
-      failwith (sprintf "test suite not found: %s" ident)
+      (eprintf "UnitTest: run: test suite not found: %s" ident;
+       exit EXIT_SOFTWARE)
 
 let run_several ?supervisor list =
   let is_true x = x in
@@ -790,22 +798,23 @@ Exit Status:
 
 let help () =
   prerr_usage();
-  exit 0
+  exit EXIT_SUCCESS
 
 let usage () =
   prerr_usage();
-  exit 64	(* Cf. sysexits(3) *)
+  exit EXIT_USAGE
 
 let main () =
   if Array.length Sys.argv <= 1 then
-    exit (if run_all () then 0 else 1)
+    exit (if run_all () then EXIT_SUCCESS else EXIT_FAILURE)
   else if Sys.argv.(1) = "-h" then
     help ()
   else if Sys.argv.(1) = "-l" then begin
     List.iter print_endline (list_suites ());
-    exit 0
+    exit EXIT_SUCCESS
   end else if Sys.argv.(1) = "-x" then begin
     List.iter print_endline (list_expected_failures ());
-    exit 0
+    exit EXIT_SUCCESS
   end else
-    exit (if run_several (List.tl (Array.to_list Sys.argv)) then 0 else 1)
+    exit (if run_several (List.tl (Array.to_list Sys.argv))
+      then EXIT_SUCCESS else EXIT_FAILURE)
