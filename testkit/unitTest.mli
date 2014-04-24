@@ -256,23 +256,26 @@ For instance if [A] uses [B] and [B] fails, the results for the
 testing of [A] are meaningless, so the tests for [A] have to be
 skept. *)
 
+val package : ?prerequisite:string list -> (string * (string list)) -> unit
+(** [package (name,subsuite)] create an register a test suite called
+[name] containing the test suites listed in [subsuite].
+
+@raise Failure if some prerequisite is not registered.
+@raise Failure is one of the subsuite is not known. *)
+
 val with_registered_suite : ?fixture:fixture -> ?prerequisite:string list -> string -> (suite -> unit) -> unit
 (** [with_registered_suite name init] apply [init] on a fresh new,
 registered suite, called [name].
 
-Actually, [init] is only called when the suite runs for the first time.
-
 @raise Failure if some prerequisite is not registered. *)
 
-val package : ?prerequisite:string list -> (string * (string list)) -> unit
-(** [package (name,subsuite)] create a test suite called [name]
-containing the test suites listed in [subsuite].
-
-@raise Failure is one of the subsuite is not known. *)
 
 
-val list: unit -> string list
-(** List of registered test suites. *)
+val list_expected_failures: unit -> string list
+(** List test cases which are expected to fail. *)
+
+val list_suites: unit -> string list
+(** List available test suites. *)
 
 val run: ?supervisor:supervisor -> string -> bool
 (** Run the given test suite. The return value indicates the success

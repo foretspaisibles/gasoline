@@ -184,7 +184,7 @@ let assert_precision label ?expected_failure n f x y =
 (* Compound test cases *)
 
 let case_prepend prefix t = {
-  t with ident = prefix ^ "." ^ t.ident
+  t with ident = path_cat prefix t.ident
 }
 
 let case_combinator loop ident ?expected_failure list =
@@ -352,15 +352,19 @@ and suite = {
   suite_ident: string;
   suite_fixture: fixture;
   suite_queue: suite_item Queue.t;
-  mutable suite_init: (suite -> unit) option;
 }
 
-let make ?(fixture = relax) ?init ident = {
-  suite_ident = ident;
-  suite_fixture = fixture;
-  suite_queue = Queue.create();
-  suite_init = init;
-}
+let make ?(fixture = relax) ?init ident =
+  let suite = {
+    suite_ident = ident;
+    suite_fixture = fixture;
+    suite_queue = Queue.create();
+  }
+  in
+  ( match init with
+  | Some f -> f suite
+  | None -> () );
+  suite
 
 let add_case ?(fixture = relax) s case =
   Queue.add (Case(fixture, case)) s.suite_queue
@@ -368,10 +372,6 @@ let add_case ?(fixture = relax) s case =
 let add_suite ?(fixture = relax) s suite =
   Queue.add (Suite(fixture, suite)) s.suite_queue
 
-let suite_maybe_init s =
-  match s.suite_init with
-  | Some callback -> (callback s; s.suite_init <- None)
-  | None -> ()
 
 (* Supervisor *)
 
@@ -437,7 +437,6 @@ object(self)
 
   method private really_suite_run ident setup s tear_down =
     let is_true b = b in
-    let _ = suite_maybe_init s in
     let _ = s.suite_fixture.setup () in
     let _ = setup () in
     let l = List.rev (Queue.fold (fun a x -> x :: a) [] s.suite_queue) in
@@ -684,11 +683,33 @@ let set_of_list l =
 let set_to_list s =
   Ident.fold (fun h t -> h :: t) s []
 
-let list () =
-  let loop ident _ a = Ident.add ident a in
+let generic_list loop =
   let sort = List.sort String.compare in
   let root_registry_keys = Hashtbl.fold loop root_registry Ident.empty in
   sort(set_to_list root_registry_keys)
+
+let list_suites () =
+  let loop ident _ a = Ident.add ident a in
+  generic_list loop
+
+let list_expected_failures () =
+  let rec subloop prefix a item =
+    let conditionally_add_case case a =
+      if case.expected_failure then
+	Ident.add (path_cat prefix case.ident) a
+      else
+	a
+    in
+    match item with
+    | Case(_,c) -> conditionally_add_case c a
+    | Suite(_, suite) ->
+      let ident = path_cat prefix suite.suite_ident in
+      Queue.fold (subloop ident) a suite.suite_queue
+  in
+  let loop ident root a =
+    Queue.fold (subloop ident) a root.root_suite.suite_queue
+  in
+  generic_list loop
 
 let rec toposort
     n	(* Number of elements in u at the beginning of the last iteration *)
@@ -740,7 +761,7 @@ let run_several ?supervisor list =
   List.for_all is_true (List.map (run ?supervisor) list)
 
 let run_all ?supervisor () =
-  run_several ?supervisor (list())
+  run_several ?supervisor (list_suites())
 
 
 
@@ -761,8 +782,7 @@ Usage: %s [-h | -l | suite1 [suite2 [...]]]
  Run unitary tests
 Options:
  -h Display a cheerful help message.
- -l List available primary test suites.
- -a List all available test suites.
+ -l List available test suites.
  -x List all test cases marked as expected failures.
 Exit Status:
  The %s program exits 0 on success and 1 if a test case failed.
@@ -782,7 +802,10 @@ let main () =
   else if Sys.argv.(1) = "-h" then
     help ()
   else if Sys.argv.(1) = "-l" then begin
-    List.iter print_endline (list ());
+    List.iter print_endline (list_suites ());
+    exit 0
+  end else if Sys.argv.(1) = "-x" then begin
+    List.iter print_endline (list_expected_failures ());
     exit 0
   end else
     exit (if run_several (List.tl (Array.to_list Sys.argv)) then 0 else 1)
