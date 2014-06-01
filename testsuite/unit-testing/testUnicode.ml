@@ -16,7 +16,33 @@ http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 
 open UnitTest
 
+
+(* Test the length of a string.
+
+We compare the length of several U8-encoded string with their expected
+length. *)
+module Length =
+struct
+
+  let challenge = [
+    "éléphant", 8;
+    "François", 8;
+    "sœur", 4;
+  ]
+
+  let length text =
+    let open Unicode in
+    UString.length (u8 text)
+
+  let assert_length (text, expected) =
+    assert_int text length text expected
+
+  let init suite =
+    List.iter (add_case suite) (List.map assert_length challenge)
+
+end
+
 let init suite =
-  ignore suite
+  Length.init suite
 
 let () = with_registered_suite "Unicode" init
