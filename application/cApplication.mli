@@ -13,6 +13,8 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
+(** Application using the C locale. *)
+
 
 (** Dynamically typed values. *)
 module Value :
@@ -32,6 +34,7 @@ sig
 end
 
 
+(** Diagnostic messages. *)
 module Message :
 sig
 
@@ -64,6 +67,7 @@ end
 module Component :
 sig
 
+  (** The concrete type of application components. *)
   type t = {
     name: string;
     version: string;
@@ -105,6 +109,7 @@ sig
 end
 
 
+(** Analyse of command line arguments. *)
 module Getopt :
 sig
 
@@ -112,21 +117,42 @@ sig
   (** The abstract type of getopt thingies. *)
 
   val flag : char -> (unit -> unit) -> string -> t
-  (** [flag c callback description] return a getopt thingie recogising
+  (** [flag c callback description] return a getopt thingie recognising
       the flag [c] on the command line and triggering the given
       [callback]. *)
 
   val make : 'a Value.kind -> char -> ('a -> unit) -> string -> t
+  (** [make kind c callback description] return a getopt thingie recognising
+      the flag [c] on the command line. When this flag occurs on the command
+      line, the [callback] is called on the option argument. The message
+      [description] may be displayed in the help screen of the program.
+
+      If the flag is present without an argument or if the argument cannot be
+      converted, then the guest program will terminate with exit code
+      [EXIT_USAGE] (64), displaying appropriate message and a usage notice.
+
+      The callback may raise [Invalid_argument] to indicate that a specific
+      value of the option is not supported.  The guest program will terminate
+      with exit code [EXIT_USAGE] (64), displaying appropriate message and
+      a usage notice. *)
 
   type spec
+  (** The abstract type of the whole analyse specification. *)
 
   val note : string -> string -> t
+  (** [note title text] create a note to be displayed in the help summary
+      of the application.  This can be used to add copyright information
+      or any other kind of credit or information to the help summary. *)
 
   val spec : string -> string -> t list -> (string -> unit) -> spec
+  (** [spec usage description opt rest] create a full command line analyse
+      specification out of its components. *)
 
   val help : spec -> unit
+  (** Output the help summary associated to the analysis specification. *)
 
   val help_message : spec -> string
+  (** Return the help summary associated to the analysis specification. *)
 
 end
 
