@@ -17,6 +17,8 @@
 PROJECTMODULE+=	application
 PROJECTMODULE+=	testkit
 
+PKGS+= camomile
+
 .for module in ${PROJECTMODULE}
 DIRS+= ${PROJECTBASE}/${module}
 .endfor
