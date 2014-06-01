@@ -198,8 +198,6 @@ let count_files lst =
   List.iter loop lst;
   Component_display.print_summary (queue_elements q)
 
-(* let count () = *)
-
 
 let main () =
   Application.init ();
