@@ -216,6 +216,13 @@ val add_case : ?fixture:fixture -> suite -> t -> unit
 val add_suite : ?fixture:fixture -> suite -> suite -> unit
 (** Add a test suite to a test suite. *)
 
+val add_challenge : suite -> ('a -> t) -> 'a list -> unit
+(** [add_challenge suite f c] prepare a list of test cases by mapping [f]
+    over [c] and add them to [suite].
+
+    This can be used to prepare a large amount of test cases out of
+    static data. *)
+
 
 (** {6 Supervisors} *)
 

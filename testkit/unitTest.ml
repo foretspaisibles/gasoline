@@ -386,6 +386,9 @@ let add_case ?(fixture = relax) s case =
 let add_suite ?(fixture = relax) s suite =
   Queue.add (Suite(fixture, suite)) s.suite_queue
 
+let add_challenge s f c =
+  List.iter (add_case s) (List.map f c)
+
 
 (* Supervisor *)
 

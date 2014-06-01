@@ -38,7 +38,7 @@ struct
     assert_int text length text expected
 
   let init suite =
-    List.iter (add_case suite) (List.map assert_length challenge)
+    add_challenge suite assert_length challenge
 
 end
 
