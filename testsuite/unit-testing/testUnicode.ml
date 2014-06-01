@@ -17,6 +17,14 @@ http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 open UnitTest
 
 
+let assert_ustring id ?expected_failure f x y =
+  let open Unicode in
+  assert_equal id ?expected_failure
+    ~printer:(UString.format Encoding.utf8)
+    ~equal:UString.equal
+    f x y
+
+
 (* Test the length of a string.
 
 We compare the length of several U8-encoded string with their expected
@@ -42,7 +50,50 @@ struct
 
 end
 
+
+(* Test case change *)
+module Changecase =
+struct
+  open Unicode
+
+  let challenge = [
+    "éléphant", "ÉLÉPHANT";
+    "français", "FRANÇAIS";
+    "sœur", "SŒUR";
+  ]
+
+  let assert_ll (lowercase,_) =
+    assert_ustring ("ll-" ^ lowercase)
+      UString.lowercase (u8 lowercase) (u8 lowercase)
+
+  let assert_uu (_, uppercase) =
+    assert_ustring ("uu-" ^ uppercase)
+      UString.uppercase (u8 uppercase) (u8 uppercase)
+
+  let assert_lu (lowercase, uppercase) =
+    assert_ustring ("lu-" ^ lowercase)
+      UString.uppercase (u8 lowercase) (u8 uppercase)
+
+  let assert_ul (lowercase, uppercase) =
+    assert_ustring ("ul-" ^ uppercase)
+      UString.lowercase (u8 uppercase) (u8 lowercase)
+
+  let init suite =
+    begin
+      add_challenge suite assert_ll challenge;
+      add_challenge suite assert_uu challenge;
+      add_challenge suite assert_ul challenge;
+      add_challenge suite assert_lu challenge;
+      add_challenge suite assert_lu [("daß", "DASS")];
+    end
+end
+
+
+
 let init suite =
-  Length.init suite
+  List.iter (fun f -> f suite) [
+    Length.init;
+    Changecase.init;
+  ]
 
 let () = with_registered_suite "Unicode" init
