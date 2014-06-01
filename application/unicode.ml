@@ -800,6 +800,8 @@ struct
   let set = Camomile_text.set
   let copy = Camomile_text.copy
   let compare = Camomile_text.compare
+  let equal a b =
+    compare a b = 0
   let iter = Camomile_text.iter
   let append = Camomile_text.append
   let blit = Camomile_text.blit

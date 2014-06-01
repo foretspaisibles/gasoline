@@ -796,6 +796,7 @@ sig
   val append : ustring -> ustring -> ustring
   val iter : (uchar -> unit) -> ustring -> unit
   val compare : ustring -> ustring -> int
+  val equal : ustring -> ustring -> bool
 
   val concat : ustring list -> ustring
   (** Concatenate a list of unicode strings. The list should be reather small,
