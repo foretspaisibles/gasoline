@@ -754,8 +754,8 @@ end
 
 module Encoding =
 struct
-  exception Malformed_code = Camomile_encoding.Malformed_code
-  exception Out_of_range = Camomile_encoding.Out_of_range
+  exception Malformed_code
+  exception Out_of_range
   type t = Camomile_encoding.t
 
   let automatic = Camomile_encoding.automatic
@@ -785,13 +785,25 @@ struct
 	find (String.sub l (i+1) (String.length l - i - 1))
     with _ -> latin9
 
-  let recode_string = Camomile_encoding.recode_string
+  let handle_error f x =
+    try f x with
+    | Camomile_encoding.Malformed_code -> raise Malformed_code
+    | Camomile_encoding.Out_of_range -> raise Out_of_range
 
-  let decode = Camomile_transcode.decode
-  let encode = Camomile_transcode.encode
+  let recode_string ~in_enc ~out_enc text =
+    handle_error (Camomile_encoding.recode_string ~in_enc ~out_enc) text
 
-  let import = Camomile_transcode.decode locale
-  let export = Camomile_transcode.encode locale
+  let decode code text =
+    handle_error (Camomile_transcode.decode code) text
+
+  let encode code text =
+    handle_error (Camomile_transcode.encode code) text
+
+  let import text =
+    handle_error (Camomile_transcode.decode locale) text
+
+  let export text =
+    handle_error (Camomile_transcode.encode locale) text
 
 end
 

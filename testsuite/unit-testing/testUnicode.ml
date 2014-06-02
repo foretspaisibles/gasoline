@@ -89,11 +89,21 @@ struct
 end
 
 
+(* Test encoding procedures *)
+module Transcoding =
+struct
+  let init suite =
+    List.iter (add_case suite) [
+      assert_exception "udecode" Unicode.Encoding.Malformed_code
+	Unicode.Encoding.(decode utf8 ) "\xC0";
+    ]
+end
 
 let init suite =
   List.iter (fun f -> f suite) [
     Length.init;
     Changecase.init;
+    Transcoding.init;
   ]
 
 let () = with_registered_suite "Unicode" init
