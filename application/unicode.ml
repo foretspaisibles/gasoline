@@ -111,166 +111,6 @@ type udata = mutability data
 type utext = [`Immutable] data
 type ustring = [`Mutable] data
 
-type primary_category =
-  | LETTER
-  | MARK
-  | NUMBER
-  | SEPARATOR
-  | OTHER
-  | PUNCTUATION
-  | SYMBOL
-
-type general_category =
-  | LETTER_UPPERCASE
-  | LETTER_LOWERCASE
-  | LETTER_TITLECASE
-  | LETTER_MODIFIER
-  | LETTER_OTHER
-  | MARK_NON_SPACING
-  | MARK_SPACING_COMBINING
-  | MARK_ENCLOSING
-  | NUMBER_DECIMAL_DIGIT
-  | NUMBER_LETTER
-  | NUMBER_OTHER
-  | SEPARATOR_SPACE
-  | SEPARATOR_LINE
-  | SEPARATOR_PARAGRAPH
-  | OTHER_CONTROL
-  | OTHER_FORMAT
-  | OTHER_SURROGATE
-  | OTHER_PRIVATE_USE
-  | OTHER_NOT_ASSIGNED
-  | PUNCTUATION_CONNECTOR
-  | PUNCTUATION_DASH
-  | PUNCTUATION_OPEN
-  | PUNCTUATION_CLOSE
-  | PUNCTUATION_INITIAL
-  | PUNCTUATION_FINAL
-  | PUNCTUATION_OTHER
-  | SYMBOL_MATH
-  | SYMBOL_CURRENCY
-  | SYMBOL_MODIFIER
-  | SYMBOL_OTHER
-
-type character_property =
-  (** Derived Core Properties*)
-  | MATH
-  | ALPHABETIC
-  | LOWERCASE
-  | UPPERCASE
-  | ID_START
-  | ID_CONTINUE
-  | XID_START
-  | XID_CONTINUE
-  | DEFAULT_IGNORABLE_CODE_POINT
-  | GRAPHEME_EXTEND
-  | GRAPHEME_BASE
-  (**Extended Properties*)
-  | BIDI_CONTROL
-  | WHITE_SPACE
-  | HYPHEN
-  | QUOTATION_MARK
-  | TERMINAL_PUNCTUATION
-  | OTHER_MATH
-  | HEX_DIGIT
-  | ASCII_HEX_DIGIT
-  | OTHER_ALPHABETIC
-  | IDEOGRAPHIC
-  | DIACRITIC
-  | EXTENDER
-  | OTHER_LOWERCASE
-  | OTHER_UPPERCASE
-  | NONCHARACTER_CODE_POINT
-  | GRAPHEME_LINK
-  | OTHER_GRAPHEME_EXTEND
-  | IDS_BINARY_OPERATOR
-  | IDS_TRINARY_OPERATOR
-  | RADICAL
-  | UNIFIED_IDEOGRAPH
-  | OTHER_DEFAULT_IGNORABLE_CODE_POINT
-  | DEPRECATED
-  | SOFT_DOTTED
-  | LOGICAL_ORDER_EXCEPTION
-
-type script =
-  | ARABIC
-  | ARMENIAN
-  | BENGALI
-  | BOPOMOFO
-  | BUHID
-  | CANADIAN_ABORIGINAL
-  | CHEROKEE
-  | COMMON
-  | CYRILLIC
-  | DESERET
-  | DEVANAGARI
-  | ETHIOPIC
-  | GEORGIAN
-  | GOTHIC
-  | GREEK
-  | GUJARATI
-  | GURMUKHI
-  | HAN
-  | HANGUL
-  | HANUNOO
-  | HEBREW
-  | HIRAGANA
-  | INHERITED
-  | KANNADA
-  | KATAKANA
-  | KHMER
-  | LAO
-  | LATIN
-  | MALAYALAM
-  | MONGOLIAN
-  | MYANMAR
-  | OGHAM
-  | OLD_ITALIC
-  | ORIYA
-  | RUNIC
-  | SINHALA
-  | SYRIAC
-  | TAGALOG
-  | TAGBANWA
-  | TAMIL
-  | TELUGU
-  | THAANA
-  | THAI
-  | TIBETAN
-  | YI
-
-type casemap_condition =
-  | AFTER_SOFT_DOTTED
-  | BEFORE_DOT
-  | FINAL_SIGMA
-  | LOCALE of string
-  | MORE_ABOVE
-  | NOT of casemap_condition
-
-type decomposition =
-  | CANON
-  | CIRCLE
-  | COMPAT
-  | FINAL
-  | FONT
-  | FRACTION
-  | INITIAL
-  | ISOLATED
-  | MEDIAL
-  | NARROW
-  | NOBREAK
-  | SMALL
-  | SQUARE
-  | SUB
-  | SUPER
-  | VERTICAL
-  | WIDE
-
-type decomposition_info =
-  | CANON_FORM
-  | COMPOSITE of decomposition * uchar list
-  | HANGUL_SYLLABLE
-
 module USet =
 struct
   include Camomile_set
@@ -343,6 +183,164 @@ module UTable_bool = Camomile_table_bool
 
 module UInformation =
 struct
+  type primary_category =
+    | LETTER
+    | MARK
+    | NUMBER
+    | SEPARATOR
+    | OTHER
+    | PUNCTUATION
+    | SYMBOL
+
+  type general_category =
+    | LETTER_UPPERCASE
+    | LETTER_LOWERCASE
+    | LETTER_TITLECASE
+    | LETTER_MODIFIER
+    | LETTER_OTHER
+    | MARK_NON_SPACING
+    | MARK_SPACING_COMBINING
+    | MARK_ENCLOSING
+    | NUMBER_DECIMAL_DIGIT
+    | NUMBER_LETTER
+    | NUMBER_OTHER
+    | SEPARATOR_SPACE
+    | SEPARATOR_LINE
+    | SEPARATOR_PARAGRAPH
+    | OTHER_CONTROL
+    | OTHER_FORMAT
+    | OTHER_SURROGATE
+    | OTHER_PRIVATE_USE
+    | OTHER_NOT_ASSIGNED
+    | PUNCTUATION_CONNECTOR
+    | PUNCTUATION_DASH
+    | PUNCTUATION_OPEN
+    | PUNCTUATION_CLOSE
+    | PUNCTUATION_INITIAL
+    | PUNCTUATION_FINAL
+    | PUNCTUATION_OTHER
+    | SYMBOL_MATH
+    | SYMBOL_CURRENCY
+    | SYMBOL_MODIFIER
+    | SYMBOL_OTHER
+
+  type character_property =
+    | MATH
+    | ALPHABETIC
+    | LOWERCASE
+    | UPPERCASE
+    | ID_START
+    | ID_CONTINUE
+    | XID_START
+    | XID_CONTINUE
+    | DEFAULT_IGNORABLE_CODE_POINT
+    | GRAPHEME_EXTEND
+    | GRAPHEME_BASE
+    | BIDI_CONTROL
+    | WHITE_SPACE
+    | HYPHEN
+    | QUOTATION_MARK
+    | TERMINAL_PUNCTUATION
+    | OTHER_MATH
+    | HEX_DIGIT
+    | ASCII_HEX_DIGIT
+    | OTHER_ALPHABETIC
+    | IDEOGRAPHIC
+    | DIACRITIC
+    | EXTENDER
+    | OTHER_LOWERCASE
+    | OTHER_UPPERCASE
+    | NONCHARACTER_CODE_POINT
+    | GRAPHEME_LINK
+    | OTHER_GRAPHEME_EXTEND
+    | IDS_BINARY_OPERATOR
+    | IDS_TRINARY_OPERATOR
+    | RADICAL
+    | UNIFIED_IDEOGRAPH
+    | OTHER_DEFAULT_IGNORABLE_CODE_POINT
+    | DEPRECATED
+    | SOFT_DOTTED
+    | LOGICAL_ORDER_EXCEPTION
+
+  type script =
+    | ARABIC
+    | ARMENIAN
+    | BENGALI
+    | BOPOMOFO
+    | BUHID
+    | CANADIAN_ABORIGINAL
+    | CHEROKEE
+    | COMMON
+    | CYRILLIC
+    | DESERET
+    | DEVANAGARI
+    | ETHIOPIC
+    | GEORGIAN
+    | GOTHIC
+    | GREEK
+    | GUJARATI
+    | GURMUKHI
+    | HAN
+    | HANGUL
+    | HANUNOO
+    | HEBREW
+    | HIRAGANA
+    | INHERITED
+    | KANNADA
+    | KATAKANA
+    | KHMER
+    | LAO
+    | LATIN
+    | MALAYALAM
+    | MONGOLIAN
+    | MYANMAR
+    | OGHAM
+    | OLD_ITALIC
+    | ORIYA
+    | RUNIC
+    | SINHALA
+    | SYRIAC
+    | TAGALOG
+    | TAGBANWA
+    | TAMIL
+    | TELUGU
+    | THAANA
+    | THAI
+    | TIBETAN
+    | YI
+
+  type casemap_condition =
+    | AFTER_SOFT_DOTTED
+    | BEFORE_DOT
+    | FINAL_SIGMA
+    | LOCALE of string
+    | MORE_ABOVE
+    | NOT of casemap_condition
+
+  type decomposition =
+    | CANON
+    | CIRCLE
+    | COMPAT
+    | FINAL
+    | FONT
+    | FRACTION
+    | INITIAL
+    | ISOLATED
+    | MEDIAL
+    | NARROW
+    | NOBREAK
+    | SMALL
+    | SQUARE
+    | SUB
+    | SUPER
+    | VERTICAL
+    | WIDE
+
+  type decomposition_info =
+    | CANON_FORM
+    | COMPOSITE of decomposition * uchar list
+    | HANGUL_SYLLABLE
+
 
   let general_category_import =
     function
