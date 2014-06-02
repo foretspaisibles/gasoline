@@ -144,6 +144,13 @@ let assert_exists ident ?expected_failure ?printer p l =
   make_case ident ?expected_failure
     (fun _ -> List.exists (wrap_predicate p) l)
 
+let assert_int ident ?expected_failure f x y =
+  assert_equal
+    ident
+    ?expected_failure
+    ~printer:Format.pp_print_int
+    f x y
+
 let assert_zero ident ?expected_failure f x =
   assert_equal
     ident
@@ -378,6 +385,9 @@ let add_case ?(fixture = relax) s case =
 
 let add_suite ?(fixture = relax) s suite =
   Queue.add (Suite(fixture, suite)) s.suite_queue
+
+let add_challenge s f c =
+  List.iter (add_case s) (List.map f c)
 
 
 (* Supervisor *)

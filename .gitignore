@@ -7,7 +7,7 @@
 *.cma
 *.cmxa
 .depend
-*.bc
+*.cb
 *.cn
 #
 # C object files

@@ -15,6 +15,7 @@
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
 SRCS+=		testUnitTest.ml
+SRCS+=		testUnicode.ml
 
 SRCS+=		main.ml
 

@@ -30,8 +30,9 @@ application.
 {2:application The [application] library}
 
 {!modules:
-  CApplication
   SysExits
+  Unicode
+  CApplication
 }
 
 {1 Trailer}
