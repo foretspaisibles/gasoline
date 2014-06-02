@@ -96,6 +96,8 @@ struct
     List.iter (add_case suite) [
       assert_exception "udecode" Unicode.Encoding.Malformed_code
 	Unicode.Encoding.(decode utf8 ) "\xC0";
+      assert_exception "find" Not_found
+	Unicode.Encoding.find "this is not the name of an encoding"
     ]
 end
 

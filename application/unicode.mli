@@ -640,7 +640,7 @@ with the name [name]. *)
 val find : string -> t
 (** Returns the encoding of the given name.
 
-Fails if the encoding is unknown.
+@raise Not_found if the encoding is unknown.
 
 Encoding names are the same to codeset names in charmap files for the
 encodings defined by charmap.  See charmaps directory in the source
