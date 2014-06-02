@@ -656,28 +656,34 @@ struct
   let upper_table = Camomile_information.load_to_upper1_tbl ()
   let title_table = Camomile_information.load_to_title1_tbl ()
 
-  let is_letter x =
-    (primary_category x) = LETTER
+  let test_primary_category c x =
+    primary_category x = c
+
+  let test_general_category c x =
+    general_category x = c
+
+  let is_letter =
+    test_primary_category LETTER
 
   let is_alpha = is_letter
 
-  let is_mark x =
-    (primary_category x) = MARK
+  let is_mark =
+    test_primary_category MARK
 
-  let is_number x =
-    (primary_category x) = NUMBER
+  let is_number =
+    test_primary_category NUMBER
 
-  let is_punctuation x =
-    (primary_category x) = PUNCTUATION
+  let is_punctuation =
+    test_primary_category PUNCTUATION
 
-  let is_symbol x =
-    (primary_category x) = SYMBOL
+  let is_symbol =
+    test_primary_category SYMBOL
 
-  let is_other x =
-    (primary_category x) = OTHER
+  let is_other =
+    test_primary_category OTHER
 
-  let is_separator x =
-    (primary_category x) = SEPARATOR
+  let is_separator =
+    test_primary_category SEPARATOR
 
   let is_space x =
     match general_category x with
@@ -687,8 +693,8 @@ struct
       | SEPARATOR_PARAGRAPH -> true
       | _ -> false
 
-  let is_cntrl x =
-    (general_category x) = OTHER_CONTROL
+  let is_cntrl =
+    test_general_category OTHER_CONTROL
 
   let is_ascii x =
     let c = UChar.uint_code x in
@@ -697,17 +703,17 @@ struct
   let is_latin x =
       (script x) = LATIN
 
-  let is_upper x =
-    general_category x = LETTER_UPPERCASE
+  let is_upper =
+    test_general_category LETTER_UPPERCASE
 
-  let is_lower x =
-    general_category x = LETTER_LOWERCASE
+  let is_lower =
+    test_general_category LETTER_LOWERCASE
 
-  let is_title x =
-    general_category x = LETTER_TITLECASE
+  let is_title =
+    test_general_category LETTER_TITLECASE
 
   let is_graph x =
-    not(primary_category x = OTHER)
+    not(test_primary_category OTHER x)
 
   let is_print x =
     is_graph x && not (is_space x)
@@ -715,8 +721,8 @@ struct
   let is_alnum x =
     is_alpha x || is_number x
 
-  let is_digit x =
-    general_category x = NUMBER_DECIMAL_DIGIT
+  let is_digit =
+    test_general_category NUMBER_DECIMAL_DIGIT
 
   let is_bdigit x =
     let c = UChar.uint_code x in
