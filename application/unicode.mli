@@ -1114,7 +1114,12 @@ sig
 end
 
 
-(** Standard Input/Output *)
+(** Standard Input/Output.
+
+You can write your Unicode application using Input/Output as a functor
+parametrised by [UChannel_stdio.S].  The bootstrapping code of the
+application can then prepare the [UChannel_stdio.PARAMETER] module and
+call the main code after having instantiated the functor. *)
 module UChannel_stdio :
 sig
 
@@ -1175,7 +1180,10 @@ sig
 
 end
 
-(** Standard Input/Output adapted to locale *)
+(** Standard Input/Output adapted to locale.
+
+It deserves the same purpose as [UChannel_stdio] but it automatically
+tuned to the active locale, as reported from [Encoding.locale]. *)
 module UChannel_locale :
 sig
 
