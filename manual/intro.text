@@ -35,6 +35,17 @@ application.
   CApplication
 }
 
+{2:authorkit The [authorkit]}
+
+This small library provides service for authoring, like production of
+simple HTML or SGML files.
+
+{!modules:
+  LoremIpsum
+  WSGML
+  WHTML
+}
+
 {1 Trailer}
 
 {2 Index}
