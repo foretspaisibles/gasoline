@@ -1,7 +1,7 @@
-### gasoline.main.mk -- Project Makefile
+### Makefile -- Gasoline
 
 # Author: Michael Grünewald
-# Date: Tue Apr 15 00:04:36 CEST 2014
+# Date: Tue Jun  3 12:44:50 CEST 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
@@ -13,18 +13,14 @@
 # you should have received as part of this distribution. The terms
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
+TOPLEVEL?= ${.CURDIR:T}
 
 .include "gasoline.init.mk"
 
-SUBDIR+=	${PROJECTMODULE}
-SUBDIR+=	toplevel
-SUBDIR+=	testsuite
-SUBDIR+=	example
-SUBDIR+=	manual
+.for s in ${PROJECTMODULE}
+LIBS+= gasoline_${s}
+.endfor
 
-test: all
-	@cd testsuite && ${MAKE} test
+.include "ocaml.toplevel.mk"
 
-.include "bps.project.mk"
-
-### End of file `gasoline.main.mk'
+### End of file `gasoline.toplevel.mk'
