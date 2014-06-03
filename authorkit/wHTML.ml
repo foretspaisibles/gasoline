@@ -272,7 +272,7 @@ let html ?(enc = Encoding.locale) c =
       (Encoding.name enc) ^
       "\"?>"
   ) ~dtd:"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"
-    c
+    [html_element_block "html" c]
 
 let cdata = cdata
 let c x = cdata (u x)
