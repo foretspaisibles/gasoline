@@ -1,7 +1,7 @@
-### Makefile -- Trip & Trap
+### Makefile -- Author kit
 
 # Author: Michael Grünewald
-# Date: Wed Apr 16 11:23:08 CEST 2014
+# Date: Tue Jun  3 11:44:56 CEST 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
@@ -14,10 +14,18 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-SUBDIR+=	unittest
-SUBDIR+=	unicode
-SUBDIR+=	authorkit
+PROGRAM=	author
 
-.include "gasoline.subdir.mk"
+SRCS+=		main.ml
+
+TESTS=		test-simple-html
+
+PROGRAM8=	env LANG=en_US.UTF-8 ./${PROGRAM}
+
+test-simple-html.got: ${PROGRAM}
+	${PROGRAM8} > ${.TARGET}
+
+.include "gasoline.program.mk"
+.include "gasoline.trip-trap.mk"
 
 ### End of file `Makefile'
