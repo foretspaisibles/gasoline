@@ -1,9 +1,9 @@
-### gasoline.main.mk -- Project Makefile
+### Makefile -- Examples
 
 # Author: Michael Grünewald
-# Date: Tue Apr 15 00:04:36 CEST 2014
+# Date: Tue Jun  3 11:12:28 CEST 2014
 
-# Gasoline (https://github.com/michipili/gasoline)
+# GIT-Toolkit (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
 #
 # Copyright © 2014 Michael Grünewald
@@ -14,16 +14,9 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-.include "gasoline.init.mk"
+SUBDIR+=	wordcount
+SUBDIR+=	wordgen
 
-SUBDIR+=	${PROJECTMODULE}
-SUBDIR+=	testsuite
-SUBDIR+=	example
-SUBDIR+=	manual
+.include "gasoline.subdir.mk"
 
-test: all
-	@cd testsuite && ${MAKE} test
-
-.include "bps.project.mk"
-
-### End of file `gasoline.main.mk'
+### End of file `Makefile'
