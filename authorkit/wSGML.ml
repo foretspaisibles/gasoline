@@ -165,7 +165,7 @@ let rec pp_print_snippet_loop f h d =
   let pp_print_element f h e =
     begin
       if h then pp_print_cut f ();
-      if e.block or h then (
+      if e.block || h then (
 	pp_open_hbox f ();
 	pp_open_vbox f 0;
       );
@@ -182,14 +182,14 @@ let rec pp_print_snippet_loop f h d =
 	pp_print_element_content f h e;
 	if e.block then pp_print_cut f ();
       );
-      if e.block or h then pp_close_box f ();
+      if e.block || h then pp_close_box f ();
       if e.block then pp_print_cut f ();
-      if e.block or h then pp_close_box f ();
+      if e.block || h then pp_close_box f ();
       if not e.empty then (
 	pp_print_element_close_tag f h e;
       );
       if h then pp_print_cut f ();
-      if e.block or h then pp_close_box f ();
+      if e.block || h then pp_close_box f ();
       if h then pp_print_cut f ();
     end
   in
