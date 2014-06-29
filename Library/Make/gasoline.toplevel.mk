@@ -21,6 +21,8 @@ TOPLEVEL?= ${.CURDIR:T}
 LIBS+= gasoline_${s}
 .endfor
 
+PKGS+=	compiler-libs
+
 .include "ocaml.toplevel.mk"
 
 ### End of file `gasoline.toplevel.mk'
