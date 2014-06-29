@@ -8,20 +8,14 @@ let gasolinemodule = [
 let gasolineprinter = [
 ]
 
-let gasolinesrcdir () =
-  "/usr/home/michael/Workshop/gasoline"
 
-let gasolinelibdir () =
-  "/usr/local/lib/ocaml/site-lib/gasoline"
+let directory_list () =
+  match Gasoline_config.projectbase () with
+  | Some s -> List.map (Filename.concat s) gasolinemodule
+  | None -> [Gasoline_config.gasolinelibdir()]
 
-let directory devel =
-  let makedir subdir =
-    Filename.concat (gasolinesrcdir()) subdir
-  in
-  if devel then
-    List.iter (fun s -> Topdirs.dir_directory(makedir s)) gasolinemodule
-  else
-    Topdirs.dir_directory (gasolinelibdir())
+let directory () =
+  List.iter Topdirs.dir_directory (directory_list())
 
 let install_printer () =
   let loop s =
@@ -32,7 +26,7 @@ let install_printer () =
 let startup_hook () =
   let devel = true in
   begin
-    directory devel;
+    directory();
     install_printer();
   end
 

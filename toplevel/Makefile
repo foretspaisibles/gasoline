@@ -16,6 +16,30 @@
 
 TOPLEVEL=	gasoline
 
+SRCS+=		gasoline_config.ml
 SRCS+=		gasoline_toplevel.ml
+
+
+BPS_AUTOCONF_VARIABLE=	LIBDIR
+BPS_AUTOCONF_VARIABLE+=	exec_prefix
+BPS_AUTOCONF_VARIABLE+=	prefix
+BPS_AUTOCONF_VARIABLE+=	bindir
+BPS_AUTOCONF_VARIABLE+=	libdir
+
+_BPS_AUTOCONF_REPLACE=
+_BPS_AUTOCONF_EXPAND=
+
+.for v in ${BPS_AUTOCONF_VARIABLE}
+_BPS_AUTOCONF_REPLACE+=	-e 's|[@]${v}@|$$(${v})|g'
+_BPS_AUTOCONF_EXPAND+=	-e 's|[$$]{${v}}|${${v}}|g'
+_BPS_AUTOCONF_EXPAND+=	-e 's|[$$](${v})|${${v}}|g'
+.endfor
+
+BPS_AUTOCONF_REPLACE=	${_BPS_AUTOCONF_REPLACE} ${_BPS_AUTOCONF_EXPAND}
+
+gasoline_config.ml: gasoline_config.ml.in
+	${SED} ${BPS_AUTOCONF_REPLACE} ${.ALLSRC} > ${.TARGET}
+
+CLEANFILES+=	gasoline_config.ml
 
 .include "gasoline.toplevel.mk"
