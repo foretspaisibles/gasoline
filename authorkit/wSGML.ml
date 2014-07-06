@@ -56,8 +56,8 @@ let escape_loop output_ustring output_uchar s =
 let escape s =
   let l = UString.length s in
   let b = UBuffer.create (3*l) in
-    escape_loop (UBuffer.add_ustring b) (UBuffer.add_uchar b) s;
-    UBuffer.contents b
+  escape_loop (UBuffer.add_ustring b) (UBuffer.add_uchar b) s;
+  UBuffer.contents b
 
 
 type snippet =
@@ -67,10 +67,10 @@ type snippet =
 
 and element  = {
   name : nmtoken;
-  attribute : (nmtoken * cdata) Queue.t;
   empty : bool;
   block : bool;
-  content : snippet Queue.t;
+  attribute : (nmtoken * cdata) list;
+  content : snippet list;
 }
 
 let pcdata s =
@@ -83,17 +83,13 @@ let enqueue q l =
   List.iter (fun x -> Queue.add x q) l
 
 let make_element n ?(empty = false) ?(block = true) ?(attr = []) c =
-  if n = "" then invalid_arg "WSGML.element";
-  let e = {
+  if n = "" then invalid_arg "WSGML.element" else {
     name = n;
-    attribute = Queue.create();
+    attribute = attr;
     empty = empty;
     block = block;
-    content = Queue.create();
-  } in
-    enqueue e.attribute attr;
-    enqueue e.content c;
-    e
+    content = c;
+  }
 
 let element n ?empty ?block ?attr c =
   ELEMENT(make_element n ?empty ?block ?attr c)
@@ -110,36 +106,38 @@ let make ?(declaration = "") ?(dtd = "") content = {
   snips = content;
 }
 
-let rec pp_print_snippet_loop f h d =
-  let put_uchar x =
-    if UInformation.is_space x then
-      pp_print_space f ()
-    else
-      pp_print_uchar f x
-  in
-  let put_ustring x =
-    UString.iter put_uchar x in
-  let pp_print_pcdata _ x = escape_loop put_ustring put_uchar x in
-  let pp_print_attribute f (k,v) =
-    begin
-      pp_print_space f ();
-      pp_open_hbox f ();
-      pp_print_string f k;
-      pp_print_char f '=';
-      pp_print_char f '"';
-      pp_print_ustring f v;
-      pp_print_char f '"';
-      pp_close_box f ();
-    end
-  in
+let put_uchar f x =
+  if UInformation.is_space x then
+    pp_print_space f ()
+  else
+    pp_print_uchar f x
 
+let put_ustring f x =
+  UString.iter (put_uchar f) x
+
+let pp_print_pcdata f x =
+  escape_loop (put_ustring f) (put_uchar f) x
+
+let pp_print_attribute f (k,v) =
+  begin
+    pp_print_space f ();
+    pp_open_hbox f ();
+    pp_print_string f k;
+    pp_print_char f '=';
+    pp_print_char f '"';
+    pp_print_ustring f v;
+    pp_print_char f '"';
+    pp_close_box f ();
+  end
+
+let rec pp_print_snippet_loop f h d =
   let pp_print_element_open_tag f h e =
     begin
       pp_open_hvbox f 0;
       pp_open_hvbox f sgml_indent;
       pp_print_char f '<';
       pp_print_string f e.name;
-      Queue.iter (pp_print_attribute f) e.attribute;
+      List.iter (pp_print_attribute f) e.attribute;
       pp_close_box f ();
       pp_print_cut f ();
       pp_print_char f '>';
@@ -159,7 +157,7 @@ let rec pp_print_snippet_loop f h d =
 
   let pp_print_element_content f h e =
     begin
-      Queue.iter (pp_print_snippet_loop f e.block) e.content;
+      List.iter (pp_print_snippet_loop f e.block) e.content;
     end
   in
   let pp_print_element f h e =
@@ -243,7 +241,9 @@ let to_string ?enc d =
   Buffer.contents (to_buffer ?enc d)
 
 let output ?enc c d =
-  uformat (formatter_of_out_channel ?enc c) d
+  let ppt = formatter_of_out_channel ?enc c in
+  uformat ppt d;
+  pp_print_flush ppt ()
 
 let print ?enc d =
   output ?enc stdout d
@@ -266,20 +266,3 @@ let rec outcome_loop x l =
 
 let outcome l =
   outcome_loop [] l
-
-
-type factory = element
-
-let prepare x =
-  match x with
-    | ELEMENT e -> e
-    | _ -> invalid_arg "prepare"
-
-let add_attribute f a =
-  Queue.add a f.attribute
-
-let add_content f c =
-  Queue.add c f.content
-
-let finalize f =
-  ELEMENT f

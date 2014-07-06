@@ -127,22 +127,3 @@ by [f v].
 
 This procedure may be useful when writing a function with a big number of
 optional arguments, describing optional parts of a document. *)
-
-type factory
-(** The type of {element factories}. An element factory allows the foregery of
-complex elements. *)
-
-val prepare : snippet -> factory
-(** [prepare s] create a complex snippet factory, base of the
-snippet [s].
-
-@raise Invalid_argument "prepare" if [s] is not an element. *)
-
-val add_content: factory -> snippet -> unit
-(** Add a snippet to the element under prepareation. *)
-
-val add_attribute: factory -> (nmtoken * cdata) -> unit
-(** Add an atribute to the element under preparation. *)
-
-val finalize : factory -> snippet
-(** Finish the preparation of the snippet. *)
