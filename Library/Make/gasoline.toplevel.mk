@@ -17,7 +17,9 @@ TOPLEVEL?= ${.CURDIR:T}
 
 .include "gasoline.init.mk"
 
-.for s in ${PROJECTMODULE}
+TOPLEVELMODULE?= ${PROJECTMODULE}
+
+.for s in ${TOPLEVELMODULE}
 LIBS+= gasoline_${s}
 .endfor
 
