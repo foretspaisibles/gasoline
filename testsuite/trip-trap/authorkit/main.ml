@@ -14,17 +14,41 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 open Unicode
-open WHTML
 
-let document () =
-  html [
-    body [
-      h1 (u"My first heading");
-      p [c"My first paragraph."];
+module Test_WHTML =
+struct
+  open WHTML
+
+  let document () =
+    html [
+      body [
+	h1 (u"My first heading");
+	p [c"My first paragraph."];
+      ]
     ]
-  ]
 
-let main () =
-  WSGML.print (document())
+  let main () =
+    WSGML.print (document())
+end
 
-let () = main ()
+module Test_WSGML =
+struct
+  open WSGML
+
+  let document () =
+    let h1 = element ~block:false "h1" [ pcdata(u"My first heading.") ] in
+    let p = element ~block:false "p" [ pcdata(u"My first paragraph.") ] in
+    let body = element ~block:true "body" [ h1; p] in
+    let html = element ~block:true "html" [ body] in
+    make
+      ~declaration:"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+      ~dtd:"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"
+      [ html ]
+
+  let main () =
+    WSGML.print (document());
+    Format.print_flush()
+
+end
+
+let () = Test_WSGML.main ()
