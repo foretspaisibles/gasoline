@@ -6,6 +6,8 @@ let gasolinemodule = [
 ]
 
 let gasolineprinter = [
+  "Unicode.UChar.printer";
+  "Unicode.UString.printer";
 ]
 
 
@@ -23,9 +25,14 @@ let install_printer () =
   in
   List.iter loop gasolineprinter
 
+let headline () =
+  match Gasoline_config.projectbase () with
+  | Some(_) -> printf "Runnning Gasoline toplevel in developer mode\n%!"
+  | None -> ()
+
 let startup_hook () =
-  let devel = true in
   begin
+    headline();
     directory();
     install_printer();
   end
