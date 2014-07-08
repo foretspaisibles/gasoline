@@ -166,6 +166,9 @@ struct
   let line = of_int 0x2028
   let par = of_int 0x2029
 
+  let printer ppt c =
+    fprintf ppt "U+%04X" (to_int c)
+
 end
 
 module type UTABLE =
@@ -879,6 +882,11 @@ struct
 
   let prerr e u =
     output e stderr u
+
+  let printer ppt s =
+    pp_print_string ppt "u8\"";
+    format Encoding.utf8 ppt s;
+    pp_print_string ppt "\""
 
 end
 

@@ -757,6 +757,8 @@ val line: uchar
 val par: uchar
 (** The paragraph separator character. *)
 
+val printer : Format.formatter -> uchar -> unit
+(** A printer for the toplevel. *)
 end
 
 
@@ -833,6 +835,9 @@ sig
   val print : Encoding.t -> ustring -> unit
 
   val prerr : Encoding.t -> ustring -> unit
+
+  val printer : Format.formatter -> ustring -> unit
+  (** A printer for the toplevel. *)
 
 end
 

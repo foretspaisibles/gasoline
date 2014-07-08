@@ -1,30 +1,30 @@
-### gasoline.init.mk -- Initialisation
+### Makefile -- Gasoline
 
 # Author: Michael Grünewald
-# Date: Thu Nov  7 07:35:59 CET 2013
+# Date: Tue Jun  3 12:44:50 CEST 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
 #
-# Copyright © 2013 Michael Grünewald
+# Copyright © 2014 Michael Grünewald
 #
 # This file must be used under the terms of the CeCILL-B.
 # This source file is licensed as described in the file COPYING, which
 # you should have received as part of this distribution. The terms
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
+TOPLEVEL?= ${.CURDIR:T}
 
-PROJECTMODULE+=	appkit
-PROJECTMODULE+=	testkit
-PROJECTMODULE+=	authorkit
+.include "gasoline.init.mk"
 
-PKGS+= camomile
+TOPLEVELMODULE?= ${PROJECTMODULE}
 
-.for module in ${PROJECTMODULE}
-DIRS+= ${PROJECTBASE}/${module}
+.for s in ${TOPLEVELMODULE}
+LIBS+= gasoline_${s}
 .endfor
 
-PACKAGE=	gasoline
-PACKAGEDIR=	/${PACKAGE}
+PKGS+=	compiler-libs
 
-### End of file `gasoline.init.mk'
+.include "ocaml.toplevel.mk"
+
+### End of file `gasoline.toplevel.mk'

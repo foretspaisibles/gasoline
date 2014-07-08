@@ -17,6 +17,7 @@
 .include "gasoline.init.mk"
 
 SUBDIR+=	${PROJECTMODULE}
+SUBDIR+=	toplevel
 SUBDIR+=	testsuite
 SUBDIR+=	example
 SUBDIR+=	manual
