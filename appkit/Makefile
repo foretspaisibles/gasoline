@@ -22,6 +22,11 @@ SRCS+=	cApplication.ml
 SRCS+=	configuration_parser.mll
 SRCS+=	configuration.ml
 
+SRCS+=	generic_type.ml
+SRCS+=	generic_message.ml
+SRCS+=	generic_diagnostic.ml
+SRCS+=	generic_application.ml
+
 .include "gasoline.library.mk"
 
 ### End of file `Makefile'
