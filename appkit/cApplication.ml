@@ -1,4 +1,4 @@
-(* CApplication -- Application using the C locale
+(* CApplication -- C-Stylish Applications
 
 Author: Michael Grünewald
 Date: Sat Dec 28 13:05:16 CET 2013
