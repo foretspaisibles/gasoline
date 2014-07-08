@@ -18,12 +18,12 @@ PROGRAM=	author
 
 SRCS+=		main.ml
 
-TESTS=		test-simple-1-sgml
-TESTS+=		test-simple-2-sgml
-TESTS+=		test-simple-3-sgml
-TESTS+=		test-simple-1-html
-TESTS+=		test-simple-2-html
-TESTS+=		test-simple-3-html
+TESTS=		test-sgml-simple-1
+TESTS+=		test-sgml-simple-2
+TESTS+=		test-sgml-simple-3
+TESTS+=		test-html-simple-1
+TESTS+=		test-html-simple-2
+TESTS+=		test-html-simple-3
 
 PROGRAM8=	${ENVTOOL} LANG=en_US.UTF-8 ./${PROGRAM}
 

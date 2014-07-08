@@ -84,12 +84,12 @@ struct
 end
 
 let testtable = [
-  "test-simple-1-sgml",		Test_WSGML.test1;
-  "test-simple-2-sgml",		Test_WSGML.test2;
-  "test-simple-3-sgml",		Test_WSGML.test3;
-  "test-simple-1-html",		Test_WHTML.test1;
-  "test-simple-2-html",		Test_WHTML.test2;
-  "test-simple-3-html",		Test_WHTML.test3;
+  "test-sgml-simple-1",		Test_WSGML.test1;
+  "test-sgml-simple-2",		Test_WSGML.test2;
+  "test-sgml-simple-3",		Test_WSGML.test3;
+  "test-html-simple-1",		Test_WHTML.test1;
+  "test-html-simple-2",		Test_WHTML.test2;
+  "test-html-simple-3",		Test_WHTML.test3;
 ]
 
 let runtest filename =
