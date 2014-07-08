@@ -16,12 +16,31 @@ http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 open Unicode
 open UFormat
 
-let sgml_indent = 2
+(* Some boxes *)
+let withbox openbox ppt a f =
+  begin
+    openbox ppt a;
+    f ppt;
+    pp_close_box ppt ();
+  end
+
+let withhbox ppt f =
+  withbox pp_open_hbox ppt () f
+
+let withvbox ppt indent f =
+  withbox pp_open_vbox ppt indent f
+
+let withhvbox indent ppt f =
+  withbox pp_open_hvbox ppt indent f
+
+let withhovbox indent ppt f =
+  withbox pp_open_hovbox ppt indent f
+
 
 (* Some constants. *)
 
 let buffer_sz = 4096	(* Random buffer size *)
-let margin_sz = 2 	(* Margins in the pretty printer *)
+let indent_sz = 2 	(* Margins in the pretty printer *)
 
 let amp = UChar.of_char '&'
 let lt = UChar.of_char '<'
@@ -112,120 +131,116 @@ let put_uchar f x =
   else
     pp_print_uchar f x
 
-let put_ustring f x =
-  UString.iter (put_uchar f) x
+let put_ustring ppt x =
+  UString.iter (put_uchar ppt) x
 
-let pp_print_pcdata f x =
-  escape_loop (put_ustring f) (put_uchar f) x
+let pp_print_pcdata ppt x =
+  escape_loop (put_ustring ppt) (put_uchar ppt) x
 
-let pp_print_attribute f (k,v) =
+let pp_print_attribute ppt (k,v) =
+  let pp_print_binding ppt =
+    pp_print_string ppt k;
+    pp_print_char ppt '=';
+    pp_print_char ppt '"';
+    pp_print_ustring ppt v;
+    pp_print_char ppt '"';
+  in
   begin
-    pp_print_space f ();
-    pp_open_hbox f ();
-    pp_print_string f k;
-    pp_print_char f '=';
-    pp_print_char f '"';
-    pp_print_ustring f v;
-    pp_print_char f '"';
-    pp_close_box f ();
+    pp_print_space ppt ();
+    withhbox ppt pp_print_binding;
   end
 
-let rec pp_print_snippet_loop f h d =
-  let pp_print_element_open_tag f h e =
-    begin
-      pp_open_hvbox f 0;
-      pp_open_hvbox f sgml_indent;
-      pp_print_char f '<';
-      pp_print_string f e.name;
-      List.iter (pp_print_attribute f) e.attribute;
-      pp_close_box f ();
-      pp_print_cut f ();
-      pp_print_char f '>';
-      pp_close_box f ();
-    end
-  in
-  let pp_print_element_close_tag f h e =
-    begin
-      pp_open_hbox f ();
-      pp_print_char f '<';
-      pp_print_char f '/';
-      pp_print_string f e.name;
-      pp_print_char f '>';
-      pp_close_box f ();
-    end
-  in
 
-  let pp_print_element_content f h e =
-    begin
-      List.iter (pp_print_snippet_loop f e.block) e.content;
-    end
-  in
-  let pp_print_element f h e =
-    begin
-      if h then pp_print_cut f ();
-      if e.block || h then (
-	pp_open_hbox f ();
-	pp_open_vbox f 0;
-      );
+let pp_print_element_open_tag ppt e =
+  begin
+    pp_open_hvbox ppt 0;
+    pp_open_hvbox ppt indent_sz;
+    pp_print_char ppt '<';
+    pp_print_string ppt e.name;
+    List.iter (pp_print_attribute ppt) e.attribute;
+    pp_close_box ppt ();
+    pp_print_cut ppt ();
+    pp_print_char ppt '>';
+    pp_close_box ppt ();
+  end
 
-      (
-	if e.block then
-	  pp_open_vbox f sgml_indent
-	else if h then
-	  pp_open_hovbox f sgml_indent
-      );
-      pp_print_element_open_tag f h e;
-      if not e.empty then (
-	if e.block then pp_print_cut f ();
-	pp_print_element_content f h e;
-	if e.block then pp_print_cut f ();
-      );
-      if e.block || h then pp_close_box f ();
-      if e.block then pp_print_cut f ();
-      if e.block || h then pp_close_box f ();
-      if not e.empty then (
-	pp_print_element_close_tag f h e;
-      );
-      if h then pp_print_cut f ();
-      if e.block || h then pp_close_box f ();
-      if h then pp_print_cut f ();
-    end
+
+let pp_print_element_close_tag ppt e =
+  begin
+    pp_open_hbox ppt ();
+    pp_print_char ppt '<';
+    pp_print_char ppt '/';
+    pp_print_string ppt e.name;
+    pp_print_char ppt '>';
+    pp_close_box ppt ();
+  end
+
+let pp_print_nonempty_element f ppt e =
+  let cutonlyforblocks () =
+    if e.block then pp_print_cut ppt ()
   in
+  let pack x =
+    cutonlyforblocks();
+    f ppt x
+  in
+  begin
+    pp_open_hvbox ppt 0;
+    (if e.block then
+	pp_open_vbox ppt indent_sz
+     else
+	pp_open_hvbox ppt indent_sz
+    );
+    pp_print_element_open_tag ppt e;
+    List.iter pack e.content;
+    pp_close_box ppt ();
+    if e.block then pp_force_newline ppt ();
+    pp_print_element_close_tag ppt e;
+    pp_close_box ppt ();
+  end
+
+
+let pp_print_element f ppt e =
+  if e.empty then
+    pp_print_element_open_tag ppt e
+  else
+    pp_print_nonempty_element f ppt e
+
+let rec pp_print_snippet_loop ppt d =
   match d with
-    | PCDATA c -> pp_print_pcdata f c
-    | CDATA c -> pp_print_ustring f c
-    | ELEMENT e -> pp_print_element f h e
+  | PCDATA c -> pp_print_pcdata ppt c
+  | CDATA c -> pp_print_ustring ppt c
+  | ELEMENT e -> pp_print_element pp_print_snippet_loop ppt e
 
 
 
-let uformat f d =
-  let pp_maybe_print_uline f l =
+let uformat ppt d =
+  let pp_maybe_print_uline ppt l =
     if not (l = uempty) then
       begin
-	pp_open_hbox f ();
-	pp_print_ustring f l;
-	pp_close_box f ();
-	pp_print_cut f ();
+	pp_open_hbox ppt ();
+	pp_print_ustring ppt l;
+	pp_close_box ppt ();
+	pp_print_cut ppt ();
       end
   in
-  let pp_print_snippet f s =
+  let pp_print_snippet ppt s =
     begin
-      pp_open_hbox f ();
-      pp_print_snippet_loop f false s;
-      pp_close_box f ();
-      pp_print_cut f ();
+      pp_open_hbox ppt ();
+      pp_print_snippet_loop ppt s;
+      pp_close_box ppt ();
+      pp_print_cut ppt ();
     end
   in
   begin
-    pp_open_vbox f 0;
-    pp_maybe_print_uline f d.declaration;
-    pp_maybe_print_uline f d.dtd;
-    List.iter (pp_print_snippet f) d.snips;
-    pp_close_box f ();
+    pp_open_vbox ppt 0;
+    pp_maybe_print_uline ppt d.declaration;
+    pp_maybe_print_uline ppt d.dtd;
+    List.iter (pp_print_snippet ppt) d.snips;
+    pp_close_box ppt ();
   end
 
-let format ?enc f d =
-  uformat (formatter_of_formatter ?enc f) d
+let format ?enc ppt d =
+  uformat (formatter_of_formatter ?enc ppt) d
 
 let add_to_buffer ?enc b d =
   uformat (formatter_of_buffer ?enc b) d
@@ -248,8 +263,8 @@ let output ?enc c d =
 let print ?enc d =
   output ?enc stdout d
 
-let write ?enc f d =
-  let c = open_out f in
+let write ?enc ppt d =
+  let c = open_out ppt in
   begin
     output ?enc c d;
     close_out c;
