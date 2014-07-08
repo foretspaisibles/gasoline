@@ -18,6 +18,8 @@ SRCS+=	unicode.ml
 SRCS+=	sysExits.ml
 SRCS+=	cApplication.ml
 
+SRCS+=	configuration_parser.mll
+SRCS+=	configuration.ml
 
 .include "gasoline.library.mk"
 
