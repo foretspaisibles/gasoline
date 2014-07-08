@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+  <body>
+    <h1
+      id="this-header-as-such-a-long-identifier-it-has-indeeed"
+      class="this-class-as-quite-along-identifier-as-well"
+    >My First Heading</h1>
+    <p>My first paragraph.</p>
+  </body>
+</html>

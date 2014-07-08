@@ -18,12 +18,16 @@ PROGRAM=	author
 
 SRCS+=		main.ml
 
-TESTS=		test-simple-html
+TESTS=		test-simple-1-sgml
+TESTS+=		test-simple-2-sgml
+TESTS+=		test-simple-3-sgml
 
-PROGRAM8=	env LANG=en_US.UTF-8 ./${PROGRAM}
+PROGRAM8=	${ENVTOOL} LANG=en_US.UTF-8 ./${PROGRAM}
 
-test-simple-html.got: ${PROGRAM}
-	${PROGRAM8} > ${.TARGET}
+.for test in ${TESTS}
+${test}.got: ${PROGRAM}
+	${PROGRAM8} ${.TARGET}
+.endfor
 
 .include "gasoline.program.mk"
 .include "gasoline.trip-trap.mk"
