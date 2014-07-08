@@ -67,10 +67,13 @@ let html_element_empty_text name =
   html_element_simple name prepare_unit ~empty:true ~block:false
 
 let html_element_hier name =
-  html_element_simple name prepare_cdata_list ~empty:false ~block:true ~attr:[]
+  html_element_simple name prepare_cdata_list ~empty:false ~block:false ~attr:[]
 
 let html_element_block name =
   html_element_simple name prepare_id ~empty:false ~block:true ~attr:[]
+
+let html_element_paragraph name =
+  html_element_simple name prepare_id ~empty:false ~block:false ~attr:[]
 
 let html_element_markup name =
   html_element_text name ~attr:[]
@@ -192,7 +195,7 @@ let h4 = html_element_hier "h4"
 let h5 = html_element_hier "h5"
 let h6 = html_element_hier "h6"
 
-let p = html_element_block "p"
+let p = html_element_paragraph "p"
 let pre = html_element_block "pre"
 
 let quote (

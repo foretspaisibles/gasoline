@@ -21,6 +21,7 @@ SRCS+=		main.ml
 TESTS=		test-simple-1-sgml
 TESTS+=		test-simple-2-sgml
 TESTS+=		test-simple-3-sgml
+TESTS+=		test-simple-1-html
 
 PROGRAM8=	${ENVTOOL} LANG=en_US.UTF-8 ./${PROGRAM}
 

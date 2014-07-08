@@ -22,7 +22,7 @@ struct
   let document () =
     html [
       body [
-	h1 (u"My first heading");
+	h1 (u"My First Heading");
 	p [c"My first paragraph."];
       ]
     ]
@@ -77,6 +77,7 @@ let testtable = [
   "test-simple-1-sgml",		Test_WSGML.test1;
   "test-simple-2-sgml",		Test_WSGML.test2;
   "test-simple-3-sgml",		Test_WSGML.test3;
+  "test-simple-1-html",		Test_WHTML.main;
 ]
 
 let runtest filename =
