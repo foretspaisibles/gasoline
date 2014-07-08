@@ -188,7 +188,7 @@ let pp_print_nonempty_element f ppt e =
     (if e.block then
 	pp_open_vbox ppt indent_sz
      else
-	pp_open_hvbox ppt indent_sz
+	pp_open_hovbox ppt 0
     );
     pp_print_element_open_tag ppt e;
     List.iter pack e.content;
