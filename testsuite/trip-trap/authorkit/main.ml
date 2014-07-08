@@ -19,17 +19,27 @@ module Test_WHTML =
 struct
   open WHTML
 
-  let document () =
-    html [
-      body [
-	h1 (u"My First Heading");
-	p [c"My first paragraph."];
-      ]
-    ]
+  let document contents =
+    html [ body contents ]
 
-  let main ppt =
-    WSGML.format ppt (document());
+  let a_h1 = h1 (u"My First Heading")
+  let a_h1attr = h1
+    ~id:"this-header-as-such-a-long-identifier-it-has-indeeed"
+    ~cls:"this-class-as-quite-along-identifier-as-well"
+    (u"My First Heading")
+
+  let a_p = p [c"My first paragraph."]
+  let a_plong =  p [c"This rather long paragraph \
+    is used to demonstrate how text is folded within a regular paragraph."]
+
+
+  let testsimple contents ppt =
+    WSGML.format ppt (document contents);
     Format.pp_print_flush ppt ()
+
+  let test1 = testsimple [ a_h1; a_p ]
+  let test2 = testsimple [ a_h1; a_plong ]
+  let test3 = testsimple [ a_h1attr; a_p ]
 end
 
 module Test_WSGML =
@@ -77,7 +87,9 @@ let testtable = [
   "test-simple-1-sgml",		Test_WSGML.test1;
   "test-simple-2-sgml",		Test_WSGML.test2;
   "test-simple-3-sgml",		Test_WSGML.test3;
-  "test-simple-1-html",		Test_WHTML.main;
+  "test-simple-1-html",		Test_WHTML.test1;
+  "test-simple-2-html",		Test_WHTML.test2;
+  "test-simple-3-html",		Test_WHTML.test3;
 ]
 
 let runtest filename =

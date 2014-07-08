@@ -277,8 +277,9 @@ let html ?(enc = Encoding.locale) c =
   ) ~dtd:"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"
     [html_element_block "html" c]
 
-let cdata = cdata
-let c x = cdata (u x)
+let cdata = WSGML.cdata
+let pcdata = WSGML.pcdata
+let c x = pcdata (u x)
 
 
 let ol = html_element_block "ol"

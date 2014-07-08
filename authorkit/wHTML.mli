@@ -23,6 +23,9 @@ open WSGML
 val cdata: cdata -> snippet
 (** Conversion from character data. *)
 
+val pcdata: pcdata -> snippet
+(** Conversion from character data. *)
+
 val c: string -> snippet
 (** Conversion from Latin-1 strings. *)
 
