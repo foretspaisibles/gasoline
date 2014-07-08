@@ -1,7 +1,7 @@
-### Makefile -- Trip & Trap
+### Makefile -- Trip-trap test for the configuration parser
 
 # Author: Michael Grünewald
-# Date: Wed Apr 16 11:23:08 CEST 2014
+# Date: Fri Aug  8 13:27:56 CEST 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
@@ -14,11 +14,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-SUBDIR+=	unittest
-SUBDIR+=	unicode
-SUBDIR+=	authorkit
-SUBDIR+=	configuration
+TESTS+=	test_configuration
 
-.include "gasoline.subdir.mk"
+.include "gasoline.trip-trap.mk"
 
 ### End of file `Makefile'
