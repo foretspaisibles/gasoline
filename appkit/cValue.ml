@@ -37,6 +37,15 @@ type a b. a kind -> b kind -> (a,b) witness option =
   | Float, Float -> Some Witness
   | _ -> None
 
+let kind_nmb :
+type a. a kind -> int =
+  fun a -> match a with
+  | Bool -> 0
+  | Int -> 1
+  | Char -> 2
+  | String -> 3
+  | Float -> 4
+
 type t =
 | Thingie : 'a kind * 'a -> t
 
@@ -69,6 +78,23 @@ let cast :
 type a b. (a,b) witness -> a -> b =
   fun Witness(x) -> x
 
+let equal c1 c2 =
+  match c1, c2 with
+  | Thingie(Bool, v1), Thingie(Bool, v2) -> v1 = v2
+  | Thingie(Int, v1), Thingie(Int, v2) -> v1 = v2
+  | Thingie(Char, v1), Thingie(Char, v2) -> v1 = v2
+  | Thingie(String, v1), Thingie(String, v2) -> v1 = v2
+  | Thingie(Float, v1), Thingie(Float, v2) -> v1 = v2
+  | _ -> false
+
+let compare c1 c2 =
+  match c1, c2 with
+  | Thingie(Bool, v1), Thingie(Bool, v2) -> Pervasives.compare v1 v2
+  | Thingie(Int, v1), Thingie(Int, v2) -> Pervasives.compare v1 v2
+  | Thingie(Char, v1), Thingie(Char, v2) -> Pervasives.compare v1 v2
+  | Thingie(String, v1), Thingie(String, v2) -> Pervasives.compare v1 v2
+  | Thingie(Float, v1), Thingie(Float, v2) -> Pervasives.compare v1 v2
+  | Thingie(k1,_), Thingie(k2,_) -> (kind_nmb k1) - (kind_nmb k2)
 
 (* Remark: it is possible to test for a character without reading it
 by using the reader format "%0c".  It is therefore possible to

@@ -47,6 +47,13 @@ val has_kind : 'a kind -> t -> bool
 val same_kind : t -> t -> bool
 (** Predicate recognising dynamic of values of the same kind. *)
 
+(** {6 Comparison} *)
+
+val equal : t -> t -> bool
+(** Equality test for dynamic values. *)
+
+val compare : t -> t -> int
+(** Comparison function for dynamic values. *)
 
 (** {6 Persistence} *)
 
