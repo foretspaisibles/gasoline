@@ -21,7 +21,7 @@ TESTS+=		test_html_simple_1
 TESTS+=		test_html_simple_2
 TESTS+=		test_html_simple_3
 
-PROGRAM8=	${ENVTOOL} LANG=en_US.UTF-8 ./${PROGRAM}
+TESTENV=	LANG=en_US.UTF-8
 
 .include "gasoline.trip-trap.mk"
 

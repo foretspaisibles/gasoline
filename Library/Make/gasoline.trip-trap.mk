@@ -14,6 +14,16 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
+# Variables:
+#
+# TESTENV
+#  Environment variables to be passed to the test programs
+#
+#   The value of the TESTENV variable should be a valid argument for
+#   `env(1)', for instance
+#
+#     TESTENV=	LANG=en_US.UTF-8 LC_COLLATE=C
+
 .include "bps.init.mk"
 .include "gasoline.init.mk"
 
@@ -61,7 +71,11 @@ ${test}.got:
 
 .if !target(${test}.got) && exists(${test}.ml)
 ${test}.got: ${test}.byte
+.if defined(TESTENV)
+	${ENVTOOL} ${TESTENV} ./${test}.byte > ${test}.got
+.else
 	./${test}.byte > ${test}.got
+.endif
 ${test}.byte: ${GASOLINELIBS} ${test}.ml
 	${GASOLINEOCAMLC} ${.ALLSRC:M*.cma} -o ${test}.byte ${test}.ml
 CLEANFILES+= ${test}.byte
