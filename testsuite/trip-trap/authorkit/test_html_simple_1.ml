@@ -1,4 +1,4 @@
-(* test-html-simple-3 -- Author kit
+(* test_html_simple_1 -- Author kit
 
 Author: Michael Grünewald
 Date: Tue Jun  3 11:45:45 CEST 2014
@@ -19,14 +19,11 @@ open WHTML
 let document contents =
   html [ body contents ]
 
-let a_h1attr = h1
-  ~id:"this-header-as-such-a-long-identifier-it-has-indeeed"
-  ~cls:"this-class-as-quite-along-identifier-as-well"
-  (u"My First Heading")
+let a_h1 = h1 (u"My First Heading")
 
 let a_p = p [c"My first paragraph."]
 
 let testsimple contents =
   WSGML.print (document contents)
 
-let () = testsimple [ a_h1attr; a_p ]
+let () = testsimple [ a_h1; a_p ]

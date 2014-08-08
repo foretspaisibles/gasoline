@@ -1,4 +1,4 @@
-(* test-sgml-simple-3 -- Author kit
+(* test_sgml_simple_1 -- Author kit
 
 Author: Michael Grünewald
 Date: Tue Jun  3 11:45:45 CEST 2014
@@ -24,14 +24,8 @@ let document contents =
     ~dtd:"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"
     [ html ]
 
-let h1attr =
-  element
-    ~block:false
-    ~attr:[
-	"id", u"this-header-as-such-a-long-identifier-it-has-indeeed";
-	"class", u"this-class-as-quite-along-identifier-as-well";
-    ]
-    "h1" [ pcdata(u"My First Heading") ]
+let h1 =
+  element ~block:false "h1" [ pcdata(u"My First Heading") ]
 
 let p =
   element ~block:false "p" [ pcdata(u"My first paragraph.") ]
@@ -39,4 +33,4 @@ let p =
 let testsimple contents =
   WSGML.print (document contents)
 
-let () = testsimple [ h1attr; p ]
+let () = testsimple [ h1; p ]

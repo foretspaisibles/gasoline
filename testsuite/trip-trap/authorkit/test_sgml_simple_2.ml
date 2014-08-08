@@ -1,4 +1,4 @@
-(* test-html-simple-2 -- Author kit
+(* test_sgml_simple_2 -- Author kit
 
 Author: Michael Grünewald
 Date: Tue Jun  3 11:45:45 CEST 2014
@@ -14,17 +14,24 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 open Unicode
-open WHTML
+open WSGML
 
 let document contents =
-  html [ body contents ]
+  let body = element ~block:true "body" contents in
+  let html = element ~block:true "html" [ body] in
+  make
+    ~declaration:"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    ~dtd:"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"
+    [ html ]
 
-let a_h1 = h1 (u"My First Heading")
+let h1 =
+  element ~block:false "h1" [ pcdata(u"My First Heading") ]
 
-let a_plong =  p [c"This rather long paragraph \
-  is used to demonstrate how text is folded within a regular paragraph."]
+let plong =
+  element ~block:false "p" [ pcdata(u"This rather long paragraph \
+  is used to demonstrate how text is folded within a regular paragraph.") ]
 
 let testsimple contents =
   WSGML.print (document contents)
 
-let () = testsimple [ a_h1; a_plong ]
+let () = testsimple [ h1; plong ]

@@ -14,16 +14,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROGRAM=	unicode
+TESTS=		test_output_channel
 
-SRCS+=		main.ml
-
-TESTS=		test-output-channel
-
-test-output-channel.got: ${PROGRAM}
-	./${PROGRAM} > ${.TARGET}
-
-.include "gasoline.program.mk"
 .include "gasoline.trip-trap.mk"
 
 ### End of file `Makefile'
