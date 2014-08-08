@@ -23,7 +23,7 @@ type 'a kind =
 | String : string kind
 | Float : float kind
 
-(** The abstract type of dynalically typed values. *)
+(** The abstract type of dynamically typed values. *)
 type t
 
 
@@ -31,7 +31,10 @@ val make : 'a kind -> 'a -> t
 (** [make kind value] create a dynamically typed value. *)
 
 val get_option : 'a kind -> t -> 'a option
-(** Get a dynamical value in a safe manner. *)
+(** Get a dynamical value in a safe manner.
+
+It is important to note that there is no implicit conversions
+performed on the value. *)
 
 val get : 'a kind -> t -> 'a
 (** Get a dynamical value in an unsafe manner.
