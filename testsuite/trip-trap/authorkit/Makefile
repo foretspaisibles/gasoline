@@ -14,10 +14,6 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROGRAM=	author
-
-SRCS+=		main.ml
-
 TESTS=		test-sgml-simple-1
 TESTS+=		test-sgml-simple-2
 TESTS+=		test-sgml-simple-3
@@ -27,12 +23,6 @@ TESTS+=		test-html-simple-3
 
 PROGRAM8=	${ENVTOOL} LANG=en_US.UTF-8 ./${PROGRAM}
 
-.for test in ${TESTS}
-${test}.got: ${PROGRAM}
-	${PROGRAM8} ${.TARGET}
-.endfor
-
-.include "gasoline.program.mk"
 .include "gasoline.trip-trap.mk"
 
 ### End of file `Makefile'
