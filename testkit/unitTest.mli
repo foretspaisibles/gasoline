@@ -113,6 +113,11 @@ verifying that at least one element of [list] passes the predicate.
 
 @param printer Printer function used to output values. *)
 
+val assert_string: string ->
+  ?expected_failure:bool ->
+  ('a -> string) -> 'a -> string -> t
+(** Specialised version of [assert_equal] for strings. *)
+
 val assert_int: string ->
   ?expected_failure:bool ->
   ('a -> int) -> 'a -> int -> t

@@ -144,6 +144,13 @@ let assert_exists ident ?expected_failure ?printer p l =
   make_case ident ?expected_failure
     (fun _ -> List.exists (wrap_predicate p) l)
 
+let assert_string ident ?expected_failure f x y =
+  assert_equal
+    ident
+    ?expected_failure
+    ~printer:Format.pp_print_string
+    f x y
+
 let assert_int ident ?expected_failure f x y =
   assert_equal
     ident
