@@ -1,4 +1,4 @@
-(* Main -- Unicode
+(* test_output_channel -- Unicode
 
 Author: Michael Grünewald
 Date: Mon Jun  2 11:51:10 CEST 2014
