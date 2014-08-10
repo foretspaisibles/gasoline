@@ -252,15 +252,6 @@ let int = option_factor int_of_string
 let float = option_factor float_of_string
 let concrete conc = option_factor (concrete_of_string conc)
 
-let set_true c r d = flag c (fun () -> r := true) d
-let set_false c r d = flag c (fun () -> r := false) d
-let set_char c r d = char c (fun x -> r := x) d
-let set_bool c r d = bool c (fun x -> r := x) d
-let set_string c r d = string c (fun x -> r := x) d
-let set_int c r d = int c (fun x -> r := x) d
-let set_float c r d = float c (fun x -> r := x) d
-let set_concrete conc c r d = concrete conc c (fun x -> r := x) d
-
 let note t c = {
     title = t;
     content = c;
@@ -821,3 +812,12 @@ let long o c d = {
     help = d;
     wants_arg = true;
 }
+
+let store r v =
+  r := v
+
+let set v r () =
+  r := v
+
+let queue a v =
+  a := !a @ [v]

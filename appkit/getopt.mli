@@ -97,32 +97,6 @@ from the given string by [conc].  When this option occurs in the
 command line, the callback [f] is called on the option argument. The
 message [d] may be displayed in the help screen of the program. *)
 
-val set_char : char -> (char ref) -> string -> t
-(** [set_char c r d] constructs a [t], like [char] but the callback is
-fixed: it is the function that stores the option argument in the
-reference [r]. *)
-
-val set_bool : char -> (bool ref) -> string -> t
-(** Similar to [set_char] for boolean values. *)
-
-val set_true : char -> (bool ref) -> string -> t
-(** Similar to [set_char] for boolean values. *)
-
-val set_false : char -> (bool ref) -> string -> t
-(** Similar to [set_char] for boolean values. *)
-
-val set_string : char -> (string ref) -> string -> t
-(** Similar to [set_char] for string values. *)
-
-val set_int : char -> (int ref) -> string -> t
-(** Similar to [set_char] for integer values. *)
-
-val set_float : char -> (float ref) -> string -> t
-(** Similar to [set_char] for floating point values. *)
-
-val set_concrete : 'a reader -> char -> ('a ref) -> string -> t
-(** Similar to [set_char] for arbitrary values. *)
-
 
 (** {6 Help notes} *)
 
@@ -192,5 +166,19 @@ val long_float : string -> (float -> unit) -> long_option
 val long_concrete : 'a reader -> string -> ('a -> unit) -> long_option
 (** Similar to [long_char] for arbitrary values. *)
 
+
+(** {6 Creating callbacks} *)
+
+val store : 'a ref -> 'a -> unit
+(** [store r v] is the same as [r := v] and can be partially evaluated
+to form a callback. *)
+
+val set : 'a -> 'a ref -> unit -> unit
+(** [set v r ()] is the same as [r := v] and and can be partially evaluated
+to form a callback. *)
+
+val queue : 'a list ref -> 'a -> unit
+(** [queue a v] add [v] at the end of [!a]. It can be partially
+evaluated to form a callback. *)
 
 exception Help
