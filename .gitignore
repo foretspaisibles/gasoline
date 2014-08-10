@@ -9,6 +9,8 @@
 .depend
 *.cb
 *.cn
+*.byte
+*.native
 #
 # C object files
 #
