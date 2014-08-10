@@ -1,0 +1,18 @@
+Usage: test-getopt [-avh][-i int][-f float][-b bool][-s string][--][rest]
+ Test the Getopt module in Gasoline
+Options:
+ -h Display available options.
+ -a The a flag.
+ -v The v flag.
+ -b The b option.
+ -c The c option.
+ -s The s option.
+ -i The i option.
+ -f The f option.
+Short Note: This is an example of a short note.
+Long Note:
+ This is an example of a very long note whose contents spans over several
+ lines.  It really has to be that long, so we will write here as much silly
+ text as needed.
+   And we also need several pragraphs of irrelevant text, but believe me,
+ this has nothing to do with you, just with the example.

@@ -32,7 +32,10 @@ application.
 {!modules:
   SysExits
   Unicode
+  Getopt
   CApplication
+  Configuration
+  Configuration_parser
 }
 
 {2:authorkit The [authorkit]}
