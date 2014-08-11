@@ -88,10 +88,10 @@ sig
   (** Check for a sink with the given facility. *)
   val mem : t -> facility -> bool
 
-  (** Iterating over facilities and sinks of a diagnostic logger. *)
+  (** Iterate over facilities and sinks of a diagnostic logger. *)
   val iter : (facility -> sink -> unit) -> t -> unit
 
-  (** Folding over facilities and sinks of a diagnostic logger. *)
+  (** Fold over facilities and sinks of a diagnostic logger. *)
   val fold : (facility -> sink -> 'a -> 'a) -> t -> 'a -> 'a
 
   (** The type of message classifications. *)
@@ -100,7 +100,7 @@ sig
   (** The type of values that can be conveyed by messages. *)
   type value
 
-  (** Sending a message to a diagnostic logger. *)
+  (** Send a message to a diagnostic logger. *)
   val send : t -> facility -> classification -> string -> (string * value) list -> unit
 
 end

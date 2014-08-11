@@ -10,7 +10,23 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-(** Generic message facility. *)
+(** Generic message facility.  This module implements a message—or
+diagnostic—facility for Gasoline guests.  This implementation is generic
+and parametrised by [Generic_types].
+
+A message [Scribe] can be used to prepare a message, that is a
+sequence of data words, and send the message to a data channel or
+retrieve it as a data block.  The message is built out of a sentence
+found in a message database, that sentence can contain placeholdes for
+variables which are substituted and formatted according to format
+indication and locale parameters.
+
+A message [Sender] connects a [Scribe] with a data channel.  It has a
+message buffer and a few control bits.
+
+A message [Sink] connects a [Scribe] with zero or more data channels.
+It can filter message according to their importance and route them to
+data channels. *)
 
 open Generic_type
 
@@ -69,12 +85,12 @@ sig
   | Formatted_variable of string * string
   (* The order of args is value, format *)
 
-  (** Analysing a character stream.
+  (** Analyse a character stream.
 
   @raise Error when the character stream is not well-formed. *)
   val analyse : t -> char Stream.t -> lexeme list
 
-  (** Analysing a character string.
+  (** Analyse a character string.
 
   @raise Error when the string is not well-formed. *)
   val analyse_string : t -> string -> lexeme list
@@ -146,7 +162,7 @@ sig
     the [connection_token]. *)
     val make : connection_token -> locale -> t
 
-    (** [add scribe c id bindings] adds the characters of the message
+    (** [add scribe c id bindings] add the characters of the message
     [id] classified as [c] and with bindings [bindings] to an internal
     buffer in [scribe]. *)
     val add : t -> classification -> string -> (string * value) list -> unit
@@ -240,7 +256,7 @@ sig
     (** Make a message sender. *)
     val make : connection_token -> locale -> out_channel -> t
 
-    (** [send s c id binding] requires the sender [s] to send the
+    (** [send s c id binding] ask the sender [s] to send the
     message identified by [id] with classification [c], substituting
     message variables according to the [binding].
 
@@ -328,6 +344,7 @@ sig
 
     (** The type of locales. *)
     type locale
+
     (** The type of message sink control bits.
 
     A message sink operating with the [async] bit set never flushes
@@ -348,8 +365,7 @@ sig
     one.
 
     A fresh new message sink operates with all its control bits set to
-    false, cap and floor set to [None].
-    *)
+    false, cap and floor set to [None]. *)
     type control = {
       mutable async: bool;	                (** Buffer messages *)
       mutable delay: bool;	                (** Delay messages *)
@@ -390,7 +406,7 @@ sig
     (** The list of output channels attached to our sink. *)
     val out_channels : t-> out_channel list
 
-    (** [send s c id binding] requires the sink [s] to send the
+    (** [send s c id binding] ask the sink [s] to send the
     message identified by [id] with classification [c], substituting
     message variables according to the [binding].
 

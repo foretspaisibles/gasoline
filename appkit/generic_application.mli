@@ -29,7 +29,7 @@ type component = {
   (** Configuration path of the component *)
   config_prefix : string list;
 
-  (** One-letter introducing long options used by [Getopt]. *)
+  (** Character introducing long options used by [Getopt]. *)
   getopt_prefix : char;
 }
 
@@ -71,7 +71,7 @@ sig
     ?datadir:string (** Read-only architecture-independant data files *) ->
     ?sysconfdir:string (** Host configuration, read-only *) ->
     ?usrconfdir:string (** User configuration, read-only *) ->
-    ?sharedstatedir:string (** Local state directory, e.g. /com *) ->
+    ?sharedstatedir:string (** Shared state directory, e.g. /com *) ->
     ?localstatedir:string (** Local state directory, e.g. /var *) ->
     unit -> unit
 
@@ -137,8 +137,8 @@ sig
   argument is the rest function, processing non-option arguments on
   the command line. *)
   val main : configuration_spec -> (string -> unit) -> (unit -> unit) -> unit
-
 end
+
 
 module type SINK =
   Generic_message.Sink.S
@@ -154,8 +154,8 @@ sig
   (** [register rkey rcb comp sink] is expected to create several
   configuration keys and callbacks and to register them with [rkey]
   and [rcb]. *)
-
 end
+
 
 module Make(Sink:SINK)(Parameter:P with type sink = Sink.t): S
   with type sink = Sink.t
