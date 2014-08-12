@@ -13,21 +13,7 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-module Value =
-struct
-  type 'a kind =
-  | Bool : bool kind
-  | Int : int kind
-  | Char : char kind
-  | String : string kind
-  | Float : float kind
-
-  type t = unit
-
-  let make kind value =
-    failwith "CApplication.Value.make: Not implemented"
-
-end
+module Value = CValue
 
 
 module Message =

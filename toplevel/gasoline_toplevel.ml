@@ -8,6 +8,7 @@ let gasolinemodule = [
 let gasolineprinter = [
   "Unicode.UChar.printer";
   "Unicode.UString.printer";
+  "CValue.printer";
 ]
 
 

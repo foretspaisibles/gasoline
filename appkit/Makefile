@@ -18,6 +18,7 @@ SRCS+=	unicode.ml
 SRCS+=	sysExits.ml
 SRCS+=	getopt.ml
 
+SRCS+=	cValue.ml
 SRCS+=	cType.ml
 SRCS+=	cConfiguration.ml
 SRCS+=	cMessage.ml

@@ -16,6 +16,7 @@
 
 SRCS+=		testUnitTest.ml
 SRCS+=		testUnicode.ml
+SRCS+=		testCValue.ml
 SRCS+=		testConfiguration.ml
 
 SRCS+=		main.ml
