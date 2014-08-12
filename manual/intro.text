@@ -36,6 +36,10 @@ application.
   CApplication
   Configuration
   Configuration_parser
+  Generic_type
+  Generic_message
+  Generic_diagnostic
+  Generic_application
 }
 
 {2:authorkit The [authorkit]}

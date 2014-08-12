@@ -17,10 +17,19 @@
 SRCS+=	unicode.ml
 SRCS+=	sysExits.ml
 SRCS+=	getopt.ml
+
+SRCS+=	cType.ml
+SRCS+=	cConfiguration.ml
+SRCS+=	cMessage.ml
 SRCS+=	cApplication.ml
 
 SRCS+=	configuration_parser.mll
 SRCS+=	configuration.ml
+
+SRCS+=	generic_type.ml
+SRCS+=	generic_message.ml
+SRCS+=	generic_diagnostic.ml
+SRCS+=	generic_application.ml
 
 .include "gasoline.library.mk"
 

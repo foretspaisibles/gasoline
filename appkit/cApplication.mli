@@ -1,4 +1,4 @@
-(* CApplication -- Application using the C locale
+(* CApplication -- C-Stylish Applications
 
 Author: Michael Grünewald
 Date: Sat Dec 28 13:05:16 CET 2013
@@ -13,7 +13,7 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-(** Application using the C locale. *)
+(** C-Stylish Applications. *)
 
 
 (** Dynamically typed values. *)
