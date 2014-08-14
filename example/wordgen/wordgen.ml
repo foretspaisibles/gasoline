@@ -29,6 +29,7 @@ struct
     name = "automaton";
     version = "1.0";
     require = [];
+    provide = [];
     description = "Automaton parameters";
     config_prefix = [];
     getopt_prefix = Some 'A';
@@ -64,6 +65,7 @@ struct
   struct
     open Application.Value
     open Application.Message
+    open Application.Classification
 
     let sink =
       Application.Component.sink comp
@@ -134,6 +136,7 @@ struct
     name = "library";
     version = "1.0";
     require = [];
+    provide = [];
     description = "Dictionary library";
     config_prefix = [];
     getopt_prefix = Some 'L';
@@ -154,21 +157,22 @@ struct
   struct
     open Application.Value
     open Application.Message
+    open Application.Classification
 
     let sink =
       Application.Component.sink comp
 
     let file_not_found name reason =
-      send sink Error "${FILENAME}: cannot open (${REASON})"
-	[ "FILENAME", make String name;
-	  "REASON", make String reason;
-	]
+      send sink Error "${FILENAME}: cannot open (${REASON})" [
+	"FILENAME", make String name;
+	"REASON", make String reason;
+      ]
 
     let file_not_saved name reason =
-      send sink Error "${FILENAME}: cannot save (${REASON})"
-	[ "FILENAME", make String name;
-	  "REASON", make String reason;
-	]
+      send sink Error "${FILENAME}: cannot save (${REASON})" [
+	"FILENAME", make String name;
+	"REASON", make String reason;
+      ]
   end
 
   let library () =
@@ -205,27 +209,11 @@ type operation =
 let operation =
   ref Help
 
-let getopt_spec () =
-  let open Application in
-  let open Value in
-  Getopt.spec "wordgen [-h]"
-    "Generate words imitating a dictionary"
-    (getopt_list () @ [
-      Getopt.flag 'h' (fun () -> operation := Help)
-	"Display a cheerful help message and exit.";
-      Getopt.flag 'L' (fun () -> operation := List)
-	"List the content of the dictionary library.";
-      Getopt.make String 'C' (fun s -> operation := Compile s)
-	"FILE\n\
-         Compile FILE and dump the result in the dictionary library.";
-      Getopt.make String 'G' (fun s -> operation := Generate s)
-	"FILE\n\
-         Generate words using dumped data FILE.";
-    ]) ignore
-
 let help () =
-  let open Application in
-  Getopt.help (getopt_spec())
+  Application.help ()
+
+let usage () =
+  Application.usage ()
 
 let list () =
   List.iter print_endline (Component_library.list ())
@@ -240,15 +228,31 @@ let generate dump =
     (Component_automaton.generate
        (Component_library.load dump))
 
-let main () =
-  Application.init ();
-  Application.getopt (getopt_spec());
-  match !operation with
-  | Help -> help ()
-  | List -> list ()
-  | Compile file -> compile file
-  | Generate dump -> generate dump
+let main arglist =
+  if arglist <> [] then
+    usage ()
+  else
+    match !operation with
+    | Help -> help ()
+    | List -> list ()
+    | Compile file -> compile file
+    | Generate dump -> generate dump
 
 let () =
-  try (main (); exit 0)
-  with Error -> exit 1
+  let open Application.Value in
+  let open Application.Getopt in
+  Application.run "wordgen"
+    "[-h]"
+    "Generate words imitating a dictionary"
+    ~options:[
+      flag 'h' (fun () -> operation := Help)
+	"Display a cheerful help message and exit.";
+      flag 'L' (fun () -> operation := List)
+	"List the content of the dictionary library.";
+      make String 'C' (fun s -> operation := Compile s)
+	"FILE\n\
+         Compile FILE and dump the result in the dictionary library.";
+      make String 'G' (fun s -> operation := Generate s)
+	"FILE\n\
+         Generate words using dumped data FILE.";
+    ] main

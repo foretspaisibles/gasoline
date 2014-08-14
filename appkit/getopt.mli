@@ -123,6 +123,13 @@ val spec :
 for command line analysis. *)
 
 
+(** {6 Help screen} *)
+
+val help : spec -> unit
+(** Output the help screen associated to the analysis specification
+and terminate the application. *)
+
+
 (** {6 Parse command options} *)
 
 val parse : spec -> string array -> unit

@@ -1,4 +1,4 @@
-(* Configuration -- Generic configuration facility
+(* ConfigurationMap -- Generic configuration facility
 
 Author: Michael Grünewald
 Date: Wed Oct 24 07:48:50 CEST 2012
@@ -102,11 +102,11 @@ sig
     default: 'a;
     description: string;
   }
-  type handler
-  val handler : 'a key -> ('a -> unit) -> handler
+  type callback
+  val callback : 'a key -> ('a -> unit) -> callback
   val key : ('a concrete) -> string list -> string -> 'a -> string -> 'a key
   val get : t -> 'a key -> 'a
-  val apply : t -> handler -> unit
+  val apply : t -> callback -> unit
   val value : 'a key -> string -> 'a
   val empty : t
   val add : t -> (string list * string) -> string -> t
@@ -147,11 +147,11 @@ struct
     description: string;
   }
 
-  type handler = {
-    handler_path: string list;
-    handler_name: string;
-    handler_description: string;
-    handler_callback: t -> unit;
+  type callback = {
+    callback_path: string list;
+    callback_name: string;
+    callback_description: string;
+    callback_f: t -> unit;
   }
 
   let key c p k def des = {
@@ -192,19 +192,19 @@ struct
     with
     | Not_found -> use_default key
 
-  let handler key cb =
-    let handler_callback conf =
+  let callback key cb =
+    let callback_f conf =
       cb (get conf key)
     in
     {
-      handler_path = key.path;
-      handler_name = key.name;
-      handler_description = key.description;
-      handler_callback;
+      callback_path = key.path;
+      callback_name = key.name;
+      callback_description = key.description;
+      callback_f;
     }
 
-  let apply conf handler =
-    handler.handler_callback conf
+  let apply conf callback =
+    callback.callback_f conf
 
   let empty = []
 

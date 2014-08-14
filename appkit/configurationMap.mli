@@ -1,4 +1,4 @@
-(* Configuration -- Generic configuration facility
+(* ConfigurationMap -- Generic configuration facility
 
 Author: Michael Grünewald
 Date: Wed Oct 24 07:48:50 CEST 2012
@@ -10,14 +10,14 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-(** Configuration sets.
+(** Configuration maps.
 
-A configuration set holds a dictionary mapping configuration keys to
-configuration values.  Values available in a configuration set can
-retrieved based on a {i key} or consumed by a {i handler}.
-Configuration sets can be combined together. *)
+A configuration map holds a dictionary mapping configuration keys to
+configuration values.  Values available in a configuration map can
+retrieved based on a {i key} or consumed by a {i callback}.
+Configuration maps can be combined together. *)
 
-(** The abstract type of configuration sets. *)
+(** The abstract type of configuration maps. *)
 type t
 
 
@@ -45,12 +45,12 @@ type 'a key = {
   description: string;
 }
 
-(** The abstract type of configuration handlers. *)
-type handler
+(** The abstract type of configuration callbacks. *)
+type callback
 
-(** [handler key callback] create a configuration handler consuming keys
+(** [callback key callback] create a configuration callback consuming keys
 described by [key] with the given [callback]. *)
-val handler : 'a key -> ('a -> unit) -> handler
+val callback : 'a key -> ('a -> unit) -> callback
 
 (** [key concrete path name default description] create a key
 out of its given parts. *)
@@ -60,15 +60,15 @@ val key : ('a concrete) -> string list -> string -> 'a -> string -> 'a key
 default value from the key is returned. *)
 val get : t -> 'a key -> 'a
 
-(** Consume the value associated with a handler. *)
-val apply : t -> handler -> unit
+(** Explicitely consume the given value with the provided callback. *)
+val apply : t -> callback -> unit
 
 (** [value key text] get the value associated to [text] as if it
 were assigned to [key]. *)
 val value : 'a key -> string -> 'a
 
 
-(** {6 Operations on configuration sets} *)
+(** {6 Operations on configuration maps} *)
 
 (** The empty configuration. *)
 val empty : t

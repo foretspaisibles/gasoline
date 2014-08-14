@@ -20,10 +20,12 @@ SRCS+=	getopt.ml
 SRCS+=	configurationParser.mll
 SRCS+=	configurationMap.ml
 
+SRCS+=	generic_component.ml
 SRCS+=	generic_type.ml
 SRCS+=	generic_message.ml
 SRCS+=	generic_diagnostic.ml
-SRCS+=	generic_component.ml
+SRCS+=	generic_asset.ml
+SRCS+=	generic_application.ml
 
 SRCS+=	cType.ml
 SRCS+=	cConfigurationMap.ml

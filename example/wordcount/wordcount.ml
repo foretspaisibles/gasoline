@@ -29,6 +29,7 @@ struct
     name = "count";
     version = "1.0";
     require = [];
+    provide = [];
     description = "Count words";
     config_prefix = [];
     getopt_prefix = None;
@@ -38,6 +39,7 @@ struct
   struct
     open Application.Value
     open Application.Message
+    open Application.Classification
 
     let sink =
       Application.Component.sink comp
@@ -49,15 +51,12 @@ struct
 	]
   end
 
-
   let count_channel c =
     Count.from_in_channel c
-
 
   let count_file name =
     try Count.from_file name
     with Sys_error reason -> (Message.cannot_open name reason; raise Error)
-
 end
 
 
@@ -69,6 +68,7 @@ struct
     name = "display";
     version = "1.0";
     require = [];
+    provide = [];
     description = "Display word counts";
     config_prefix = [];
     getopt_prefix = None;
@@ -93,7 +93,7 @@ struct
 
     let chars =
       make Bool comp ~flag:'m'
-	"chars" true
+	"chars" false
 	"The number of characters in each input file is written to the \
          standard output. If the current locale does not support multibyte \
          characters, this is equivalent to the -c option. This will cancel \
@@ -107,7 +107,7 @@ struct
 
     let longest =
       make Bool comp ~flag:'L'
-	"longest" true
+	"longest" false
 	"The number of characters in the longest input line is written to \
          the standard output.  When more then one file argument is specified, \
          the longest input line of all files is reported as the \
@@ -120,10 +120,8 @@ struct
   struct
     open Application.Value
     open Application.Message
-
     let sink =
       Application.Component.sink comp
-
   end
 
   let spec () =
@@ -142,13 +140,11 @@ struct
 
   let print_summary lst =
     Display.print (spec()) "total" (Count.total lst)
-
 end
 
 
 let queue_elements q =
   Queue.fold (fun a x -> x :: a) [] q
-
 
 type operation =
 | Count
@@ -157,25 +153,11 @@ type operation =
 let operation =
   ref Count
 
-let args =
-  Queue.create ()
-
-let push name =
-  Queue.add name
-
-let getopt_spec () =
-  let open Application in
-  let open Value in
-  Getopt.spec "wordcount [-h][-clmwL]"
-    "Word, line, character, and byte count"
-    (getopt_list () @ [
-      Getopt.flag 'h' (fun () -> operation := Help)
-	"Display a cheerful help message and exit.";
-    ]) ignore
-
 let help () =
-  let open Application in
-  Getopt.help (getopt_spec())
+  CApplication.help ()
+
+let usage () =
+  CApplication.usage ()
 
 let count_channel c =
   let stat = Component_count.count_channel c in
@@ -196,17 +178,18 @@ let count_files lst =
     with exn -> raise exn
   in
   List.iter loop lst;
-  Component_display.print_summary (queue_elements q)
+  if List.length lst > 1 then
+    Component_display.print_summary (queue_elements q)
 
+let count files =
+  match files with
+  | [] -> count_channel stdin
+  | _ -> count_files files
 
-let main () =
-  Application.init ();
-  Application.getopt (getopt_spec());
-  begin
-  end;
+let main files =
   match !operation with
-  | Help -> help ()
-  | Count -> ignore ()
+  | Help -> ignore ()
+  | Count -> count files
 
 (* TODO: Implement the flag logic
 
@@ -215,6 +198,7 @@ The flag logic is the one described in `wc(1)`.
 This involves preventing most configuration values from being edited
 from the command line, using callbacks instead. *)
 
-let () =
-  try (main (); exit 0)
-  with Error -> exit 1
+let () = Application.run "wordcount"
+  "[-chlmwL] [file ...]"
+  "Word, line, character and byte count"
+  main

@@ -23,7 +23,8 @@ module Data : Generic_type.DATA
 (** Data buffers.  This is a tight wrapping around standard library
 buffers. *)
 module Buffer : Generic_type.BUFFER
-  with type word = Data.word
+  with type t = Buffer.t
+  and type word = Data.word
   and type block = Data.block
   and type out_channel = Data.out_channel
 

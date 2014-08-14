@@ -13,100 +13,104 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-module Value = CType.Value
+open Printf
 
+module Prototype =
+struct
+  module Locale =
+    CType.Locale
+
+  module Value =
+    CType.Value
+
+  module Classification =
+    CType.Classification
+
+  module Database =
+    CType.Database
+
+  module Buffer =
+    CType.Buffer
+
+  module Data =
+    CType.Data
+end
+
+module Locale =
+  Prototype.Locale
+
+module Value =
+  Prototype.Value
+
+module Classification =
+  Prototype.Classification
+
+module CSink =
+  Generic_message.Sink.Make(Prototype)
+
+module CSinkInitializer =
+struct
+  type sink = CSink.t
+  type connection_token = Prototype.Database.connection_token
+  type locale = Prototype.Locale.t
+  type out_channel = Prototype.Data.out_channel
+  let connection_token _ = ()
+  let locale _ = Prototype.Locale.stdlocale
+  let out_channel_lst _ = [ Pervasives.stderr ]
+end
+
+module InternalApplication =
+  Generic_application.Make(CSink)(CSinkInitializer)(Prototype)
+
+module Component =
+  InternalApplication.Component
+
+module Configuration =
+  InternalApplication.Configuration
 
 module Message =
 struct
-
   type classification =
-  | Debug
-  | Info
-  | Notice
-  | Warning
-  | Error
-  | Critical
-  | Alert
-  | Emergency
+    Classification.t
 
   type sink =
-    unit
+    CSink.t
 
-  let send sink clas id binding =
-    failwith "CApplication.Message.send: Not implemented"
+  type value =
+    Value.t
 
-end
-
-
-module Configuration =
-struct
-  type 'a t = {
-    kind: 'a Value.kind;
-  }
-
-  let make kind component ?flag ?env ?shy name default description =
-    failwith "CApplication.Configuration.make: Not implemented"
-
-  let get item =
-    failwith "CApplication.Configuration.get: Not implemented"
-
-  let set item value =
-    failwith "CApplication.Configuration.set: Not implemented"
-end
-
-
-
-module Component =
-struct
-
-  type t = {
-    name: string;
-    version: string;
-    require: string list;
-    description: string;
-    config_prefix: string list;
-    getopt_prefix: char option;
-  }
-
-  let sink _ =
-    failwith "CApplication.Component.sink: Not implemented"
-
+  let send =
+    CSink.send
 end
 
 module Getopt =
 struct
 
   type t =
-    unit
+    Getopt.t
+
+  type note =
+    Getopt.note
 
   type spec =
-    unit
+    Getopt.spec
 
   let flag c callback description =
-    failwith "CApplication.Getopt.flag: Not implemented"
+    Getopt.flag c callback description
 
   let make kind c callback description =
-    failwith "CApplication.Getopt.make: Not implemented"
+    Getopt.concrete (Value.of_string_kind kind) c callback description
 
   let note title text =
-    failwith "CApplication.Getopt.note: Not implemented"
-
-  let spec usage description getopt_list rest =
-    failwith "CApplication.Getopt.rest: Not implemented"
-
-  let help_message spec =
-    failwith "CApplication.Getopt.rest: Not implemented"
-
-  let help spec =
-    failwith "CApplication.Getopt.help: Not implemented"
-
+    Getopt.note title text
 end
 
-let init () =
-  failwith "CApplication.init: Not implemented"
 
-let getopt spec =
-  failwith "CApplication.getopt: Not implemented"
+let run name usage description ?options ?notes main =
+  InternalApplication.run name usage description ?options ?notes main
 
-let getopt_list () =
-  failwith "CApplication.getopt_list: Not implemented"
+let help () =
+  InternalApplication.help ()
+
+let usage () =
+  InternalApplication.usage()
