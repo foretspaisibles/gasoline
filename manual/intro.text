@@ -34,12 +34,12 @@ application.
   Unicode
   Getopt
   CApplication
-  Configuration
-  Configuration_parser
+  ConfigurationMap
+  ConfigurationParser
   Generic_type
   Generic_message
   Generic_diagnostic
-  Generic_application
+  Generic_component
 }
 
 {2:authorkit The [authorkit]}

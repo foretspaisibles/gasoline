@@ -241,20 +241,20 @@ struct
     let comment _ _ = ()
 
     let section p l =
-      p.path <- List.map Configuration_parser.text l
+      p.path <- List.map ConfigurationParser.text l
 
     let binding p k v =
       p.conf <- (
-	Configuration_parser.text k,
-	Configuration_parser.text v
+	ConfigurationParser.text k,
+	ConfigurationParser.text v
       ) :: p.conf
 
     let parse_error p pos error =
-      M.parse_error pos (Configuration_parser.error_to_string error)
+      M.parse_error pos (ConfigurationParser.error_to_string error)
 
   end
 
-  module Parser = Configuration_parser.Make(Parser_definition)
+  module Parser = ConfigurationParser.Make(Parser_definition)
 
   let from_anything f x =
     let p = {

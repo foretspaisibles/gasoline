@@ -286,13 +286,3 @@ sig
   val to_string : t -> string
   (** Convert a classification to string. *)
 end
-
-
-module Concrete :
-sig
-  val bool : bool Configuration.concrete
-  val char : char Configuration.concrete
-  val int : int Configuration.concrete
-  val float : float Configuration.concrete
-  val string : string Configuration.concrete
-end

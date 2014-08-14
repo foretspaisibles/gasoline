@@ -1,4 +1,4 @@
-(* Generic_application -- Generic application
+(* Generic_component -- Generic application component
 
 Author: Michael Grünewald
 Date: Sun May 12 13:22:40 CEST 2013
@@ -38,7 +38,7 @@ type callback = unit -> unit
 
 (** The type of concrete configuration values. *)
 type 'a concrete =
-  'a Configuration.concrete
+  'a ConfigurationMap.concrete
 
 (** The type of configuration specifications. *)
 type configuration_spec =
@@ -150,7 +150,7 @@ sig
   type sink
   (** The type of message sinks. *)
 
-  val register : (Configuration.handler -> unit) -> ((unit -> unit) -> unit) -> component -> sink -> unit
+  val register : (ConfigurationMap.handler -> unit) -> ((unit -> unit) -> unit) -> component -> sink -> unit
   (** [register rkey rcb comp sink] is expected to create several
   configuration keys and callbacks and to register them with [rkey]
   and [rcb]. *)

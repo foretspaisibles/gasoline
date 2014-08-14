@@ -1,4 +1,4 @@
-(* Generic_application -- Generic application
+(* Generic_component -- Generic application components
 
 Author: Michael Grünewald
 Date: Sun May 12 13:22:40 CEST 2013
@@ -38,7 +38,7 @@ type component = {
 type callback = unit -> unit
 
 type 'a concrete =
-  'a Configuration.concrete
+  'a ConfigurationMap.concrete
 
 type configuration_spec =
 | Empty
@@ -200,7 +200,7 @@ module type SINK =
 module type P =
 sig
   type sink
-  val register : (Configuration.handler -> unit) -> ((unit -> unit) -> unit) -> component -> sink -> unit
+  val register : (ConfigurationMap.handler -> unit) -> ((unit -> unit) -> unit) -> component -> sink -> unit
 end
 
 module Component =
@@ -252,13 +252,13 @@ struct
       Queue.create ()
 
     let add_new item value =
-      Queue.add (Configuration.handler item ((:=) value)) table
+      Queue.add (ConfigurationMap.handler item ((:=) value)) table
 
     let add key =
       Queue.add key table
 
     let apply c =
-      Queue.iter (Configuration.apply c) table
+      Queue.iter (ConfigurationMap.apply c) table
   end
 
 
@@ -332,13 +332,13 @@ struct
   module Configuration_file =
   struct
     let make f =
-      try Configuration.from_file f
+      try ConfigurationMap.from_file f
       with Sys_error msg -> (
 	(* TODO(michipili) Canonise error *)
 	(* TODO(michipili) Catch parse error *)
 	eprintf "%s: configuration: %s\n"
 	  !Identification._name msg;
-	Configuration.empty
+	ConfigurationMap.empty
       )
   end
 
@@ -357,17 +357,17 @@ struct
 
     let add item var =
       Queue.add {
-	path = item.Configuration.path;
-	key = item.Configuration.name;
+	path = item.ConfigurationMap.path;
+	key = item.ConfigurationMap.name;
 	variable = var;
       }
 
     let make () =
       let loop ax r =
-	try Configuration.add ax (r.path, r.key) (Sys.getenv r.variable)
+	try ConfigurationMap.add ax (r.path, r.key) (Sys.getenv r.variable)
 	with Not_found -> ax
       in
-      Queue.fold loop Configuration.empty table
+      Queue.fold loop ConfigurationMap.empty table
   end
 
 
@@ -385,8 +385,8 @@ struct
 
     let make_callback item =
       let r = {
-	path = item.Configuration.path;
-	key = item.Configuration.name;
+	path = item.ConfigurationMap.path;
+	key = item.ConfigurationMap.name;
 	value = None;
       } in
       let callback s =
@@ -399,37 +399,37 @@ struct
 
     let add_flag item flag =
       let callback = make_callback item in
-      Command_line.add_newflag flag callback item.Configuration.description
+      Command_line.add_newflag flag callback item.ConfigurationMap.description
 
     let add_long item flag =
       let callback = make_callback item in
       Command_line.add_newlong
 	flag
-	item.Configuration.name
+	item.ConfigurationMap.name
 	callback
-	item.Configuration.description
+	item.ConfigurationMap.description
 
     let make () =
       let loop ax r =
 	match r.value with
-	| Some v -> Configuration.add ax (r.path, r.key) v
+	| Some v -> ConfigurationMap.add ax (r.path, r.key) v
 	| None -> ax
       in
-      Queue.fold loop Configuration.empty table
+      Queue.fold loop ConfigurationMap.empty table
   end
 
   module Configuration_policy =
   struct
     let rec apply policy =
       match policy with
-      | Empty -> Configuration.empty
+      | Empty -> ConfigurationMap.empty
       | Environment -> Configuration_environment.make ()
       | Command_line -> Configuration_getopt.make ()
       | File s -> Configuration_file.make s
-      | Heredoc s -> Configuration.from_string s
-      | Alist a -> Configuration.from_alist a
-      | Merge(a,b) -> Configuration.merge  (apply a) (apply b)
-      | Override(a,b) -> Configuration.override (apply a) (apply b)
+      | Heredoc s -> ConfigurationMap.from_string s
+      | Alist a -> ConfigurationMap.from_alist a
+      | Merge(a,b) -> ConfigurationMap.merge  (apply a) (apply b)
+      | Override(a,b) -> ConfigurationMap.override (apply a) (apply b)
 
     let rec merge ax = match ax with
       | [] -> Empty
@@ -627,7 +627,7 @@ struct
       ref default
     in
     let config_item = {
-      Configuration.
+      ConfigurationMap.
       concrete = concrete;
       path = comp.config_prefix;
       name = name;

@@ -1,4 +1,4 @@
-(* CConfiguration -- Configuration for C-Stylish applications
+(* CConfigurationMap -- Configuration map for C-Stylish applications
 
 Author: Michael Grünewald
 Date: Sun May 12 10:46:09 CEST 2013
@@ -10,10 +10,10 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-(** Configuration for C-Stylish applications. *)
+(** Configuration maps for C-Stylish applications. *)
 
 
-include module type of Configuration
+include module type of ConfigurationMap
 
 (** Create a boolean configuration item. *)
 val key_bool : string list -> string -> bool -> string -> bool key
