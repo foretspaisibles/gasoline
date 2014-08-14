@@ -28,7 +28,6 @@ SRCS+=	generic_component.ml
 SRCS+=	cType.ml
 SRCS+=	cConfigurationMap.ml
 SRCS+=	cMessage.ml
-SRCS+=	cValue.ml
 SRCS+=	cApplication.ml
 
 .include "gasoline.library.mk"

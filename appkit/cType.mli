@@ -142,22 +142,98 @@ sig
     | After_currency_symbol
     (** Sign right after currency symbol. *)
 
-
-  (** The standard locale used when no other format is supplied. *)
+  (** The standard locale used when no other information is supplied. *)
   val stdlocale : t
 end
 
 
+(** Dynamically typed values for plain applications. *)
 module Value :
 sig
 
-  (** The type of values that can be conveyed by messages. *)
-  type t =
-  | Bool of bool
-  | Char of char
-  | Int of int
-  | Float of float
-  | String of string
+  (** The type tracking ['a]. *)
+  type 'a kind =
+  | Bool : bool kind
+  | Int : int kind
+  | Char : char kind
+  | String : string kind
+  | Float : float kind
+
+  (** The abstract type of dynamically typed values. *)
+  type t
+
+
+  (** Creating and examinating dynamic values. *)
+
+  val make : 'a kind -> 'a -> t
+  (** [make kind value] create a dynamically typed value. *)
+
+  val get_option : 'a kind -> t -> 'a option
+  (** Get a dynamical value in a safe manner.
+
+  It is important to note that there is no implicit conversions
+  performed on the value. *)
+
+  val get : 'a kind -> t -> 'a
+  (** Get a dynamical value in an unsafe manner.
+
+  @raise Failure if the value is of anouther kind. *)
+
+  val is_of_kind : 'a kind -> t -> bool
+  (** Predicate recognising dynamical values of a specific kind. *)
+
+  val is_of_same_kind : t -> t -> bool
+  (** Predicate recognising dynamic of values of the same kind. *)
+
+
+  (** {6 Comparison} *)
+
+  val equal : t -> t -> bool
+  (** Equality test for dynamic values. *)
+
+  val compare : t -> t -> int
+  (** Comparison function for dynamic values. *)
+
+
+  (** {6 Persistence and display} *)
+
+  val taste : 'a kind -> string -> bool
+  (** [taste k s] recognise [s] if it represents a value of kind [k]. *)
+
+  val to_string : t -> string
+  (** [to_string v] transform [v] to a string.
+
+  This string can be written in a file and read back later with [of_string]. *)
+
+  val of_string : string -> t
+  (** [of_string s] convert a string to a dynamic value. *)
+
+  val of_string_kind : 'a kind -> string -> 'a
+  (** [of_string_kind k s] convert [s] to a dynamic value of kind [k].
+
+  @raise Failure if [s] cannot be converted to a value of kind [k]. *)
+
+  val of_string_same : t -> string -> t
+  (** [of_string_same v s] convert [s] to a dynamic value of the same kind a [v].
+
+  @raise Failure if [s] cannot be converted to a value of that kind. *)
+
+  val reader_kind : 'a kind -> Scanf.Scanning.in_channel -> 'a
+  (** Custom reader to use with [scanf]. *)
+
+  val reader_same : t -> Scanf.Scanning.in_channel -> t
+  (** Custom reader to use with [scanf]. *)
+
+  val printer : Format.formatter -> t -> unit
+  (** A printer for the toplevel. *)
+
+
+  (** {6 Formatted output}
+
+  While the low-level functions [add], [add_formatted] and [add_text]
+  described below can be useful in emergency cases, it is recommended
+  to use higher level formetted printing facilities as provided by the
+  [Generic_message.Scribe] functor, for instance. *)
 
   (** The type of localisation parameters. *)
   type locale = Locale.t
@@ -234,6 +310,7 @@ end
 
 module Database : Generic_type.DATABASE
   with type connection_token = unit
+
 
 module Classification :
 sig
