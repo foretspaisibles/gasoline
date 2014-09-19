@@ -10,6 +10,8 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
+open SysExits
+
 type info =
   Generic_component.info
 
@@ -86,6 +88,17 @@ module Make(Sink:SINK)
    and type locale = Sink.locale
    and type out_channel = Sink.out_channel)(Parameter:P) =
 struct
+
+  let die code argv =
+    Printf.kfprintf
+      (fun outc -> output_char outc '\n'; SysExits.exit code) stderr
+      argv
+
+  let wlog argv =
+    Printf.kfprintf
+      (fun outc -> output_char outc '\n') stderr
+      argv
+
   module Component =
   struct
     include Generic_component
@@ -94,33 +107,39 @@ struct
 
     type card = {
       info: info;
-      sink: sink;
       bootstrap: callback;
       shutdown: callback;
     }
 
     let _expected_sz = 16
     let _card_table = Hashtbl.create _expected_sz
+    let _sink_table = Hashtbl.create _expected_sz
 
     let register ?(bootstrap = ignore) ?(shutdown = ignore) info =
-      let sink = Sink.create () in
       let card = {
 	info;
-	sink;
 	bootstrap;
 	shutdown;
       } in
+      wlog "register: %s" info.name;
       Hashtbl.add _card_table info.name card
 
     let sink info =
-      try (Hashtbl.find _card_table info.name).sink
-      with Not_found -> failwith "Generic_application.Component.sink"
+      let create_pack name =
+	let sink = Sink.create () in
+	Hashtbl.add _sink_table name sink;
+	sink
+      in
+      try Hashtbl.find _sink_table info.name
+      with Not_found -> create_pack info.name
 
     let init () =
       let loop name card =
-	Sink.connect card.sink (SinkInitializer.connection_token card.info)
+	wlog "init: %s" name;
+	Sink.connect (sink card.info)
+	  (SinkInitializer.connection_token card.info)
 	  (SinkInitializer.locale card.info);
-	List.iter (fun outc -> Sink.attach card.sink outc)
+	List.iter (fun outc -> Sink.attach (sink card.info) outc)
 	  (SinkInitializer.out_channel_lst card.info)
       in
       Hashtbl.iter loop _card_table

@@ -57,6 +57,8 @@ struct
   let count_file name =
     try Count.from_file name
     with Sys_error reason -> (Message.cannot_open name reason; raise Error)
+
+  let () = Application.Component.register comp
 end
 
 
@@ -140,6 +142,8 @@ struct
 
   let print_summary lst =
     Display.print (spec()) "total" (Count.total lst)
+
+  let () = Application.Component.register comp
 end
 
 
