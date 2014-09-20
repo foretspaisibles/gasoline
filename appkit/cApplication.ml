@@ -106,8 +106,9 @@ struct
 end
 
 
-let run name usage description ?options ?notes main =
-  InternalApplication.run name usage description ?options ?notes main
+let run name usage description ?options ?notes ?configuration main =
+  InternalApplication.run
+    name usage description ?options ?notes ?configuration main
 
 let help () =
   InternalApplication.help ()

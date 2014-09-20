@@ -77,9 +77,19 @@ sig
       string -> 'a -> string -> 'a t
     val get : 'a t -> 'a
     val set : 'a t -> 'a -> unit
+    type spec =
+    | Empty
+    | Command_line
+    | Environment
+    | File of string
+    | Heredoc of string
+    | Alist of ((string list * string) * string) list
+    | Merge of spec * spec
+    | Override of spec * spec
   end
   val run : string -> string -> string ->
     ?options:(Getopt.t list) -> ?notes:(Getopt.note list) ->
+    ?configuration:Configuration.spec ->
     (string list -> unit) -> unit
   val help : unit -> unit
   val usage : unit -> unit
@@ -314,6 +324,32 @@ struct
 
     let set item value =
       item := value
+
+    type spec =
+    | Empty
+    | Command_line
+    | Environment
+    | File of string
+    | Heredoc of string
+    | Alist of ((string list * string) * string) list
+    | Merge of spec * spec
+    | Override of spec * spec
+
+    let rec map spec =
+      match spec with
+      | Empty -> ConfigurationMap.empty
+      | Command_line -> RegistryGetopt.map ()
+      | Environment -> RegistryEnvironment.map ()
+      | File(name) -> ConfigurationMap.from_file name
+      | Heredoc(conf) -> ConfigurationMap.from_string conf
+      | Alist(bindings) -> ConfigurationMap.from_alist bindings
+      | Merge(a,b) -> ConfigurationMap.merge (map a) (map b)
+      | Override(a,b) -> ConfigurationMap.override (map a)(map b)
+
+    let init spec =
+      let configuration_map = map spec in
+      RegistryCallback.iter
+	(ConfigurationMap.apply configuration_map)
   end
 
 
@@ -361,7 +397,10 @@ struct
   end
 
 
-  let run name usage description ?(options = []) ?(notes = []) main =
+  let run name usage description
+	  ?(options = []) ?(notes = [])
+	  ?(configuration = Configuration.Empty)
+	  main =
     let restlist = ref [] in
     let rest s = restlist := s :: !restlist in
     let spec () =
@@ -371,6 +410,7 @@ struct
     begin
       Component.init ();
       Getopt.parse_argv (spec());
+      Configuration.init configuration;
       Supervisor.run (spec()) main !restlist;
     end
 

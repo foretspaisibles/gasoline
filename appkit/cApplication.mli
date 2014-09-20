@@ -425,6 +425,17 @@ sig
 
   val set : 'a t -> 'a -> unit
   (** [set item value] set the [value] of the given configuration [item]. *)
+
+  (** The type of configuration specifications. *)
+  type spec =
+  | Empty
+  | Command_line
+  | Environment
+  | File of string
+  | Heredoc of string
+  | Alist of ((string list * string) * string) list
+  | Merge of spec * spec
+  | Override of spec * spec
 end
 
 
@@ -466,6 +477,7 @@ end
 
 val run : string -> string -> string ->
   ?options:(Getopt.t list) -> ?notes:(Getopt.note list) ->
+  ?configuration:Configuration.spec ->
   (string list -> unit) -> unit
 (** [run name usage description ?options ?notes main] run the application.
 
