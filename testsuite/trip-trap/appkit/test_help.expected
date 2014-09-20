@@ -1,0 +1,6 @@
+Usage: punishment [-n number] [-p paragraph]
+ I must not talk in class.
+Options:
+ -h Display available options.
+ -n The number of times our punishment must be printed
+ -p The paragraph we must copy as punishment

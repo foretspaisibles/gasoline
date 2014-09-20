@@ -1,0 +1,1 @@
+test_noprovider: error: Requirement 'inexistant' of component 'monolith' has no provider.
