@@ -317,6 +317,50 @@ struct
   end
 
 
+  module Supervisor =
+  struct
+    type error =
+    | Bootstrap
+    | Shutdown
+    | Main
+
+    exception Error of error * string
+
+    let supervise err f x =
+      try f x
+      with exn -> raise(Error(err, Printexc.to_string exn))
+
+    let invalid_help () =
+      invalid_arg "Generic_application.Make.help"
+
+    let invalid_usage _ =
+      invalid_arg "Generic_application.Make.usage"
+
+    let actually_help =
+      ref invalid_help
+
+    let actually_usage =
+      ref invalid_usage
+
+    let help () =
+      !actually_help ()
+
+    let usage mesg =
+      !actually_usage mesg
+
+    let run spec main lst =
+      try
+	supervise Bootstrap Component.bootstrap();
+	supervise Main main lst;
+	supervise Shutdown Component.shutdown();
+      with
+      | Error(Bootstrap, mesg) -> die EXIT_SOFTWARE "bootstrap: %s" mesg
+      | Error(Shutdown, mesg) -> die EXIT_SOFTWARE "shutdown: %s" mesg
+      | Error(Main, mesg) ->  (Component.shutdown();
+			       die EXIT_SOFTWARE "main: %s" mesg)
+  end
+
+
   let run name usage description ?(options = []) ?(notes = []) main =
     let restlist = ref [] in
     let rest s = restlist := s :: !restlist in
@@ -326,15 +370,13 @@ struct
     in
     begin
       Component.init ();
-      Component.bootstrap();
       Getopt.parse_argv (spec());
-      main !restlist;
-      Component.shutdown();
+      Supervisor.run (spec()) main !restlist;
     end
 
   let help () =
-    failwith "CApplication.help: not implemented"
+    Supervisor.help ()
 
-  let usage () =
-    failwith "CApplication.usage: not implemented"
+  let usage mesg =
+    Supervisor.usage mesg
 end
