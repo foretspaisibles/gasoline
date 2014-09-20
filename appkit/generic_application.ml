@@ -125,7 +125,6 @@ struct
 	bootstrap;
 	shutdown;
       } in
-      wlog "register: %s" info.name;
       Hashtbl.add _card_table info.name card
 
     let sink info =
@@ -139,7 +138,6 @@ struct
 
     let init () =
       let loop name card =
-	wlog "init: %s" name;
 	Sink.connect (sink card.info)
 	  (SinkInitializer.connection_token card.info)
 	  (SinkInitializer.locale card.info);
@@ -309,7 +307,6 @@ struct
       item
 
     let map () =
-      wlog "Using empty configuration map";
       ConfigurationMap.empty
 
     let get item =
