@@ -200,7 +200,27 @@ struct
 
     let shutdown () =
       rcorder_apply must_shutdown_before (fun card -> card.shutdown card.info)
+  end
 
+  (* Keep trace of environment variables mapped to configurations. *)
+  module RegistryEnvironment :
+  sig
+    (* [add path name env] *)
+    val add : string list -> string -> string option -> unit
+    val map : unit -> ConfigurationMap.t
+  end =
+  struct
+    let _table = ref []
+    let add path name env =
+      match env with
+      | Some(envname) -> _table := (path, name, envname) :: !_table
+      | None -> ()
+    let map () =
+      let loop ax (path, name, envname) =
+	try ConfigurationMap.add ax (path, name) (Sys.getenv envname)
+	with Not_found -> ax
+      in
+      List.fold_left loop ConfigurationMap.empty !_table
   end
 
   module Configuration =
@@ -234,8 +254,15 @@ struct
       } in
       let item = ref default in
       let callback = ConfigurationMap.callback key ((:=) item) in
+      let registry_environment_add env =
+	RegistryEnvironment.add (component_path comp) name env
+	|> MonadOption.return
+      in
+      let open MonadOption.E in
+      env
+      >>= registry_environment_add
+      |> MonadOption.terminate;
       (* TODO: Create command line option creating a map entry *)
-      (* TODO: Create environment option creating a map entry *)
       (* TODO: Store the callback somewhere *)
       item
 
