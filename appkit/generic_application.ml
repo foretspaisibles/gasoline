@@ -261,6 +261,15 @@ struct
       List.fold_left loop [] !_table
   end
 
+  module RegistryCallback :
+  sig
+    val add : ConfigurationMap.callback -> unit
+    val iter : (ConfigurationMap.callback -> unit) -> unit
+  end = struct
+    let _table = ref []
+    let add c = _table := c :: !_table
+    let iter f= List.iter f !_table
+  end
 
   module Configuration =
   struct
@@ -292,11 +301,11 @@ struct
 	description;
       } in
       let item = ref default in
-      let callback = ConfigurationMap.callback key ((:=) item) in
       RegistryGetopt.add (component_path comp) name
 	kind flag ((:=) item) description;
       RegistryEnvironment.add (component_path comp) name env;
-      (* TODO: Store the callback somewhere *)
+      RegistryCallback.add
+	(ConfigurationMap.callback key ((:=) item));
       item
 
     let map () =
