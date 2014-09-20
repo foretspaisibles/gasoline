@@ -317,18 +317,18 @@ struct
   end
 
 
-  let run name usage description ?options ?notes main =
-(*    init_sink_system ();
-    init_components ();
-    prepare_configuration_maps();
-    build_command_line_spec();
-    execute_command_line_spec();
-    main rest
-*)
+  let run name usage description ?(options = []) ?(notes = []) main =
+    let restlist = ref [] in
+    let rest s = restlist := s :: !restlist in
+    let spec () =
+      Getopt.spec usage description
+	(RegistryGetopt.get () @ options) rest notes
+    in
     begin
       Component.init ();
       Component.bootstrap();
-      main [];
+      Getopt.parse_argv (spec());
+      main !restlist;
       Component.shutdown();
     end
 
