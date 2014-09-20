@@ -223,6 +223,45 @@ struct
       List.fold_left loop ConfigurationMap.empty !_table
   end
 
+  (* Keep trace of command line options mapped to configurations. *)
+  module RegistryGetopt :
+  sig
+    (* [add path name kind flag callback description] *)
+    val add : string list -> string ->
+      'a Parameter.Value.kind -> char option -> ('a -> unit) -> string -> unit
+    val map : unit -> ConfigurationMap.t
+    val get : unit -> Getopt.t list
+  end = struct
+    let _table = ref []
+    let really_add path name kind flag callback description =
+      let text = ref "" in
+      let of_string s =
+	text := s;
+	Parameter.Value.of_string_kind kind s
+      in
+      let getopt =
+	Getopt.concrete of_string flag callback description
+      in
+      _table := (path, name, getopt, text) :: !_table
+
+    let add path name kind flag callback description =
+      match flag with
+      | Some(c) -> really_add path name kind c callback description
+      | None -> ()
+
+    let map () =
+      let loop ax (path, name, _, text) =
+	try ConfigurationMap.add ax (path, name) (!text)
+	with Not_found -> ax
+      in
+      List.fold_left loop ConfigurationMap.empty !_table
+
+    let get () =
+      let loop ax (_, _, getopt, _) = getopt :: ax in
+      List.fold_left loop [] !_table
+  end
+
+
   module Configuration =
   struct
     type 'a kind =
@@ -254,8 +293,9 @@ struct
       } in
       let item = ref default in
       let callback = ConfigurationMap.callback key ((:=) item) in
+      RegistryGetopt.add (component_path comp) name
+	kind flag ((:=) item) description;
       RegistryEnvironment.add (component_path comp) name env;
-      (* TODO: Create command line option creating a map entry *)
       (* TODO: Store the callback somewhere *)
       item
 
