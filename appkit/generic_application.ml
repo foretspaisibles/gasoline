@@ -254,14 +254,7 @@ struct
       } in
       let item = ref default in
       let callback = ConfigurationMap.callback key ((:=) item) in
-      let registry_environment_add env =
-	RegistryEnvironment.add (component_path comp) name env
-	|> MonadOption.return
-      in
-      let open MonadOption.E in
-      env
-      >>= registry_environment_add
-      |> MonadOption.terminate;
+      RegistryEnvironment.add (component_path comp) name env;
       (* TODO: Create command line option creating a map entry *)
       (* TODO: Store the callback somewhere *)
       item
