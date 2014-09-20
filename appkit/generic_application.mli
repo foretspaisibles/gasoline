@@ -54,7 +54,24 @@ sig
 
     (** The abstract type of dynamically typed values. *)
     type t
-  end
+
+    val make : 'a kind -> 'a -> t
+    (** [make kind value] create a dynamically typed value. *)
+
+    val to_string : t -> string
+    (** [to_string v] transform [v] to a string.
+
+    This string can be written in a file and read back later with
+    [of_string]. *)
+
+    val of_string : string -> t
+    (** [of_string s] convert a string to a dynamic value. *)
+
+    val of_string_kind : 'a kind -> string -> 'a
+    (** [of_string_kind k s] convert [s] to a dynamic value of kind [k].
+
+    @raise Failure if [s] cannot be converted to a value of kind [k]. *)
+    end
 end
 
 (** The output signature of the functor [Make]. *)

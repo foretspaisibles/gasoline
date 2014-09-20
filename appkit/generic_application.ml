@@ -41,6 +41,10 @@ sig
   sig
     type 'a kind
     type t
+    val make : 'a kind -> 'a -> t
+    val to_string : t -> string
+    val of_string : string -> t
+    val of_string_kind : 'a kind -> string -> 'a
   end
 end
 
@@ -210,7 +214,34 @@ struct
     type 'a t = 'a ref
 
     let make kind comp ?flag ?env ?shy name default description =
-      failwith "Configuration.make: not implemented"
+      let component_path info =
+	let open Component in
+	info.config_prefix @ [ info.name ]
+      in
+      let concrete = {
+	ConfigurationMap.
+	of_string = Parameter.Value.of_string_kind kind;
+	to_string = (fun x -> Parameter.Value.make kind x
+			|> Parameter.Value.to_string );
+      } in
+      let key = {
+	ConfigurationMap.
+	concrete;
+	path = component_path comp;
+	name;
+	default;
+	description;
+      } in
+      let item = ref default in
+      let callback = ConfigurationMap.callback key ((:=) item) in
+      (* TODO: Create command line option creating a map entry *)
+      (* TODO: Create environment option creating a map entry *)
+      (* TODO: Store the callback somewhere *)
+      item
+
+    let map () =
+      wlog "Using empty configuration map";
+      ConfigurationMap.empty
 
     let get item =
       !item
