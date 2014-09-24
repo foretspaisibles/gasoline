@@ -251,10 +251,15 @@ struct
 	text := s;
 	Parameter.Value.of_string_kind kind s
       in
-      let getopt =
-	Getopt.concrete of_string flag callback description
+      let seen = ref false in
+      let callback_wrapper x =
+	seen:= true;
+	callback x
       in
-      _table := (path, name, getopt, text) :: !_table
+      let getopt =
+	Getopt.concrete of_string flag callback_wrapper description
+      in
+      _table := (path, name, getopt, text, seen) :: !_table
 
     let add path name kind flag callback description =
       match flag with
@@ -262,14 +267,17 @@ struct
       | None -> ()
 
     let map () =
-      let loop ax (path, name, _, text) =
-	try ConfigurationMap.add ax (path, name) (!text)
+      let loop ax (path, name, _, text, seen) =
+	try if !seen then
+	      ConfigurationMap.add ax (path, name) (!text)
+	    else
+	      ax
 	with Not_found -> ax
       in
       List.fold_left loop ConfigurationMap.empty !_table
 
     let get () =
-      let loop ax (_, _, getopt, _) = getopt :: ax in
+      let loop ax (_, _, getopt, _, _) = getopt :: ax in
       List.fold_left loop [] !_table
   end
 
