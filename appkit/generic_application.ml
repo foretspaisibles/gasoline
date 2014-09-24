@@ -103,7 +103,11 @@ module Make(Sink:SINK)
    and type out_channel = Sink.out_channel)(Parameter:P) =
 struct
 
+  let progname () =
+    Filename.basename Sys.executable_name
+
   let die code argv =
+    Printf.fprintf stderr "%s: " (progname());
     Printf.kfprintf
       (fun outc -> output_char outc '\n'; SysExits.exit code) stderr
       argv
@@ -363,8 +367,13 @@ struct
     exception Error of error * string
 
     let supervise err f x =
+      let error err mesg =
+	raise(Error(err, mesg))
+      in
       try f x
-      with exn -> raise(Error(err, Printexc.to_string exn))
+      with
+      | Failure(mesg) -> error err ("failure: "^mesg)
+      | exn -> error err (Printexc.to_string exn)
 
     let invalid_help () =
       invalid_arg "Generic_application.Make.help"
@@ -390,10 +399,10 @@ struct
 	supervise Main main lst;
 	supervise Shutdown Component.shutdown();
       with
-      | Error(Bootstrap, mesg) -> die EXIT_SOFTWARE "bootstrap: %s" mesg
-      | Error(Shutdown, mesg) -> die EXIT_SOFTWARE "shutdown: %s" mesg
+      | Error(Bootstrap, mesg) -> die EXIT_SOFTWARE "%s" mesg
+      | Error(Shutdown, mesg) -> die EXIT_SOFTWARE "%s" mesg
       | Error(Main, mesg) ->  (Component.shutdown();
-			       die EXIT_SOFTWARE "main: %s" mesg)
+			       die EXIT_SOFTWARE "%s" mesg)
   end
 
 
