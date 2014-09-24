@@ -24,6 +24,8 @@ message = \"I still cannot do much to help you, \\
 
 let configuration2 = "maxusers = 10"
 
+let configuration3 = "="
+
 let concrete_string =
   let id_string = (fun (x : string) -> x) in {
     ConfigurationMap.
@@ -68,10 +70,18 @@ let test_override suite =
   in
   add_case suite case
 
+let test_illegal_character suite =
+  let case = assert_exception "illegal_character"
+    (Failure("Syntax error in configuration file '' on line 1."))
+    ConfigurationMap.from_string "="
+  in
+  add_case suite case
+
 let init suite =
   List.iter (fun f -> f suite) [
     test_multiple_lines;
     test_override;
+    test_illegal_character;
   ]
 
 let () = with_registered_suite "Configuration" init

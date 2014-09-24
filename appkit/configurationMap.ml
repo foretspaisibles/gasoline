@@ -10,6 +10,7 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
+open Printf
 
 (* Finite automatons recognising globbing patterns. *)
 module Glob =
@@ -286,7 +287,8 @@ struct
     ()
 
   let parse_error pos message =
-    ()
+    failwith (sprintf "Syntax error in configuration file '%s' on line %d."
+		      pos.Lexing.pos_fname pos.Lexing.pos_lnum)
 
   let default path name value =
     ()

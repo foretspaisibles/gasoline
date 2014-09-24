@@ -340,12 +340,16 @@ struct
     | Override of spec * spec
 
     let rec map spec =
+      let handle_failure f x =
+	try f x
+	with Failure(mesg) -> die EXIT_USAGE "failure: %s" mesg
+      in
       match spec with
       | Empty -> ConfigurationMap.empty
       | Command_line -> RegistryGetopt.map ()
       | Environment -> RegistryEnvironment.map ()
-      | File(name) -> ConfigurationMap.from_file name
-      | Heredoc(conf) -> ConfigurationMap.from_string conf
+      | File(name) -> handle_failure ConfigurationMap.from_file name
+      | Heredoc(conf) -> handle_failure ConfigurationMap.from_string conf
       | Alist(bindings) -> ConfigurationMap.from_alist bindings
       | Merge(a,b) -> ConfigurationMap.merge (map a) (map b)
       | Override(a,b) -> ConfigurationMap.override (map a)(map b)

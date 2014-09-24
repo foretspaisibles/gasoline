@@ -52,12 +52,14 @@ struct
     mutable m: mode;
     mutable p: Lexing.position;
     b: Buffer.t;
+    fname: string;
   }
 
-  let make () = {
+  let make fname = {
     m = MNORMAL;
     p = Lexing.dummy_pos;
     b = Buffer.create buffer_sz;
+    fname;
   }
 
   let enter_normal_mode f c lexbuf =
@@ -148,8 +150,11 @@ struct
   let contents c =
     Buffer.contents c.b
 
+  let with_fname c pos =
+    { pos with Lexing.pos_fname = c.fname }
+
   let startpos c =
-    c.p
+    with_fname c c.p
 
   let is_empty c =
     Buffer.length c.b = 0
@@ -230,10 +235,10 @@ struct
     Lexing.new_line lexbuf;
     a
 
-  let raw _ lexbuf =
+  let raw c lexbuf =
     (
-      lexbuf.Lexing.lex_start_p,
-      lexbuf.Lexing.lex_curr_p,
+      Context.with_fname c lexbuf.Lexing.lex_start_p,
+      Context.with_fname c lexbuf.Lexing.lex_curr_p,
       (Lexing.lexeme lexbuf)
     )
 
@@ -243,8 +248,8 @@ struct
 
   let fixed token c lexbuf =
     (
-      lexbuf.Lexing.lex_start_p,
-      lexbuf.Lexing.lex_curr_p,
+      Context.with_fname c lexbuf.Lexing.lex_start_p,
+      Context.with_fname c lexbuf.Lexing.lex_curr_p,
       token
     )
 
@@ -426,11 +431,11 @@ let rec process_lexbuf c lexbuf =
 let process_file file =
   let c = open_in file in
   let l = Lexing.from_channel c in
-  let u = Context.make () in
-  begin
+  let u = Context.make file in
+  try
     process_lexbuf u l;
     close_in c;
-  end
+  with exn -> close_in c; raise exn
 
 
 type pos =
@@ -510,9 +515,9 @@ struct
 		       parse_lexbuf p lexbuf )
     | _ -> D.parse_error p.d startpos Expecting_path_sep_or_term
 
-  let safe_parse_lexbuf d lexbuf =
+  let safe_parse_lexbuf fname d lexbuf =
     try parse_lexbuf {
-      c = Context.make ();
+      c = Context.make fname;
       d = d;
     } lexbuf
     with Failure "lexing: empty token" -> (
@@ -520,20 +525,20 @@ struct
     )
 
   let parse d lexbuf =
-    safe_parse_lexbuf d lexbuf
+    safe_parse_lexbuf "" d lexbuf
 
   let parse_channel d channel =
-    safe_parse_lexbuf d (Lexing.from_channel channel)
+    safe_parse_lexbuf "" d (Lexing.from_channel channel)
 
-  let parse_file d file =
-    let channel = open_in file in
-    begin
-      parse_channel d channel;
+  let parse_file d fname =
+    let channel = open_in fname in
+    try
+      safe_parse_lexbuf fname d (Lexing.from_channel channel);
       close_in channel;
-    end
+    with exn -> close_in channel; raise exn
 
   let parse_string d s =
-    safe_parse_lexbuf d (Lexing.from_string s)
+    safe_parse_lexbuf "" d (Lexing.from_string s)
 
 end
 }
