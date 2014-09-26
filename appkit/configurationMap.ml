@@ -44,20 +44,17 @@ struct
 end
 
 
-exception Parse_error of Lexing.position * string
-
-let parse_error pos s =
-  raise (Parse_error(pos,s))
-
 (* We implement configuration sets as a functor parametrised by
 messages emitted on the occurence of various events. *)
 
 module type MESSAGE =
 sig
-  val value_error : string list -> string -> Lexing.position -> string -> unit
-  val parse_error : Lexing.position -> string -> unit
+  val value_error : string list -> string ->
+    Lexing.position -> string -> string -> unit
+  val uncaught_exn : string list -> string ->
+    Lexing.position -> string -> exn -> unit
   val default : string list -> string -> string -> unit
-  val uncaught_exn : string list -> string -> exn -> unit
+  val parse_error : Lexing.position -> string -> unit
 end
 
 module type S =
@@ -101,7 +98,7 @@ module Make(M:MESSAGE) =
 struct
 
   type t =
-    (string * string) list
+    (string * (string * Lexing.position)) list
 
   type 'a concrete = {
     of_string: string -> 'a;
@@ -144,20 +141,23 @@ struct
     M.default key.path key.name (key.concrete.to_string key.default);
     key.default
 
-  let value key text =
+  let positioned_value pos key text =
     try key.concrete.of_string text
     with
-    | Parse_error(pos, s) -> (
-      M.value_error key.path key.name pos s;
-      use_default key
-    )
-    | exn -> (
-      M.uncaught_exn key.path key.name exn;
-      use_default key
-    )
+    | Failure(mesg) ->
+       M.value_error key.path key.name pos text mesg;
+       use_default key
+    | exn ->
+       M.uncaught_exn key.path key.name pos text exn;
+       use_default key
+
+  let value key text =
+    positioned_value Lexing.dummy_pos key text
 
   let get a key =
-    try value key (assoc key a)
+    try
+      let (text, pos) = assoc key a in
+      positioned_value pos key text
     with
     | Not_found -> use_default key
 
@@ -178,7 +178,7 @@ struct
   let empty = []
 
   let add a (p,k) v =
-    (path_to_string p k,v) :: a
+    (path_to_string p k, (v, Lexing.dummy_pos)) :: a
 
   let merge a b =
     a @ b
@@ -213,14 +213,13 @@ struct
       p.path <- List.map ConfigurationParser.text l
 
     let binding p k v =
-      p.conf <- (
-	path_to_string p.path (ConfigurationParser.text k),
-	ConfigurationParser.text v
-      ) :: p.conf
+      let path = path_to_string p.path (ConfigurationParser.text k) in
+      let text = ConfigurationParser.text v in
+      let pos = ConfigurationParser.startpos v in
+      p.conf <- (path, (text, pos)) :: p.conf
 
     let parse_error p pos error =
       M.parse_error pos (ConfigurationParser.error_to_string error)
-
   end
 
   module Parser = ConfigurationParser.Make(Parser_definition)
@@ -250,37 +249,37 @@ end
 
 module Quiet =
 struct
-  let value_error path name pos value =
+  let value_error path name pos text mesg =
     ()
 
-  let parse_error pos message =
+  let uncaught_exn path name pos text exn =
     ()
 
   let default path name value =
     ()
 
-  let uncaught_exn path name exn =
+  let parse_error pos message =
     ()
 end
 
 
 module Verbose =
 struct
-  let value_error path name pos value =
+  let value_error path name pos text mesg =
     eprintf "ConfigurationMap.value_error: '%s' for '%s' in %s'"
-      value (path_to_string path name) pos.Lexing.pos_fname
+      text (path_to_string path name) pos.Lexing.pos_fname
+
+  let uncaught_exn path name text exn =
+    eprintf "ConfigurationMap.uncaught_exn: %s: %s\n"
+      (path_to_string path name) (Printexc.to_string exn)
+
+  let default path name value =
+    ()
 
   let parse_error pos message =
     eprintf "ConfigurationMap.parse_error: \
       syntax error in configuration file '%s' on line %d."
       pos.Lexing.pos_fname pos.Lexing.pos_lnum
-
-  let default path name value =
-    ()
-
-  let uncaught_exn path name exn =
-    eprintf "ConfigurationMap.uncaught_exn: %s: %s\n"
-      (path_to_string path name) (Printexc.to_string exn)
 end
 
 module Internal =

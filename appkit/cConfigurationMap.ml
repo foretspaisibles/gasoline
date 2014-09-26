@@ -15,23 +15,19 @@ include ConfigurationMap
 
 module Concrete =
 struct
-  let wrap f x =
-    try f x
-    with Failure _ -> ConfigurationMap.parse_error Lexing.dummy_pos x
-
   let bool_of_string s =
-    wrap Pervasives.bool_of_string s
+    Pervasives.bool_of_string s
 
   let char_of_string s =
     if String.length s = 1 then
       s.[0]
-    else ConfigurationMap.parse_error Lexing.dummy_pos s
+    else failwith "char_of_string"
 
   let int_of_string s =
-    wrap Pervasives.int_of_string s
+    Pervasives.int_of_string s
 
   let float_of_string s =
-    wrap Pervasives.float_of_string s
+    Pervasives.float_of_string s
 
   let string_of_string s =
     s

@@ -31,10 +31,6 @@ type 'a concrete = {
   to_string: 'a -> string;
 }
 
-(** Function used by conversion functions to signal parse errors. *)
-val parse_error : Lexing.position -> string -> 'a
-
-
 (** The type of configuration keys.  A configuration key can be used
 to retrieve a configuration value. *)
 type 'a key = {
