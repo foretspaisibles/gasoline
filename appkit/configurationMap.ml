@@ -19,60 +19,28 @@ let path_to_string p k =
 module Glob =
 struct
 
-  module State =
-  struct
-    type t = int
-    let compare = Pervasives.compare
-  end
+  let rec list_match pattern text =
+    match pattern, text with
+    | [], [] -> true
+    | '*' :: pattern_tl, [] -> list_match pattern_tl []
+    | '*' :: pattern_tl, text_hd :: text_tl ->
+       list_match pattern_tl text || list_match pattern text_tl
+    | '?' :: pattern_tl, _ :: text_tl -> list_match pattern_tl text_tl
+    | pattern_hd :: pattern_tl, text_hd :: text_tl ->
+       (pattern_hd = text_hd) && list_match pattern_tl text_tl
+    | _ -> false
 
-  module State_set =
-    Set.Make(State)
-
-  type t = string
-
-  let add_raw_transition patt c state a =
-    let patt_sz = String.length patt in
-    if state < patt_sz then (
-      match patt.[state] with
-      | '?' -> State_set.add (state + 1) a
-      | '*' -> State_set.add state a
-      | p -> if p = c then State_set.add (state + 1) a else a
-    ) else (
-      a
-    )
-
-  let add_epsilon_transition patt state a =
-    let patt_sz = String.length patt in
-    if state < patt_sz && patt.[state] = '*' then
-      State_set.add (state + 1) a
-    else
-      a
-
-  let raw_transition patt c a =
-    State_set.fold (add_raw_transition patt c) a State_set.empty
-
-  let rec saturate patt a =
-    let epsilon =
-      State_set.fold (add_epsilon_transition patt) a State_set.empty
+  let string_chars s =
+    let rec loop ax i =
+      if i < 0 then
+	ax
+      else
+	loop (s.[i] :: ax) (i-1)
     in
-    if State_set.subset epsilon a then
-      a
-    else
-      saturate patt (State_set.union a epsilon)
+    loop [] (String.length s - 1)
 
-  let transition patt c a =
-    saturate patt (raw_transition patt c a)
-
-  let iteration patt active c =
-    active := transition patt c !active
-
-  (* [string_match patt s] recognises the string [s] matching [patt]. *)
-  let string_match patt s =
-    let active = ref(saturate patt (State_set.singleton 0)) in
-    begin
-      String.iter (iteration patt active) s;
-      State_set.mem (String.length patt) !active
-    end
+  let string_match pattern text =
+    list_match (string_chars pattern) (string_chars text)
 end
 
 
