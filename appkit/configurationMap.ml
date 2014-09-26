@@ -282,22 +282,38 @@ end
 
 module Quiet =
 struct
-
   let value_error path name pos value =
-    failwith (sprintf "Bad value '%s' for '%s' in %s'."
-		      value (path_to_string path name) pos.Lexing.pos_fname)
+    ()
 
   let parse_error pos message =
-    failwith (sprintf "Syntax error in configuration file '%s' on line %d."
-		      pos.Lexing.pos_fname pos.Lexing.pos_lnum)
+    ()
 
   let default path name value =
     ()
 
-  let uncaught_exn exn path name =
+  let uncaught_exn path name exn =
     ()
 end
 
+
+module Verbose =
+struct
+  let value_error path name pos value =
+    eprintf "ConfigurationMap.value_error: '%s' for '%s' in %s'"
+      value (path_to_string path name) pos.Lexing.pos_fname
+
+  let parse_error pos message =
+    eprintf "ConfigurationMap.parse_error: \
+      syntax error in configuration file '%s' on line %d."
+      pos.Lexing.pos_fname pos.Lexing.pos_lnum
+
+  let default path name value =
+    ()
+
+  let uncaught_exn path name exn =
+    eprintf "ConfigurationMap.uncaught_exn: %s: %s\n"
+      (path_to_string path name) (Printexc.to_string exn)
+end
 
 module Internal =
   (Make(Quiet) : S)
