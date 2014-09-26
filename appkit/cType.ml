@@ -211,7 +211,12 @@ struct
 
   let of_string_kind :
   type a. a kind -> string -> a =
-    fun k s ->
+    let is_plain_string s =
+      String.length s = 0 || s.[0] <> '"'
+    in
+    fun k s -> match k, is_plain_string s with
+    | String, true -> s
+    | _ ->
       try sscanf s "%r%!" (reader_kind k) ident
       with Scan_failure(_) -> failwith "CValue.of_string_kind"
 
