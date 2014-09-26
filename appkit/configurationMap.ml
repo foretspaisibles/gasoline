@@ -12,6 +12,9 @@ are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 open Printf
 
+let path_to_string p k =
+  String.concat "." (p @ [k])
+
 (* Finite automatons recognising globbing patterns. *)
 module Glob =
 struct
@@ -129,9 +132,6 @@ It is not possible to use an hashtable because keys could be patterns. *)
 module Make(M:MESSAGE) =
 struct
 
-  let path_to_string p k =
-    String.concat "." (p @ [k])
-
   type t =
     (string * string) list
 
@@ -163,14 +163,14 @@ struct
     description = des;
   }
 
-  let assoc key a =
+  let assoc key conf =
     let path_as_string =
       path_to_string key.path key.name
     in
     let string_match (glob, data) =
       Glob.string_match glob path_as_string
     in
-    snd (List.find string_match a)
+    snd (List.find string_match conf)
 
   let use_default key =
     M.default key.path key.name (key.concrete.to_string key.default);
@@ -246,7 +246,7 @@ struct
 
     let binding p k v =
       p.conf <- (
-	ConfigurationParser.text k,
+	path_to_string p.path (ConfigurationParser.text k),
 	ConfigurationParser.text v
       ) :: p.conf
 
@@ -284,7 +284,8 @@ module Quiet =
 struct
 
   let value_error path name pos value =
-    ()
+    failwith (sprintf "Bad value '%s' for '%s' in %s'."
+		      value (path_to_string path name) pos.Lexing.pos_fname)
 
   let parse_error pos message =
     failwith (sprintf "Syntax error in configuration file '%s' on line %d."
