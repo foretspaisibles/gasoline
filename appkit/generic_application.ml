@@ -82,6 +82,7 @@ sig
     | Command_line
     | Environment
     | File of string
+    | RandomFile of string t
     | Heredoc of string
     | Alist of ((string list * string) * string) list
     | Merge of spec * spec
@@ -342,6 +343,7 @@ struct
     | Command_line
     | Environment
     | File of string
+    | RandomFile of string t
     | Heredoc of string
     | Alist of ((string list * string) * string) list
     | Merge of spec * spec
@@ -352,12 +354,21 @@ struct
 	try f x
 	with Failure(mesg) -> die EXIT_USAGE "failure: %s" mesg
       in
+      let use_file name =
+	(* Configuration values used in RandomFile should be
+	   initialised to the empty string. *)
+	if name <> "" then
+	  handle_failure ConfigurationMap.from_file name
+	else
+	  ConfigurationMap.empty
+      in
       match spec with
       | Empty -> ConfigurationMap.empty
       | Command_line -> RegistryGetopt.map ()
       | Environment -> RegistryEnvironment.map ()
-      | File(name) -> handle_failure ConfigurationMap.from_file name
-      | Heredoc(conf) -> handle_failure ConfigurationMap.from_string conf
+      | File(name) -> use_file name
+      | RandomFile(name) -> use_file (get name)
+      | Heredoc(doc) -> handle_failure ConfigurationMap.from_string doc
       | Alist(bindings) -> ConfigurationMap.from_alist bindings
       | Merge(a,b) -> ConfigurationMap.merge (map a) (map b)
       | Override(a,b) -> ConfigurationMap.override (map a)(map b)

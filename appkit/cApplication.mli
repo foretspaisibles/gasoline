@@ -432,6 +432,7 @@ sig
   | Command_line
   | Environment
   | File of string
+  | RandomFile of string t
   | Heredoc of string
   | Alist of ((string list * string) * string) list
   | Merge of spec * spec

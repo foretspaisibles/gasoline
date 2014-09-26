@@ -43,6 +43,11 @@ struct
       make String comp ~flag:'p' ~env:"PARAGRAPH"
 	"paragraph" "I must not talk in class"
 	"The paragraph we must copy as punishment"
+
+    let configfile =
+      make String comp ~flag:'c' ~env:"CONFIGFILE"
+        "configfile" ""
+	"Add a configuration file to read"
   end
 
 
@@ -89,11 +94,13 @@ let main lst =
 let () =
   let configuration =
     let open Application.Configuration in
-    Merge(Environment, Command_line)
+    Merge(
+	Merge(Environment, Command_line),
+	RandomFile(Monolith.Configuration.configfile))
   in
   Application.run
     "punishment"
-    "[-n number] [-p paragraph]"
+    "[-n number] [-p paragraph] [-c configfile]"
     "I must not talk in class."
     ~configuration
     main
