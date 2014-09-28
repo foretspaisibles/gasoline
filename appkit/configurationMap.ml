@@ -269,12 +269,13 @@ struct
     eprintf "ConfigurationMap.value_error: '%s' for '%s' in %s'"
       text (path_to_string path name) pos.Lexing.pos_fname
 
-  let uncaught_exn path name text exn =
+  let uncaught_exn path name pos text exn =
     eprintf "ConfigurationMap.uncaught_exn: %s: %s\n"
       (path_to_string path name) (Printexc.to_string exn)
 
   let default path name value =
-    ()
+    eprintf "ConfigurationMap.default: %s: %s\n"
+      (path_to_string path name) value
 
   let parse_error pos message =
     eprintf "ConfigurationMap.parse_error: \
