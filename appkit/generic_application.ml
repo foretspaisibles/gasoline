@@ -164,53 +164,104 @@ struct
       in
       Hashtbl.iter loop _card_table
 
-    let provide name =
-      name :: (Hashtbl.find _card_table name).info.provide
+    (* Rules to sort the component list.
 
-    let require name =
-      (Hashtbl.find _card_table name).info.require
+    1. If two independent components provide the same thing, then both
+       component must be executed to meet the barrier.
 
-    let is_leaf satisfied name =
-      List.for_all (fun x -> List.mem x satisfied)
-        (require name)
+    2. If two interdependent components provide the same thing, then
+       both component must be executed in graph order to meet the
+       barrier.
 
-    let rcorder lst =
-      let rec loop satisfied progress seen togo =
-	match progress, seen, togo with
-	| false, [], [] -> List.rev satisfied
-	| false, hd :: tl, [] -> failwith(hd)
-	| true, _, [] -> loop satisfied false [] seen
-	| _, _, hd :: tl ->
-	   if is_leaf satisfied hd then
-	     loop (provide hd @ satisfied) true seen tl
-	   else
-	     loop satisfied progress (hd :: seen) tl
+    3. We pick a component, stack it as “in progress” and try to
+       satisfy all its requirements. Once all of an in-progress script
+       are met, we can remove it from the “in progress” stack. *)
+
+    let maybe_add x lst =
+      if List.mem x lst then lst else x :: lst
+
+    let remove x lst =
+      List.filter (fun y -> x <> y) lst
+
+    let dfs graph visited startnode =
+      let rec explore path visited node =
+        if List.mem node path then
+          ksprintf failwith
+            "Cyclic dependency on provision '%s'."
+            node
+        else if List.mem node visited then
+          visited
+        else
+          let nextpath = node :: path in
+          let edges = List.assoc node graph in
+          let dfsvisited =
+            List.fold_left (explore nextpath) visited edges
+          in
+          node :: dfsvisited
       in
-      loop [] false [] lst
+      explore [] visited startnode
+
+    let toposort graph =
+      List.fold_left (fun visited (node,_) -> dfs graph visited node)
+        [] graph
+
+    let graph table =
+      let require card =
+	List.map (fun r -> (card.info.name, r)) card.info.require
+      in
+      let provide card =
+	List.map (fun p -> (p, card.info.name)) card.info.provide
+      in
+      let rec transfer a b =
+	match a with
+	| [] -> b
+	| hd :: tl -> transfer tl (hd::b)
+      in
+      let edges table =
+	let loop _ card ax =
+	  ax
+	  |> transfer (require card)
+	  |> transfer (provide card)
+	  |> remove (card.info.name, card.info.name)
+	in
+	Hashtbl.fold loop table []
+      in
+      let nodes table =
+	let loop _ card ax =
+	  (card.info.name, []) :: ax
+	in
+	Hashtbl.fold loop table []
+      in
+      let rec add_edge graph ((node, require) as edge) =
+	match graph with
+	| [] -> [node, [require]]
+	| ((hd_node, hd_require) as hd_edge) :: tl ->
+	   if hd_node = node then
+	     (hd_node, maybe_add require hd_require) :: tl
+	   else
+	     hd_edge :: add_edge tl edge
+      in
+      List.fold_left add_edge (nodes table) (edges table)
 
     let process_components f lst =
       let loop name =
-	f (Hashtbl.find _card_table name)
+	try f (Hashtbl.find _card_table name)
+	with Not_found -> ()
       in
       List.iter loop lst
 
-    let component_lst () =
-      Hashtbl.fold (fun name _ ax -> name :: ax) _card_table []
-
-    let handle_rcorder lst =
-      try rcorder lst
-      with Failure(component) ->
-        failwith(sprintf "Cyclic dependency on provision '%s'." component)
+    let component_graph () =
+      graph _card_table
 
     let bootstrap () =
-      component_lst ()
-      |> handle_rcorder
+      component_graph ()
+      |> toposort
+      |> List.rev
       |> process_components (fun card -> card.bootstrap card.info)
 
     let shutdown () =
-      component_lst ()
-      |> handle_rcorder
-      |> List.rev
+      component_graph ()
+      |> toposort
       |> process_components (fun card -> card.shutdown card.info)
   end
 
