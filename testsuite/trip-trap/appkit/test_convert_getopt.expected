@@ -1,1 +1,2 @@
-test_convert_config: error: Bad boolean argument 'maybe' for option '-f'.
+punishment.byte: invalid argument -- n "@": CValue.of_string_kind
+Usage: punishment.byte [-n number] [-p paragraph] [-c configfile]

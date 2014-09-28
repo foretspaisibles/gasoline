@@ -99,7 +99,11 @@ struct
     Getopt.flag c callback description
 
   let make kind c callback description =
-    Getopt.concrete (Value.of_string_kind kind) c callback description
+    let convert kind text =
+      try Value.of_string_kind kind text
+      with Failure(_) -> failwith(Value.kind_name kind)
+    in
+    Getopt.concrete (convert kind) c callback description
 
   let note title text =
     Getopt.note title text
