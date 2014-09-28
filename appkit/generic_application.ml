@@ -116,6 +116,7 @@ struct
       argv
 
   let wlog argv =
+    Printf.fprintf stderr "%s: " (progname());
     Printf.kfprintf
       (fun outc -> output_char outc '\n') stderr
       argv
@@ -422,6 +423,18 @@ struct
     let usage mesg =
       !actually_usage mesg
 
+    let terminate mesg mesg2 =
+      wlog "%s" mesg;
+      die EXIT_SOFTWARE "%s" mesg2
+
+    let emergency_shutdown mesg =
+      try
+	Component.shutdown();
+	die EXIT_SOFTWARE "%s" mesg
+      with
+      | Failure(mesg2) -> terminate mesg ("failure: "^ mesg2)
+      | exn -> terminate mesg (Printexc.to_string exn)
+
     let run spec main lst =
       try
 	supervise Bootstrap Component.bootstrap();
@@ -430,8 +443,7 @@ struct
       with
       | Error(Bootstrap, mesg) -> die EXIT_SOFTWARE "%s" mesg
       | Error(Shutdown, mesg) -> die EXIT_SOFTWARE "%s" mesg
-      | Error(Main, mesg) ->  (Component.shutdown();
-			       die EXIT_SOFTWARE "%s" mesg)
+      | Error(Main, mesg) ->  emergency_shutdown mesg
   end
 
 
