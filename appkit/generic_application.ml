@@ -162,58 +162,49 @@ struct
       in
       Hashtbl.iter loop _card_table
 
-    let rec recursive_require name =
-      let card = Hashtbl.find _card_table name in
-      List.concat
-	(card.info.require :: List.map recursive_require card.info.require)
-
     let provide name =
-      (Hashtbl.find _card_table name).info.provide
+      name :: (Hashtbl.find _card_table name).info.provide
 
-    let is_required_by a b =
-      let bdependents = recursive_require b in
-      let required_by_b name =
-	List.mem name bdependents
+    let require name =
+      (Hashtbl.find _card_table name).info.require
+
+    let is_leaf satisfied name =
+      List.for_all (fun x -> List.mem x satisfied)
+        (require name)
+
+    let rcorder lst =
+      let rec loop satisfied progress seen togo =
+	match progress, seen, togo with
+	| false, [], [] -> List.rev satisfied
+	| false, hd :: tl, [] -> failwith(hd)
+	| true, _, [] -> loop satisfied false [] seen
+	| _, _, hd :: tl ->
+	   if is_leaf satisfied hd then
+	     loop (provide hd @ satisfied) true seen tl
+	   else
+	     loop satisfied progress (hd :: seen) tl
       in
-      List.exists required_by_b (a :: provide a)
+      loop [] false [] lst
 
-    let must_bootstrap_before a b =
-      let general_case a b =
-	match is_required_by a b, is_required_by b a with
-	| true, true -> failwith "cyclic dependency"
-	| true, false -> true
-	| _ -> false
-      in
-      a <> b && general_case a b
-
-    let must_shutdown_before a b =
-      must_bootstrap_before b a
-
-    let rcorder is_before lst =
-      let compare a b =
-	if is_before a b then
-	  1
-	else if a = b then
-	  0
-	else
-	  -1
-      in
-      List.sort compare lst
-
-    let rcorder_apply is_before f =
+    let process_components f lst =
       let loop name =
 	f (Hashtbl.find _card_table name)
       in
-      let component_lst =
-	Hashtbl.fold (fun name _ ax -> name :: ax) _card_table []
-      in
-      List.iter loop (rcorder is_before component_lst)
+      List.iter loop lst
+
+    let component_lst () =
+      Hashtbl.fold (fun name _ ax -> name :: ax) _card_table []
 
     let bootstrap () =
-      rcorder_apply must_bootstrap_before (fun card -> card.bootstrap card.info)
+      component_lst ()
+      |> rcorder
+      |> process_components (fun card -> card.bootstrap card.info)
 
     let shutdown () =
-      rcorder_apply must_shutdown_before (fun card -> card.shutdown card.info)
+      component_lst ()
+      |> rcorder
+      |> List.rev
+      |> process_components (fun card -> card.shutdown card.info)
   end
 
   (* Keep trace of environment variables mapped to configurations. *)
