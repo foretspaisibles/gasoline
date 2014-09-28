@@ -47,7 +47,7 @@ struct
     let configfile =
       make String comp ~flag:'c' ~env:"CONFIGFILE"
         "configfile" ""
-	"Add a configuration file to read"
+	"The name of an additional configuration file to read"
   end
 
 
