@@ -33,7 +33,7 @@ test_convert_getopt.got: punishment.byte
 	./${.ALLSRC} -n '@' > ${.TARGET}
 
 test_convert_config.got: punishment.byte
-	./${.ALLSRC} -c punishment.conf > ${.TARGET}
+	-./${.ALLSRC} -c punishment.conf > ${.TARGET} 2>&1
 
 test_help.got: punishment.byte
 	./${.ALLSRC} -h > ${.TARGET}

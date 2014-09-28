@@ -265,6 +265,15 @@ struct
     | Thingie(String, s) -> fprintf ppt "String(%S)" s
     | Thingie(Float, f) -> fprintf ppt "Float(%g)" f
 
+  let kind_name :
+  type a. a kind -> string =
+    function
+    | Bool -> "boolean"
+    | Int -> "integer"
+    | Char -> "character"
+    | String -> "string"
+    | Float -> "floating point"
+
   type locale = Locale.t
 
   type format = {

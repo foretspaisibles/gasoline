@@ -72,7 +72,7 @@ let test_override suite =
 
 let test_illegal_character suite =
   let case = assert_exception "illegal_character"
-    (Failure("Syntax error in configuration file '' on line 1."))
+    (Failure("Syntax error in configuration text on line 1."))
     ConfigurationMap.from_string "="
   in
   add_case suite case

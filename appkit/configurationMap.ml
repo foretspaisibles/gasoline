@@ -283,7 +283,52 @@ struct
       pos.Lexing.pos_fname pos.Lexing.pos_lnum
 end
 
+
+module Brittle =
+struct
+
+  type location =
+    | Undefined
+    | File of string * int
+
+  let location pos =
+    if pos.Lexing.pos_fname = "" then
+      Undefined
+    else
+      File(pos.Lexing.pos_fname, pos.Lexing.pos_lnum)
+
+  let failprintf fmt =
+    ksprintf (fun s -> raise(Failure(s))) fmt
+
+  let value_error path name pos text mesg =
+    match location pos with
+    | File(filename, line) ->
+       failprintf "Bad %s value '%s' for '%s' in '%s'."
+                  mesg text (path_to_string path name) filename
+    | Undefined ->
+       failprintf "Bad %s value '%s' for '%s'."
+                  mesg text (path_to_string path name)
+
+  let uncaught_exn path name pos text exn =
+    eprintf "ConfigurationMap.uncaught_exn: %s: %s\n"
+      (path_to_string path name) (Printexc.to_string exn)
+
+  let default path name value =
+    eprintf "ConfigurationMap.default: %s: %s\n"
+      (path_to_string path name) value
+
+  let parse_error pos message =
+    match location pos with
+    | File(filename, line) ->
+       failprintf "Syntax error in configuration file '%s' on line %d."
+         filename line
+    | Undefined ->
+       failprintf "Syntax error in configuration text on line %d."
+         pos.Lexing.pos_lnum
+end
+
+
 module Internal =
-  (Make(Quiet) : S)
+  (Make(Brittle) : S)
 
 include Internal

@@ -228,6 +228,8 @@ sig
   val printer : Format.formatter -> t -> unit
   (** A printer for the toplevel. *)
 
+  val kind_name : 'a kind -> string
+  (** The name of the value kind. *)
 
   (** {6 Formatted output}
 

@@ -70,6 +70,9 @@ sig
     (** [of_string_kind k s] convert [s] to a dynamic value of kind [k].
 
     @raise Failure if [s] cannot be converted to a value of kind [k]. *)
+
+    val kind_name : 'a kind -> string
+    (** The name of a value kind. *)
     end
 end
 

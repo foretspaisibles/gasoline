@@ -45,6 +45,7 @@ sig
     val to_string : t -> string
     val of_string : string -> t
     val of_string_kind : 'a kind -> string -> 'a
+    val kind_name : 'a kind -> string
   end
 end
 
@@ -307,12 +308,20 @@ struct
 	let open Component in
 	info.config_prefix @ [ info.name ]
       in
-      let concrete = {
+      let concrete =
+	let of_string text =
+	  try Parameter.Value.of_string_kind kind text
+	  with Failure(_) -> failwith(Parameter.Value.kind_name kind)
+	in
+	let to_string x =
+	  Parameter.Value.make kind x
+	  |> Parameter.Value.to_string
+	in {
 	ConfigurationMap.
-	of_string = Parameter.Value.of_string_kind kind;
-	to_string = (fun x -> Parameter.Value.make kind x
-			|> Parameter.Value.to_string );
-      } in
+	of_string;
+	to_string;
+	}
+      in
       let key = {
 	ConfigurationMap.
 	concrete;
@@ -349,11 +358,11 @@ struct
     | Merge of spec * spec
     | Override of spec * spec
 
+    let handle_failure f x =
+      try f x
+      with Failure(mesg) -> die EXIT_USAGE "failure: %s" mesg
+
     let rec map spec =
-      let handle_failure f x =
-	try f x
-	with Failure(mesg) -> die EXIT_USAGE "failure: %s" mesg
-      in
       let use_file name =
 	(* Configuration values used in RandomFile should be
 	   initialised to the empty string. *)
@@ -375,8 +384,8 @@ struct
 
     let init spec =
       let configuration_map = map spec in
-      RegistryCallback.iter
-	(ConfigurationMap.apply configuration_map)
+      handle_failure RegistryCallback.iter
+	    (ConfigurationMap.apply configuration_map)
   end
 
 
