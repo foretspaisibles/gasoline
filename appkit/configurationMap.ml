@@ -314,8 +314,7 @@ struct
       (path_to_string path name) (Printexc.to_string exn)
 
   let default path name value =
-    eprintf "ConfigurationMap.default: %s: %s\n"
-      (path_to_string path name) value
+    ()
 
   let parse_error pos message =
     match location pos with

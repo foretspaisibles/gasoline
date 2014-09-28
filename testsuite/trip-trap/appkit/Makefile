@@ -27,7 +27,7 @@ TESTS+=		test_rcorder
 TESTS+=		test_usage
 
 test_convert_environment.got: punishment.byte
-	env NUMBER='@' ./${.ALLSRC} > ${.TARGET}
+	-env NUMBER='@' ./${.ALLSRC} > ${.TARGET} 2>&1
 
 test_convert_getopt.got: punishment.byte
 	./${.ALLSRC} -n '@' > ${.TARGET}

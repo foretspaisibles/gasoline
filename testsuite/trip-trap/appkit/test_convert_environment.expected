@@ -1,1 +1,1 @@
-test_convert_config: error: Bad boolean value 'maybe' for 'test.flag' in 'test_convert_config.conf'.
+punishment.byte: failure: Bad integer value '@' for 'monolith.number'.
