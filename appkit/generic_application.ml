@@ -11,6 +11,7 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 open SysExits
+open Printf
 
 type info =
   Generic_component.info
@@ -195,14 +196,19 @@ struct
     let component_lst () =
       Hashtbl.fold (fun name _ ax -> name :: ax) _card_table []
 
+    let handle_rcorder lst =
+      try rcorder lst
+      with Failure(component) ->
+        failwith(sprintf "Cyclic dependency on provision '%s'." component)
+
     let bootstrap () =
       component_lst ()
-      |> rcorder
+      |> handle_rcorder
       |> process_components (fun card -> card.bootstrap card.info)
 
     let shutdown () =
       component_lst ()
-      |> rcorder
+      |> handle_rcorder
       |> List.rev
       |> process_components (fun card -> card.shutdown card.info)
   end
