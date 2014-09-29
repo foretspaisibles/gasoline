@@ -17,7 +17,7 @@ open CApplication
 
 module Component_automaton :
 sig
-  val comp : Component.t
+  val comp : Component.info
 
   module Configuration :
   sig
@@ -33,7 +33,7 @@ end
 
 module Component_library :
 sig
-  val comp : Component.t
+  val comp : Component.info
 
   module Configuration :
   sig
@@ -50,4 +50,4 @@ val help : unit -> unit
 val list : unit -> unit
 val compile : string -> unit
 val generate : string -> unit
-val main : unit -> unit
+val main : string list -> unit

@@ -25,9 +25,9 @@ struct
     pos.Lexing.pos_cnum - pos.Lexing.pos_bol
 
   let excerpt_to_string tag excerpt =
-    let startpos = Configuration_parser.startpos excerpt in
-    let endpos = Configuration_parser.endpos excerpt in
-    let text = Configuration_parser.text excerpt in
+    let startpos = ConfigurationParser.startpos excerpt in
+    let endpos = ConfigurationParser.endpos excerpt in
+    let text = ConfigurationParser.text excerpt in
     let startline, startcol =
       pos_to_lc startpos
     in
@@ -60,12 +60,12 @@ struct
     in
     printf "%03d:%02d PARSE_ERROR(%S)\n"
       errline errcol
-      (Configuration_parser.error_to_string error)
+      (ConfigurationParser.error_to_string error)
 
 end
 
-module Configuration_logger =
-  Configuration_parser.Make(Logger)
+module ConfigurationLogger =
+  ConfigurationParser.Make(Logger)
 
 
-let () = Configuration_logger.parse_file () "example.conf"
+let () = ConfigurationLogger.parse_file () "example.conf"

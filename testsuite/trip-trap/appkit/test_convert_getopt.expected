@@ -1,0 +1,2 @@
+punishment.byte: invalid argument -- n "@": CValue.of_string_kind
+Usage: punishment.byte [-n number] [-p paragraph] [-c configfile]

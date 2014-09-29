@@ -24,22 +24,24 @@ message = \"I still cannot do much to help you, \\
 
 let configuration2 = "maxusers = 10"
 
+let configuration3 = "="
+
 let concrete_string =
   let id_string = (fun (x : string) -> x) in {
-    Configuration.
+    ConfigurationMap.
     of_string = id_string;
     to_string = id_string;
   }
 
 let concrete_int = {
-  Configuration.
+  ConfigurationMap.
   of_string = int_of_string;
   to_string = string_of_int;
 }
 
 let test_multiple_lines suite =
-  let conf = Configuration.from_string configuration1 in
-  let key = Configuration.key concrete_string [] "message"
+  let conf = ConfigurationMap.from_string configuration1 in
+  let key = ConfigurationMap.key concrete_string [] "message"
     "This is the default value of a message"
     "A message displayed to the user in various circonstances."
   in
@@ -49,22 +51,29 @@ let test_multiple_lines suite =
     can span over multiple lines!"
   in
   let case = assert_string "multiple-lines"
-    (Configuration.get conf) key expected
+    (ConfigurationMap.get conf) key expected
   in
   add_case suite case
 
 let test_override suite =
   let conf =
-    Configuration.(override (from_string configuration1)
+    ConfigurationMap.(override (from_string configuration1)
 		     (from_string configuration2))
   in
-  let key = Configuration.key concrete_int [] "maxusers"
+  let key = ConfigurationMap.key concrete_int [] "maxusers"
     13
     "The maximal number of users"
   in
   let expected = 10 in
   let case = assert_int "override"
-    (Configuration.get conf) key expected
+    (ConfigurationMap.get conf) key expected
+  in
+  add_case suite case
+
+let test_illegal_character suite =
+  let case = assert_exception "illegal_character"
+    (Failure("Syntax error in configuration text on line 1."))
+    ConfigurationMap.from_string "="
   in
   add_case suite case
 
@@ -72,6 +81,7 @@ let init suite =
   List.iter (fun f -> f suite) [
     test_multiple_lines;
     test_override;
+    test_illegal_character;
   ]
 
 let () = with_registered_suite "Configuration" init

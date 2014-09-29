@@ -17,7 +17,6 @@ let buffer_sz = 100		(* Size of buffers holding argument options *)
 let progname () =
   Filename.basename Sys.executable_name
 
-exception Help
 exception Error of string
 
 (* Error messages *)
@@ -403,11 +402,14 @@ struct
     set (fun x -> x.wants_arg) lst
 end
 
+let help_callback =
+  ref (fun () -> failwith "Getopt.help_callback")
+
 let help_flag = {
   option = 'h';
   wants_arg = false;
   help = "Display available options.";
-  callback = fun _ -> raise Help;
+  callback = fun _ -> !help_callback ();
 }
 
 let maybe_add_help spec =
@@ -418,7 +420,7 @@ let help spec =
   Message.help spec;
   exit 0
 
-let usage mesg spec =
+let usage spec mesg =
   eprintf "%s: %s\n" (progname()) mesg;
   Message.usage spec;
   exit 64 (* See sysexits(3) *)
@@ -434,10 +436,10 @@ let parse spec0 argv =
   let flags = OptionList.flags spec.options in
   let options = OptionList.options spec.options in
   try
+    help_callback := (fun () -> help spec);
     List.iter (apply spec) (argv_parser flags options argv)
   with
-  | Help -> help spec
-  | Error(mesg) -> usage mesg spec
+  | Error(mesg) -> usage spec mesg
 
 let parse_argv spec =
   let argv = Array.sub Sys.argv 1 (Array.length Sys.argv - 1) in

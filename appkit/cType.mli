@@ -1,10 +1,7 @@
-(* CApplication -- C-Stylish Applications
+(* CType -- Basic types for C-stylish applications
 
 Author: Michael Grünewald
-Date: Sat Dec 28 13:05:16 CET 2013
-
-Gasoline (https://github.com/michipili/gasoline)
-This file is part of Gasoline
+Date: Wed May 22 08:08:04 CEST 2013
 
 Copyright © 2013 Michael Grünewald
 
@@ -13,7 +10,24 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-(** C-Stylish Applications. *)
+(** Basic types for C-stylish applications. *)
+
+
+(** Base data words and data blocks. *)
+module Data : Generic_type.DATA
+  with type word = char
+   and type block = string
+   and type out_channel = Pervasives.out_channel
+
+
+(** Data buffers.  This is a tight wrapping around standard library
+buffers. *)
+module Buffer : Generic_type.BUFFER
+  with type t = Buffer.t
+  and type word = Data.word
+  and type block = Data.block
+  and type out_channel = Data.out_channel
+
 
 (** Localisation parameters. *)
 module Locale :
@@ -134,7 +148,7 @@ sig
 end
 
 
-(** Dynamically typed values. *)
+(** Dynamically typed values for plain applications. *)
 module Value :
 sig
 
@@ -150,7 +164,7 @@ sig
   type t
 
 
-  (** {6 Creating and examining values} *)
+  (** Creating and examinating dynamic values. *)
 
   val make : 'a kind -> 'a -> t
   (** [make kind value] create a dynamically typed value. *)
@@ -181,7 +195,8 @@ sig
   val compare : t -> t -> int
   (** Comparison function for dynamic values. *)
 
-  (** {6 Persistence} *)
+
+  (** {6 Persistence and display} *)
 
   val taste : 'a kind -> string -> bool
   (** [taste k s] recognise [s] if it represents a value of kind [k]. *)
@@ -213,12 +228,15 @@ sig
   val printer : Format.formatter -> t -> unit
   (** A printer for the toplevel. *)
 
+  val kind_name : 'a kind -> string
+  (** The name of the value kind. *)
 
   (** {6 Formatted output}
 
-  The low-level functions [add], [add_foramtted] and [add_text] should
-  only be used in emergency cases.  The preferred way to output values
-  is through the use of messages. *)
+  While the low-level functions [add], [add_formatted] and [add_text]
+  described below can be useful in emergency cases, it is recommended
+  to use higher level formetted printing facilities as provided by the
+  [Generic_message.Scribe] functor, for instance. *)
 
   (** The type of localisation parameters. *)
   type locale = Locale.t
@@ -293,6 +311,10 @@ sig
 end
 
 
+module Database : Generic_type.DATABASE
+  with type connection_token = unit
+
+
 module Classification :
 sig
 
@@ -344,163 +366,3 @@ sig
   val to_string : t -> string
   (** Convert a classification to string. *)
 end
-
-(** Diagnostic messages. *)
-module Message :
-sig
-
-  (** The type of message classification. *)
-  type classification =
-    Classification.t
-
-  (** The abstract type of message sinks. *)
-  type sink
-
-  (** The type of core values used by the application. *)
-  type value =
-    Value.t
-
-  (** [send sink clas id binding] require the sink [sink] to send the
-  message identified by [id] with classification [c], substituting
-  message variables according to the [binding]. *)
-  val send : sink -> classification ->
-    string -> (string * value) list -> unit
-end
-
-
-(** Application components. *)
-module Component :
-sig
-
-  (** The concrete type of application components. *)
-  type info = {
-    name : string;
-    version : string;
-    description : string;
-    require: string list;
-    provide : string list;
-    config_prefix : string list;
-    getopt_prefix : char option;
-  }
-
-  (** The type of callbacks. *)
-  type callback = info -> unit
-
-  val sink : info -> Message.sink
-  (** Get the message sink dedicated to a given component. *)
-
-  (** Register a component. *)
-  val register : ?bootstrap:callback -> ?shutdown:callback -> info -> unit
-end
-
-
-(** Configuration values. *)
-module Configuration :
-sig
-
-  (** The type tracking ['a]. *)
-  type 'a kind =
-    'a Value.kind
-
-  (** The type of configuration items tracking a value of type ['a]. *)
-  type 'a t
-
-  (** The type of application components. *)
-  type component =
-    Component.info
-
-  val make : 'a kind -> component ->
-    ?flag:char -> ?env:string -> ?shy:bool ->
-    string -> 'a -> string -> 'a t
-  (** [make kind comp name default description] create a configuration
-      item holding a value of type ['a].  This configuration value can
-      be manipulated through the functions [set] and [get] below.
-
-      @param flag the letter used for command line flag.
-      @param env the environment variable used to get a value.
-      @param shy flag governing description in the short help. *)
-
-  val get : 'a t -> 'a
-  (** [get item] return the value of the given configuration [item]. *)
-
-  val set : 'a t -> 'a -> unit
-  (** [set item value] set the [value] of the given configuration [item]. *)
-
-  (** The type of configuration specifications. *)
-  type spec =
-  | Empty
-  | Command_line
-  | Environment
-  | File of string
-  | RandomFile of string t
-  | Heredoc of string
-  | Alist of ((string list * string) * string) list
-  | Merge of spec * spec
-  | Override of spec * spec
-end
-
-
-(** Analyse of command line arguments. *)
-module Getopt :
-sig
-
-  type t
-  (** The abstract type of getopt thingies. *)
-
-  val flag : char -> (unit -> unit) -> string -> t
-  (** [flag c callback description] return a getopt thingie recognising
-      the flag [c] on the command line and triggering the given
-      [callback]. *)
-
-  val make : 'a Value.kind -> char -> ('a -> unit) -> string -> t
-  (** [make kind c callback description] return a getopt thingie recognising
-      the flag [c] on the command line. When this flag occurs on the command
-      line, the [callback] is called on the option argument. The message
-      [description] may be displayed in the help screen of the program.
-
-      If the flag is present without an argument or if the argument cannot be
-      converted, then the guest program will terminate with exit code
-      [EXIT_USAGE] (64), displaying appropriate message and a usage notice.
-
-      The callback may raise [Invalid_argument] to indicate that a specific
-      value of the option is not supported.  The guest program will terminate
-      with exit code [EXIT_USAGE] (64), displaying appropriate message and
-      a usage notice. *)
-
-  type note
-  (** The abstract type of usage notes. *)
-
-  val note : string -> string -> note
-  (** [note title text] create a note to be displayed in the help summary
-      of the application.  This can be used to add copyright information
-      or any other kind of credit or information to the help summary. *)
-end
-
-val run : string -> string -> string ->
-  ?options:(Getopt.t list) -> ?notes:(Getopt.note list) ->
-  ?configuration:Configuration.spec ->
-  (string list -> unit) -> unit
-(** [run name usage description ?options ?notes main] run the application.
-
-The function [main] is passed the list of remaining arguments on the
-command line. *)
-
-val help : unit -> unit
-(** Output the help summary associated to the application and
-terminates the application with exit code [SysExits.EXIT_SUCCESS].
-
-This is a magic function which can be called from code executed in the
-[run] function, if this condition is not fullfilled, it raises a
-[Invalid_argument].
-
-@raise Invalid_argument if not called under [run]. *)
-
-val usage : unit -> unit
-(** Output the usage summary associated to the application and
-terminate the application with exit code [SysExits.EXIT_USAGE].
-
-This is a magic function which can be called from code executed in the
-[run] function, if this condition is not fullfilled, it raises a
-[Invalid_argument].
-
-@raise Invalid_argument if not called under [run]. *)

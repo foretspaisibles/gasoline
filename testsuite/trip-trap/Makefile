@@ -18,6 +18,7 @@ SUBDIR+=	unittest
 SUBDIR+=	unicode
 SUBDIR+=	authorkit
 SUBDIR+=	configuration
+SUBDIR+=	appkit
 
 .include "gasoline.subdir.mk"
 

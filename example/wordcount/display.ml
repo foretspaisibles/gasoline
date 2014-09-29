@@ -37,10 +37,10 @@ let print spec filename stat =
     print_int stat.Count.longest
   ) else (
     List.iter (fun (flag,n) -> if flag then print_int n) [
-      spec.bytes, stat.Count.bytes;
-      spec.chars, stat.Count.chars;
       spec.lines, stat.Count.lines;
       spec.words, stat.Count.words;
+      spec.bytes, stat.Count.bytes;
+      spec.chars, stat.Count.chars;
     ];
   );
   print_filename filename;

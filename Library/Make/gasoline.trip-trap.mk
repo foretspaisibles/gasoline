@@ -39,6 +39,9 @@ GASOLINEOCAMLC+= -I ${dir}
 .for module in ${PROJECTMODULE}
 GASOLINELIBS+= gasoline_${module}.cma
 .endfor
+.if defined(WITH_DEBUG)&&(${WITH_DEBUG} == "yes")
+GASOLINEOCAMLC+= -g
+.endif
 
 .SUFFIXES: .cma
 .PATH.cma: ${DIRS}

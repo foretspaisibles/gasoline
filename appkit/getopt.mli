@@ -123,6 +123,17 @@ val spec :
 for command line analysis. *)
 
 
+(** {6 Help screen} *)
+
+val help : spec -> unit
+(** Output the help screen associated to the analysis specification
+and terminate the application. *)
+
+val usage : spec -> string -> unit
+(** Output a message and the usage associated to the analysis specification
+and terminate the application with exit code 64. *)
+
+
 (** {6 Parse command options} *)
 
 val parse : spec -> string array -> unit
@@ -180,5 +191,3 @@ to form a callback. *)
 val queue : 'a list ref -> 'a -> unit
 (** [queue a v] add [v] at the end of [!a]. It can be partially
 evaluated to form a callback. *)
-
-exception Help

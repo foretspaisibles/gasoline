@@ -1,4 +1,4 @@
-(* Configuration_parser -- Parsing configuration files
+(* ConfigurationParser -- Parsing configuration files
 
 Author: Michael Grünewald
 Date: Mon Oct 29 07:36:58 CET 2012

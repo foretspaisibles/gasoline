@@ -1,0 +1,2 @@
+punishment.byte: illegal option -- x
+Usage: punishment.byte [-n number] [-p paragraph] [-c configfile]

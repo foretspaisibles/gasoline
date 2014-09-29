@@ -17,7 +17,7 @@ open CApplication
 
 module Component_count :
 sig
-  val comp : Component.t
+  val comp : Component.info
 
   val count_channel : in_channel -> Count.t
   val count_file : string -> Count.t
@@ -27,7 +27,7 @@ end
 
 module Component_display :
 sig
-  val comp : Component.t
+  val comp : Component.info
 
   module Configuration :
   sig
@@ -43,7 +43,8 @@ end
 
 
 val help : unit -> unit
+val usage : unit -> unit
 val count_channel : in_channel -> unit
 val count_file : string -> unit
 val count_files : string list -> unit
-val main : unit -> unit
+val main : string list -> unit

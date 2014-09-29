@@ -33,9 +33,18 @@ application.
   SysExits
   Unicode
   Getopt
+  CType
+  CMessage
+  CConfigurationMap
   CApplication
-  Configuration
-  Configuration_parser
+  ConfigurationMap
+  ConfigurationParser
+  Generic_type
+  Generic_message
+  Generic_diagnostic
+  Generic_asset
+  Generic_component
+  Generic_application
 }
 
 {2:authorkit The [authorkit]}
