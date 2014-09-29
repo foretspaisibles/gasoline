@@ -727,7 +727,7 @@ struct
 	  P.Classification.compare cls2 cls2 <= 0
 	in
 	match h.control.floor, h.control.cap with
-	| None, None -> true
+	| None, None -> false
 	| Some floor, None -> is_greater floor cls
 	| None, Some cap -> is_smaller cap cls
 	| Some floor, Some cap -> is_greater floor cls || is_smaller cap cls
