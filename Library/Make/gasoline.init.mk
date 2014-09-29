@@ -24,6 +24,8 @@ PKGS+= camomile
 DIRS+= ${PROJECTBASE}/${module}
 .endfor
 
+.sinclude "${PROJECTBASE}/Makefile.build"
+
 PACKAGE=	gasoline
 PACKAGEDIR=	/${PACKAGE}
 
