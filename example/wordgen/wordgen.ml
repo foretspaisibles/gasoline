@@ -246,6 +246,7 @@ let () =
   Application.run "wordgen"
     "[-h]"
     "Generate words imitating a dictionary"
+    ~configuration:Application.Configuration.Command_line
     ~options:[
       flag 'h' (fun () -> operation := Help)
 	"Display a cheerful help message and exit.";
