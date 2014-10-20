@@ -171,9 +171,9 @@ sig
 
   @raise Invalid_argument if not called under [run]. *)
 
-  val usage : unit -> unit
-  (** Output the usage summary associated to the application and
-  terminate the application with exit code [SysExits.EXIT_USAGE].
+  val usage : string -> unit
+  (** Output a message and the usage summary associated to the application,
+  then terminate the application with exit code [SysExits.EXIT_USAGE].
 
   This is a magic function which can be called from code executed in the
   [run] function, if this condition is not fullfilled, it raises a

@@ -212,8 +212,8 @@ let operation =
 let help () =
   Application.help ()
 
-let usage () =
-  Application.usage ()
+let usage mesg =
+  Application.usage mesg
 
 let list () =
   List.iter print_endline (Component_library.list ())
@@ -230,7 +230,7 @@ let generate dump =
 
 let main arglist =
   if arglist <> [] then
-    usage ()
+    usage "spurious argument"
   else
     match !operation with
     | Help -> help ()

@@ -95,7 +95,7 @@ sig
     ?configuration:Configuration.spec ->
     (string list -> unit) -> unit
   val help : unit -> unit
-  val usage : unit -> unit
+  val usage : string -> unit
 end
 
 module Make(Sink:SINK)
@@ -487,6 +487,8 @@ struct
       | exn -> terminate mesg (Printexc.to_string exn)
 
     let run spec main lst =
+      actually_help := (fun () -> Getopt.help spec);
+      actually_usage := (fun mesg -> Getopt.usage spec mesg);
       try
 	supervise Bootstrap Component.bootstrap();
 	supervise Main main lst;

@@ -117,5 +117,5 @@ let run name usage description ?options ?notes ?configuration main =
 let help () =
   InternalApplication.help ()
 
-let usage () =
-  InternalApplication.usage()
+let usage mesg =
+  InternalApplication.usage mesg

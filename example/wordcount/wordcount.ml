@@ -160,9 +160,6 @@ let operation =
 let help () =
   CApplication.help ()
 
-let usage () =
-  CApplication.usage ()
-
 let count_channel c =
   let stat = Component_count.count_channel c in
   Component_display.print_count "" stat

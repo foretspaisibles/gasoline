@@ -43,7 +43,6 @@ end
 
 
 val help : unit -> unit
-val usage : unit -> unit
 val count_channel : in_channel -> unit
 val count_file : string -> unit
 val count_files : string list -> unit
