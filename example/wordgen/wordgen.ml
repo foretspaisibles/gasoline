@@ -194,8 +194,7 @@ struct
     Library.list (library())
 
   let infer_name file =
-    failwith "Not implemented"
-
+    Filename.concat (Application.Configuration.get Configuration.dump) (file ^ ".wordgen")
 end
 
 
