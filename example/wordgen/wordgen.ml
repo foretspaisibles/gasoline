@@ -182,8 +182,11 @@ struct
       []
       (Application.Configuration.get Configuration.dump)
 
+  let infer_name file =
+    Filename.concat (Application.Configuration.get Configuration.dump) (file ^ ".wordgen")
+
   let load file =
-    try Library.load (library()) file
+    try Library.load (library()) (infer_name file)
     with
     | Not_found -> (Message.file_not_found file "Not found"; raise Error)
     | Sys_error m -> (Message.file_not_found file m; raise Error)
@@ -195,8 +198,6 @@ struct
   let list () =
     Library.list (library())
 
-  let infer_name file =
-    Filename.concat (Application.Configuration.get Configuration.dump) (file ^ ".wordgen")
   let () = Application.Component.register comp
 end
 
