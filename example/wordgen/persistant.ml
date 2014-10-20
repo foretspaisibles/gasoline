@@ -26,10 +26,10 @@ let with_open openfile closefile file f =
   with exn -> (closefile c; raise exn)
 
 let with_open_out =
-  with_open open_out close_out
+  with_open open_out_bin close_out
 
 let with_open_in =
-  with_open open_in close_in
+  with_open open_in_bin close_in
 
 let save file data =
   with_open_out file (fun c -> output_string c data)
