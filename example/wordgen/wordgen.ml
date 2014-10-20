@@ -125,6 +125,8 @@ struct
 	loop ((Automaton.generate a)::ax) (pred n)
     in
     loop [] Parameter.n
+
+  let () = Application.Component.register comp
 end
 
 
@@ -195,6 +197,7 @@ struct
 
   let infer_name file =
     Filename.concat (Application.Configuration.get Configuration.dump) (file ^ ".wordgen")
+  let () = Application.Component.register comp
 end
 
 
