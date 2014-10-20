@@ -71,13 +71,13 @@ struct
       Application.Component.sink comp
 
     let file_not_found name reason =
-      send sink Error "${FILENAME}: cannot open (${REASON})"
+      send sink Error "${FILENAME:s}: cannot open (${REASON:s})"
 	[ "FILENAME", make String name;
 	  "REASON", make String reason;
 	]
 
     let table_mismatch reason =
-      send sink Error "table mismatch (${REASON})"
+      send sink Error "table mismatch (${REASON:s})"
 	[ "REASON", make String reason; ]
   end
 
@@ -163,13 +163,13 @@ struct
       Application.Component.sink comp
 
     let file_not_found name reason =
-      send sink Error "${FILENAME}: cannot open (${REASON})" [
+      send sink Error "${FILENAME:s}: cannot open (${REASON:s})" [
 	"FILENAME", make String name;
 	"REASON", make String reason;
       ]
 
     let file_not_saved name reason =
-      send sink Error "${FILENAME}: cannot save (${REASON})" [
+      send sink Error "${FILENAME:s}: cannot save (${REASON:s})" [
 	"FILENAME", make String name;
 	"REASON", make String reason;
       ]
