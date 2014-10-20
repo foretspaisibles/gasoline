@@ -14,17 +14,33 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 
+let buffer_sz =		(* Initial buffer size *)
+  1000
+
 type t =
-  External.sexp
+  string
 
+let with_open openfile closefile file f =
+  let c = openfile file in
+  try let answer = f c in (closefile c; answer)
+  with exn -> (closefile c; raise exn)
 
-let with_open_out file f =
-  let c = open_out file in
-  try let answer = f c in (close_out c; answer)
-  with exn -> (close_out c; raise exn)
+let with_open_out =
+  with_open open_out close_out
+
+let with_open_in =
+  with_open open_in close_in
 
 let save file data =
-  failwith "Not implemented"
+  with_open_out file (fun c -> output_string c data)
+
+let in_channel_contents c =
+  let b = Buffer.create buffer_sz in
+  try while true do
+	Buffer.add_char b (input_char c)
+      done;
+      failwith "Persistant.in_channel_contents"
+  with End_of_file -> Buffer.contents b
 
 let load file =
-  failwith "Not implemented"
+  with_open_in file in_channel_contents

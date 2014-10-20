@@ -261,9 +261,8 @@ struct
     List.fold_left loop StateMap.empty a
 
   let to_persistant m =
-    failwith "Not implemented"
+    Marshal.to_string m []
 
   let of_persistant s =
-    failwith "Not implemented"
-
+    Marshal.from_string s 0
 end

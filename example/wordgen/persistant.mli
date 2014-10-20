@@ -15,11 +15,8 @@ are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 
 (** Persistant data. *)
-open External
 
-(** Persistant data. *)
-
-type t = sexp
+type t = string
 (** The type of persistant data. *)
 
 val save : string -> t -> unit

@@ -16,7 +16,6 @@
 
 PROGRAM=	wordgen
 
-SRCS+=		external.ml
 SRCS+=		persistant.ml
 SRCS+=		table.ml
 SRCS+=		automaton.ml
