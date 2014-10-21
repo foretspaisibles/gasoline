@@ -92,5 +92,5 @@ Michael Grünewald in Bonn, on October 21, 2014
    [6]: http://michipili.github.io/gasoline/reference/Unicode.html
    [8]: http://michipili.github.io/gasoline/reference/index.html
    [9]: wiki/UnitTesting
-   [10]: /michipili/bsdowl
-   [11]: /michipili/bsdowl/wiki/Install
+   [10]: https://github.com/michipili/bsdowl
+   [11]: https://github.com/michipili/bsdowl/wiki/Install
