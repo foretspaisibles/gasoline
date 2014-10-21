@@ -85,12 +85,12 @@ Step 7 requires that you can `su -` if you are not already `root`.
 Michael Grünewald in Bonn, on October 21, 2014
 
    [1]: http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
-   [2]: wiki/DiagnosticFacility
-   [3]: wiki/Configuration
-   [4]: wiki/CascadingRules
-   [5]: wiki/Component
+   [2]: http://github.com/michipili/gasoline/wiki/DiagnosticFacility
+   [3]: http://github.com/michipili/gasoline/wiki/Configuration
+   [4]: http://github.com/michipili/gasoline/wiki/CascadingRules
+   [5]: http://github.com/michipili/gasoline/wiki/Component
    [6]: http://michipili.github.io/gasoline/reference/Unicode.html
    [8]: http://michipili.github.io/gasoline/reference/index.html
-   [9]: wiki/UnitTesting
+   [9]: http://github.com/michipili/gasoline/wiki/UnitTesting
    [10]: https://github.com/michipili/bsdowl
    [11]: https://github.com/michipili/bsdowl/wiki/Install
