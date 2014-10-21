@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Gasoline by michipili</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Gasoline</h1>
+        <h2>Gasoline is an OCaml library providing application templates. Application written with Gasoline are parametrised by the command line, environment or configuration files, they support fine-grained lightweight internationalised diagnostics and handle software component dependencies.</h2>
+        <a href="https://github.com/michipili/gasoline" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="gasoline" class="anchor" href="#gasoline"><span class="octicon octicon-link"></span></a>Gasoline</h1>
+
+<p>The Gasoline project aims at implementing a Unix-ish application
+development framework for OCaml.  The framework will provide
+application templates factoring application components bootstrapping,
+configuration analyse and offering homogeneous diagnostic facilities.</p>
+
+<p>It is written by Michael Grünewald and is distributed under the
+<a href="http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html">CeCILL-B</a> license agreement.</p>
+
+<p>Users of Gasoline should be enabled to:</p>
+
+<ul>
+<li>Rapidly develop applications by using <em>application patterns</em> such as
+“Unix filter”, “tabular data processor” or “compiler”.</li>
+<li>Write large software suites whose elements offer homogeneous
+interfaces.</li>
+<li>Use standardised diagnostic facilities supporting
+internationalisation.</li>
+<li>Cleanly distinguish between application components and lower-level
+software engineering artifacts.</li>
+<li>Easily bootstrap and shutdown applications consisting of many
+modules.</li>
+<li>Use common file formats such as CSV or JSON in their applications.</li>
+</ul>
+
+<h2>
+<a name="current-state" class="anchor" href="#current-state"><span class="octicon octicon-link"></span></a>Current state</h2>
+
+<p>Gasoline is still beta-software, and many features or design elements
+are susceptible to change before we reach version 1.0. Current
+features are:</p>
+
+<ul>
+<li>A <a href="wiki/DiagnosticFacility">diagnostic facility</a> similar to <code>printf</code> but better suited to
+internationalisation and having routing rules.</li>
+<li>
+<a href="wiki/Configuration">Configuration</a> based on files, environment variables and command
+line arguments.</li>
+<li>Configuration <a href="wiki/CascadingRules">cascading rules</a> which can be used to let system
+administrators enforce some settings of installed applications.</li>
+<li>Software <a href="wiki/Component">component management</a> which correctly bootstrap and
+shutdown the application, exception sent by the guest are caught and
+an emergency shutdown procedure is triggered.</li>
+<li>A <a href="wiki/UnitTesting">unit test</a> suite.</li>
+</ul>
+
+<p>Applications can take advantage of a <a href="http://michipili.github.io/gasoline/reference/Unicode.html">simplified interface</a> to the
+[Camomile library][7] and of writer functions, allowing to
+produce simple SGML or HTML reports.</p>
+
+<p>See the <a href="http://michipili.github.io/gasoline/reference/index.html">ocamldoc generated documentation</a> of the <code>master</code> branch
+for more details.</p>
+
+<h2>
+<a name="setup-guide" class="anchor" href="#setup-guide"><span class="octicon octicon-link"></span></a>Setup guide</h2>
+
+<p>The installation procedure is based on the portable build system
+<a href="https://github.com/michipili/bsdowl">bsdowl</a> based on BSD Make.</p>
+
+<ol>
+<li>
+<p>Verify that prerequisites are installed:</p>
+
+<ul>
+<li>BSD Make</li>
+<li><a href="https://github.com/michipili/bsdowl/wiki/Install">BSD OWl</a></li>
+<li>OCaml</li>
+<li>GNU Autoconf</li>
+</ul>
+</li>
+<li><p>Get the source, either by cloning the repository or by exploding a
+<a href="releases">distribution tarball</a>.</p></li>
+<li><p>Optionally run <code>autoconf</code> to produce a configuration script. This
+is only required if the script is not already present.</p></li>
+<li><p>Run <code>./configure</code>, you can choose the installation prefix with
+<code>--prefix</code>.</p></li>
+<li><p>Run <code>make build</code>.</p></li>
+<li><p>Optionally run <code>make test</code> to test your build.</p></li>
+<li><p>Finally run <code>make install</code>.</p></li>
+</ol>
+
+<p>Depending on how BSD Make is called on your system, you may need to
+replace <code>make</code> by <code>bsdmake</code> or <code>bmake</code> in steps 5, 6, and 7.  The GNU
+Make program usually give up the ghost, croaking <code>*** missing
+separator. Stop.</code></p>
+
+<p>Step 7 requires that you can <code>su -</code> if you are not already <code>root</code>.</p>
+
+<p>Michael Grünewald in Bonn, on October 21, 2014</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/michipili/gasoline/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/michipili/gasoline/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/michipili/gasoline"></a> is maintained by <a href="https://github.com/michipili">michipili</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
