@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="Up" href="Generic_application.P.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : Generic_application.P.Value</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="Generic_application.P.html" title="Generic_application.P">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Generic_application.P.Value.html">Generic_application.P.Value</a></h1>
+
+<pre><span class="keyword">module</span> Value: <code class="code">sig</code> <a href="Generic_application.P.Value.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Dynamically typed values.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEkind"><span class="keyword">type</span> <code class="type">'a</code> kind</span> </pre>
+<div class="info ">
+The type tracking <code class="code">'a</code>.<br>
+</div>
+
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The abstract type of dynamically typed values.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">'a <a href="Generic_application.P.Value.html#TYPEkind">kind</a> -> 'a -> <a href="Generic_application.P.Value.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">make kind value</code> create a dynamically typed value.<br>
+</div>
+
+<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Generic_application.P.Value.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+<code class="code">to_string v</code> transform <code class="code">v</code> to a string.
+<p>
+
+    This string can be written in a file and read back later with
+    <code class="code">of_string</code>.<br>
+</div>
+
+<pre><span id="VALof_string"><span class="keyword">val</span> of_string</span> : <code class="type">string -> <a href="Generic_application.P.Value.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_string s</code> convert a string to a dynamic value.<br>
+</div>
+
+<pre><span id="VALof_string_kind"><span class="keyword">val</span> of_string_kind</span> : <code class="type">'a <a href="Generic_application.P.Value.html#TYPEkind">kind</a> -> string -> 'a</code></pre><div class="info ">
+<code class="code">of_string_kind k s</code> convert <code class="code">s</code> to a dynamic value of kind <code class="code">k</code>.<br>
+<b>Raises</b> <code>Failure</code> if <code class="code">s</code> cannot be converted to a value of kind <code class="code">k</code>.<br>
+</div>
+
+<pre><span id="VALkind_name"><span class="keyword">val</span> kind_name</span> : <code class="type">'a <a href="Generic_application.P.Value.html#TYPEkind">kind</a> -> string</code></pre><div class="info ">
+The name of a value kind.<br>
+</div>
+</body></html>

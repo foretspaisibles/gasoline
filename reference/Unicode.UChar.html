@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unicode.Encoding.html">
+<link rel="next" href="Unicode.UString.html">
+<link rel="Up" href="Unicode.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : Unicode.UChar</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unicode.Encoding.html" title="Unicode.Encoding">Previous</a>
+&nbsp;<a class="up" href="Unicode.html" title="Unicode">Up</a>
+&nbsp;<a class="post" href="Unicode.UString.html" title="Unicode.UString">Next</a>
+</div>
+<h1>Module <a href="type_Unicode.UChar.html">Unicode.UChar</a></h1>
+
+<pre><span class="keyword">module</span> UChar: <code class="code">sig</code> <a href="Unicode.UChar.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Operations on Unicode characters<br>
+</div>
+<hr width="100%">
+
+<pre><span id="EXCEPTIONOut_of_range"><span class="keyword">exception</span> Out_of_range</span></pre>
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code> </pre>
+<div class="info ">
+Unicode characters. All 31 bits code points are allowed.<br>
+</div>
+
+
+<pre><span id="VALto_char"><span class="keyword">val</span> to_char</span> : <code class="type"><a href="Unicode.UChar.html#TYPEt">t</a> -> char</code></pre><div class="info ">
+<code class="code">to_char u</code> returns the Latin-9 representation of <code class="code">u</code>.<br>
+<b>Raises</b> <code>Out_of_range</code> if <code class="code">u</code> can not be represented by Latin-9.<br>
+</div>
+
+<pre><span id="VALof_char"><span class="keyword">val</span> of_char</span> : <code class="type">char -> <a href="Unicode.UChar.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_char c</code> returns the Unicode character of the Latin-1 character <code class="code">c</code>.<br>
+</div>
+
+<pre><span id="VALcode"><span class="keyword">val</span> code</span> : <code class="type"><a href="Unicode.UChar.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">code u</code> returns the Unicode code number of <code class="code">u</code>.<br>
+<b>Raises</b> <code>Out_of_range</code> if <code class="code">u</code> cannot be represented by a positive integer.<br>
+</div>
+
+<pre><span id="VALchr"><span class="keyword">val</span> chr</span> : <code class="type">int -> <a href="Unicode.UChar.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">chr n</code> returns the Unicode character with the code number <code class="code">n</code>.<br>
+<b>Raises</b> <code>Invalid_arg</code> if n &gt;= 2^32 or n &lt; 0.<br>
+</div>
+
+<pre><span id="VALuint_code"><span class="keyword">val</span> uint_code</span> : <code class="type"><a href="Unicode.UChar.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">uint_code u</code> returns the Unicode code number of <code class="code">u</code>.
+The returned int is unsigned, that is, on 32-bits platforms,
+the sign bit is used for storing the 31-th bit of the code number.<br>
+</div>
+
+<pre><span id="VALuint_chr"><span class="keyword">val</span> uint_chr</span> : <code class="type">int -> <a href="Unicode.UChar.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">uint_chr n</code> returns the Unicode character of the code number <code class="code">n</code>.
+<code class="code">n</code> is interpreted as unsigned, that is, on 32-bits platforms,
+the sign bit is treated as the 31-th bit of the code number.<br>
+<b>Raises</b> <code>Invalid_arg</code> if <code class="code">n</code> exceed 31-bits values.<br>
+</div>
+
+<pre><span id="VALeq"><span class="keyword">val</span> eq</span> : <code class="type"><a href="Unicode.UChar.html#TYPEt">t</a> -> <a href="Unicode.UChar.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Equality by code point comparison<br>
+</div>
+
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Unicode.UChar.html#TYPEt">t</a> -> <a href="Unicode.UChar.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">compare u1 u2</code> returns,
+   a value &gt; 0 if <code class="code">u1</code> has a larger Unicode code number than <code class="code">u2</code>,
+   0 if <code class="code">u1</code> and <code class="code">u2</code> are the same Unicode character,
+   a value &lt; 0 if <code class="code">u1</code> has a smaller Unicode code number than <code class="code">u2</code>.<br>
+</div>
+
+<pre><span id="VALto_int"><span class="keyword">val</span> to_int</span> : <code class="type"><a href="Unicode.UChar.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Alias of <code class="code">uint_code</code><br>
+</div>
+
+<pre><span id="VALof_int"><span class="keyword">val</span> of_int</span> : <code class="type">int -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+Alias of <code class="code">uint_chr</code><br>
+</div>
+
+<pre><span id="VALnewline"><span class="keyword">val</span> newline</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+The newline character.<br>
+</div>
+
+<pre><span id="VALspace"><span class="keyword">val</span> space</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+The space character.<br>
+</div>
+
+<pre><span id="VALhtab"><span class="keyword">val</span> htab</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+The horizontal tab character.<br>
+</div>
+
+<pre><span id="VALvtab"><span class="keyword">val</span> vtab</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+The vertical tab character.<br>
+</div>
+
+<pre><span id="VALnextline"><span class="keyword">val</span> nextline</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+The nextline character.<br>
+</div>
+
+<pre><span id="VALline"><span class="keyword">val</span> line</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+The line separator character.<br>
+</div>
+
+<pre><span id="VALpar"><span class="keyword">val</span> par</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+The paragraph separator character.<br>
+</div>
+
+<pre><span id="VALprinter"><span class="keyword">val</span> printer</span> : <code class="type">Format.formatter -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> unit</code></pre><div class="info ">
+A printer for the toplevel.<br>
+</div>
+</body></html>

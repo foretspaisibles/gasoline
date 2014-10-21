@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="CApplication.Component.html">
+<link rel="next" href="CApplication.Getopt.html">
+<link rel="Up" href="CApplication.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : CApplication.Configuration</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="CApplication.Component.html" title="CApplication.Component">Previous</a>
+&nbsp;<a class="up" href="CApplication.html" title="CApplication">Up</a>
+&nbsp;<a class="post" href="CApplication.Getopt.html" title="CApplication.Getopt">Next</a>
+</div>
+<h1>Module <a href="type_CApplication.Configuration.html">CApplication.Configuration</a></h1>
+
+<pre><span class="keyword">module</span> Configuration: <code class="code">sig</code> <a href="CApplication.Configuration.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Configuration values.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEkind"><span class="keyword">type</span> <code class="type">'a</code> kind</span> = <code class="type">'a <a href="CApplication.Value.html#TYPEkind">CApplication.Value.kind</a></code> </pre>
+<div class="info ">
+The type tracking <code class="code">'a</code>.<br>
+</div>
+
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> </pre>
+<div class="info ">
+The type of configuration items tracking a value of type <code class="code">'a</code>.<br>
+</div>
+
+
+<pre><span id="TYPEcomponent"><span class="keyword">type</span> <code class="type"></code>component</span> = <code class="type"><a href="CApplication.Component.html#TYPEinfo">CApplication.Component.info</a></code> </pre>
+<div class="info ">
+The type of application components.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">'a <a href="CApplication.Configuration.html#TYPEkind">kind</a> -><br>       <a href="CApplication.Configuration.html#TYPEcomponent">component</a> -><br>       ?flag:char -><br>       ?env:string -><br>       ?shy:bool -> string -> 'a -> string -> 'a <a href="CApplication.Configuration.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">make kind comp name default description</code> create a configuration
+      item holding a value of type <code class="code">'a</code>.  This configuration value can
+      be manipulated through the functions <code class="code">set</code> and <code class="code">get</code> below.<br>
+</div>
+<div class="param_info"><code class="code">flag</code> : the letter used for command line flag.</div>
+<div class="param_info"><code class="code">env</code> : the environment variable used to get a value.</div>
+<div class="param_info"><code class="code">shy</code> : flag governing description in the short help.</div>
+
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">'a <a href="CApplication.Configuration.html#TYPEt">t</a> -> 'a</code></pre><div class="info ">
+<code class="code">get item</code> return the value of the given configuration <code class="code">item</code>.<br>
+</div>
+
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">'a <a href="CApplication.Configuration.html#TYPEt">t</a> -> 'a -> unit</code></pre><div class="info ">
+<code class="code">set item value</code> set the <code class="code">value</code> of the given configuration <code class="code">item</code>.<br>
+</div>
+
+<pre><code><span id="TYPEspec"><span class="keyword">type</span> <code class="type"></code>spec</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.Empty"><span class="constructor">Empty</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.Command_line"><span class="constructor">Command_line</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.Environment"><span class="constructor">Environment</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.File"><span class="constructor">File</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.RandomFile"><span class="constructor">RandomFile</span></span> <span class="keyword">of</span> <code class="type">string <a href="CApplication.Configuration.html#TYPEt">t</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.Heredoc"><span class="constructor">Heredoc</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.Alist"><span class="constructor">Alist</span></span> <span class="keyword">of</span> <code class="type">((string list * string) * string) list</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.Merge"><span class="constructor">Merge</span></span> <span class="keyword">of</span> <code class="type"><a href="CApplication.Configuration.html#TYPEspec">spec</a> * <a href="CApplication.Configuration.html#TYPEspec">spec</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTspec.Override"><span class="constructor">Override</span></span> <span class="keyword">of</span> <code class="type"><a href="CApplication.Configuration.html#TYPEspec">spec</a> * <a href="CApplication.Configuration.html#TYPEspec">spec</a></code></code></td>
+
+</tr></table>
+
+<div class="info ">
+The type of configuration specifications.<br>
+</div>
+
+</body></html>

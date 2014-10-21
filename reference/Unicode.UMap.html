@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unicode.USet.html">
+<link rel="next" href="Unicode.UTable.html">
+<link rel="Up" href="Unicode.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : Unicode.UMap</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unicode.USet.html" title="Unicode.USet">Previous</a>
+&nbsp;<a class="up" href="Unicode.html" title="Unicode">Up</a>
+&nbsp;<a class="post" href="Unicode.UTable.html" title="Unicode.UTable">Next</a>
+</div>
+<h1>Module <a href="type_Unicode.UMap.html">Unicode.UMap</a></h1>
+
+<pre><span class="keyword">module</span> UMap: <code class="code">sig</code> <a href="Unicode.UMap.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Maps over Unicode characters<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEkey"><span class="keyword">type</span> <code class="type"></code>key</span> = <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code> </pre>
+<div class="info ">
+The type of the map keys.<br>
+</div>
+
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> </pre>
+<div class="info ">
+The type of maps from type <code class="code">uchar</code> to type <code class="code">'a</code>.<br>
+</div>
+
+
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type">'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+The empty map.<br>
+</div>
+
+<pre><span id="VALis_empty"><span class="keyword">val</span> is_empty</span> : <code class="type">'a <a href="Unicode.UMap.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Test whether a map is empty or not.<br>
+</div>
+
+<pre><span id="VALadd"><span class="keyword">val</span> add</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">add u v m</code> returns a map containing the same bindings as <code class="code">m</code>,
+plus a binding of <code class="code">u</code> to <code class="code">u</code>. If <code class="code">u</code> was already bound in <code class="code">m</code>, its
+previous binding disappears.<br>
+</div>
+
+<pre><span id="VALadd_range"><span class="keyword">val</span> add_range</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -><br>       <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">add u1 u2 v m</code> returns the new map which is same to <code class="code">m</code> except it
+maps characters in the range <code class="code">u1 - u2</code> to <code class="code">v</code>.<br>
+</div>
+
+<pre><span id="VALfind"><span class="keyword">val</span> find</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a</code></pre><div class="info ">
+<code class="code">find u m</code> returns the current binding of <code class="code">u</code> in <code class="code">m</code>, or raises
+<code class="code">Not_found</code> if no such binding exists.<br>
+</div>
+
+<pre><span id="VALremove"><span class="keyword">val</span> remove</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">remove u m</code> returns a map containing the same bindings as <code class="code">m</code>,
+except for <code class="code">u</code> which is unbound in the returned map.<br>
+</div>
+
+<pre><span id="VALremove_range"><span class="keyword">val</span> remove_range</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">remove_range u1 u2 m</code> removes <code class="code">u1 - u2</code> from the domain of <code class="code">m</code><br>
+</div>
+
+<pre><span id="VALfrom"><span class="keyword">val</span> from</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">from u m</code> restricts the domain of <code class="code">m</code> to the characters whose
+code points are equal or greater than <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALafter"><span class="keyword">val</span> after</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">after u m</code> restricts the domain of <code class="code">m</code> to the characters whose
+code points are greater than <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALuntil"><span class="keyword">val</span> until</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">until u m</code> restricts the domain of <code class="code">m</code> to the characters whose
+code points are equal or smaller than <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALbefore"><span class="keyword">val</span> before</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">before u m</code> restricts the domain of <code class="code">m</code> to the characters whose
+code points are smaller than <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALmem"><span class="keyword">val</span> mem</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">mem u m</code> returns <code class="code">true</code> if <code class="code">m</code> contains a binding for <code class="code">u</code>,
+and <code class="code">false</code> otherwise.<br>
+</div>
+
+<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a -> unit) -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">iter f m</code> applies <code class="code">f</code> to all bindings in map <code class="code">m</code>.  <code class="code">f</code> receives
+the key as first argument, and the associated value as second
+argument.  The bindings are passed to <code class="code">f</code> in increasing order with
+respect to the ordering over the type of the keys.  Only current
+bindings are presented to <code class="code">f</code>: bindings hidden by more recent bindings
+are not passed to <code class="code">f</code>.<br>
+</div>
+
+<pre><span id="VALiter_range"><span class="keyword">val</span> iter_range</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a -> unit) -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">iter proc m</code> : For each contingent region <code class="code">u1</code>-<code class="code">u2</code>
+that is mapped to a constant <code class="code">v</code>, <code class="code">proc u1 u2 v</code> is called.
+The order of call is determined by increasing order on <code class="code">u1</code>.<br>
+</div>
+
+<pre><span id="VALmap"><span class="keyword">val</span> map</span> : <code class="type">('a -> 'b) -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'b <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">map f m</code> returns a map with same domain as <code class="code">m</code>, where the
+associated value <code class="code">a</code> of all bindings of <code class="code">m</code> has been replaced by the
+result of the application of <code class="code">f</code> to <code class="code">a</code>.  The bindings are passed to
+<code class="code">f</code> in increasing order with respect to the ordering over the type of
+the keys.<br>
+</div>
+
+<pre><span id="VALmapi"><span class="keyword">val</span> mapi</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a -> 'b) -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'b <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+Same as <code class="code">UMap.S.map</code>, but the function receives as arguments both the
+key and the associated value for each binding of the map.<br>
+</div>
+
+<pre><span id="VALfold"><span class="keyword">val</span> fold</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'b -> 'a -> 'a) -> 'b <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a -> 'a</code></pre><div class="info ">
+<code class="code">fold f m a</code> computes <code class="code">(f kN dN ... (f k1 d1 a)...)</code>,
+where <code class="code">k1 ... kN</code> are the keys of all bindings in <code class="code">m</code>
+(in increasing order), and <code class="code">d1 ... dN</code> are the associated data.<br>
+</div>
+
+<pre><span id="VALfold_range"><span class="keyword">val</span> fold_range</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'b -> 'a -> 'a) -><br>       'b <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a -> 'a</code></pre><div class="info ">
+<code class="code">fold_range f m x</code> is equivalent to <code class="code">f u_(2n) u_(2n+1) v_n (... (f
+u_1 u_2 v_1 x))</code> where all characters in the range <code class="code">u_(2k)</code>-<code class="code">u_(2k+1)</code>
+are mapped to <code class="code">v_k</code> and <code class="code">u_1</code> &lt; <code class="code">u_3</code> &lt; ... in code point order.  For
+each range <code class="code">u_(2k)</code>-<code class="code">u_(2k+1)</code> is separated by a character which is
+not mapped to <code class="code">v_k</code>.<br>
+</div>
+
+<pre><span id="VALconstant"><span class="keyword">val</span> constant</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">Unicode.USet.t</a> -> 'a -> 'a <a href="Unicode.UMap.html#TYPEt">t</a></code></pre><div class="info ">
+Constant map.<br>
+</div>
+
+<pre><span id="VALdomain"><span class="keyword">val</span> domain</span> : <code class="type">'a <a href="Unicode.UMap.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">Unicode.USet.t</a></code></pre><div class="info ">
+Domain.<br>
+</div>
+
+<pre><span id="VALsubdomain"><span class="keyword">val</span> subdomain</span> : <code class="type">('a -> bool) -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">Unicode.USet.t</a></code></pre><div class="info ">
+<code class="code">subdomain p m</code> returns the set of characters which are mapped
+to values satisfying the predicate <code class="code">p</code> by <code class="code">m</code>.<br>
+</div>
+
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type">('a -> 'a -> int) -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Total ordering between maps.  The first argument is a total
+ordering used to compare data associated with equal keys in the two
+maps.<br>
+</div>
+
+<pre><span id="VALequal"><span class="keyword">val</span> equal</span> : <code class="type">('a -> 'a -> bool) -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> 'a <a href="Unicode.UMap.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">equal cmp m1 m2</code> tests whether the maps <code class="code">m1</code> and <code class="code">m2</code> are equal,
+that is, contain equal keys and associate them with equal data.  <code class="code">cmp</code>
+is the equality predicate used to compare the data associated with the
+keys.<br>
+</div>
+</body></html>

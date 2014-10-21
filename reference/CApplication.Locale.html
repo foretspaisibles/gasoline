@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="CApplication.Value.html">
+<link rel="Up" href="CApplication.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : CApplication.Locale</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="CApplication.html" title="CApplication">Up</a>
+&nbsp;<a class="post" href="CApplication.Value.html" title="CApplication.Value">Next</a>
+</div>
+<h1>Module <a href="type_CApplication.Locale.html">CApplication.Locale</a></h1>
+
+<pre><span class="keyword">module</span> Locale: <code class="code">sig</code> <a href="CApplication.Locale.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Localisation parameters.<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.decimal_point">decimal_point</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Decimal-point separator used for non-monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.thousands_sep">thousands_sep</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Separators used to delimit groups of digits to the left of the
+    decimal point for non-monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.grouping">grouping</span>&nbsp;: <code class="type">int list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Specifies the amount of digits that form each of the groups to
+    be separated by <code class="code">thousands_sep</code> separator for non-monetary
+    quantities.
+<p>
+
+    A mone indicate in the list indicates that no more grouping is
+    required, thus hiding the remaining entries.
+<p>
+
+    An empty list has the same meaning has a list containing a single
+    mone, that is, indicated that no grouping is required.
+<p>
+
+    (Some implementations uses zero instead of mone here, hence we
+    support both.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.int_currency_symbol">int_currency_symbol</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >International currency symbol. This is formed by the
+    three-letter ISO-4217 entry code for the currency, like "USD" for
+    U.S.Dollar or "GBP" for the Pound Sterling.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.int_currency_symbol_sep">int_currency_symbol_sep</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The character used to separate the internation currency symbol
+    from the monetary quantity.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.loc_currency_symbol">loc_currency_symbol</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Local currency symbol.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.mon_decimal_point">mon_decimal_point</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Decimal-point separator used for monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.mon_thousands_sep">mon_thousands_sep</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Separators used to delimit groups of digits to the left of the
+    decimal point for monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.mon_grouping">mon_grouping</span>&nbsp;: <code class="type">int list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Specifies the amount of digits that form each of the groups to
+    be separated by mon_thousands_sep separator for monetary
+    quantities. See grouping description above.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.mon_positive_sign">mon_positive_sign</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Sign to be used for nonnegative (positive or zero) monetary
+    quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.mon_negative_sign">mon_negative_sign</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Sign to be used for negative monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.int_frac_digits">int_frac_digits</span>&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Amount of fractional digits to the right of the decimal point
+    for monetary quantities in the international format.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.loc_frac_digits">loc_frac_digits</span>&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Amount of fractional digits to the right of the decimal point
+    for monetary quantities in the local format.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.p_cs_precedes">p_cs_precedes</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Whether the currency symbol should precede nonnegative
+    (positive or zero) monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.n_cs_precedes">n_cs_precedes</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Whether the currency symbol should precede negative monetary
+    quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.p_sep_by_space">p_sep_by_space</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Whether a space should appear between the currency symbol and
+    nonnegative (positive or zero) monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.n_sep_by_space">n_sep_by_space</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Whether a space should appear between the currency symbol and
+    negative monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.p_sign_posn">p_sign_posn</span>&nbsp;: <code class="type"><a href="CApplication.Locale.html#TYPEsign_posn">sign_posn</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Position of the sign for nonnegative (positive or zero)
+    monetary quantities.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.n_sign_posn">n_sign_posn</span>&nbsp;: <code class="type"><a href="CApplication.Locale.html#TYPEsign_posn">sign_posn</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Position of the sign for negative monetary quantities. See
+    p_sign_posn above.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+The type of localisations parameters. We imitate the definitions
+  of the C locale.h header file.
+<p>
+
+  The main differences with the C version are:<ul>
+<li>Decimal points and separator are strings and not chars.</li>
+<li>Decimal grouping information is provided as a list,
+     and 0 has a different meaning.</li>
+</ul>
+
+  Reference: http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap07.html#tag_07_03<br>
+</div>
+
+
+<pre><code><span id="TYPEsign_posn"><span class="keyword">type</span> <code class="type"></code>sign_posn</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsign_posn.Parentheses"><span class="constructor">Parentheses</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Currency symbol and quantity surrounded by parentheses.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsign_posn.Before_everything"><span class="constructor">Before_everything</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Sign before the quantity and currency symbol.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsign_posn.After_everything"><span class="constructor">After_everything</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Sign after the quantity and currency symbol.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsign_posn.Before_currency_symbol"><span class="constructor">Before_currency_symbol</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Sign right before currency symbol.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsign_posn.After_currency_symbol"><span class="constructor">After_currency_symbol</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Sign right after currency symbol.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><span id="VALstdlocale"><span class="keyword">val</span> stdlocale</span> : <code class="type"><a href="CApplication.Locale.html#TYPEt">t</a></code></pre><div class="info ">
+The standard locale used when no other information is supplied.<br>
+</div>
+</body></html>

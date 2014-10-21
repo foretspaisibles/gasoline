@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unicode.UFormat.html">
+<link rel="next" href="Unicode.UChannel_locale.html">
+<link rel="Up" href="Unicode.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : Unicode.UChannel_stdio</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unicode.UFormat.html" title="Unicode.UFormat">Previous</a>
+&nbsp;<a class="up" href="Unicode.html" title="Unicode">Up</a>
+&nbsp;<a class="post" href="Unicode.UChannel_locale.html" title="Unicode.UChannel_locale">Next</a>
+</div>
+<h1>Module <a href="type_Unicode.UChannel_stdio.html">Unicode.UChannel_stdio</a></h1>
+
+<pre><span class="keyword">module</span> UChannel_stdio: <code class="code">sig</code> <a href="Unicode.UChannel_stdio.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Standard Input/Output.
+<p>
+
+You can write your Unicode application using Input/Output as a functor
+parametrised by <code class="code">UChannel_stdio.S</code>.  The bootstrapping code of the
+application can then prepare the <code class="code">UChannel_stdio.PARAMETER</code> module and
+call the main code after having instantiated the functor.<br>
+</div>
+<hr width="100%">
+
+<pre><span class="keyword">module type</span> <a href="Unicode.UChannel_stdio.PARAMETER.html">PARAMETER</a> = <code class="code">sig</code> <a href="Unicode.UChannel_stdio.PARAMETER.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module type</span> <a href="Unicode.UChannel_stdio.S.html">S</a> = <code class="code">sig</code> <a href="Unicode.UChannel_stdio.S.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="Unicode.UChannel_stdio.Make.html">Make</a> <code class="code">(</code><code class="code">P</code><code class="code"> : </code><code class="type"><a href="Unicode.UChannel_stdio.PARAMETER.html">PARAMETER</a></code><code class="code">) </code>: <code class="type"><a href="Unicode.UChannel_stdio.S.html">S</a></code><code class="type"> </code></pre></body></html>

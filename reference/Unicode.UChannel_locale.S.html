@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unicode.UChannel_locale.PARAMETER.html">
+<link rel="Up" href="Unicode.UChannel_locale.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : Unicode.UChannel_locale.S</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unicode.UChannel_locale.PARAMETER.html" title="Unicode.UChannel_locale.PARAMETER">Previous</a>
+&nbsp;<a class="up" href="Unicode.UChannel_locale.html" title="Unicode.UChannel_locale">Up</a>
+&nbsp;</div>
+<h1>Module type <a href="type_Unicode.UChannel_locale.S.html">Unicode.UChannel_locale.S</a></h1>
+
+<pre><span class="keyword">module type</span> S = <code class="type"><a href="Unicode.UChannel_stdio.S.html">Unicode.UChannel_stdio.S</a></code></pre><hr width="100%">
+
+<pre><span id="VALustdin"><span class="keyword">val</span> ustdin</span> : <code class="type"><a href="Unicode.UChannel.html#TYPEin_channel">Unicode.UChannel.in_channel</a></code></pre>
+<pre><span id="VALustdout"><span class="keyword">val</span> ustdout</span> : <code class="type"><a href="Unicode.UChannel.html#TYPEout_channel">Unicode.UChannel.out_channel</a></code></pre>
+<pre><span id="VALustderr"><span class="keyword">val</span> ustderr</span> : <code class="type"><a href="Unicode.UChannel.html#TYPEout_channel">Unicode.UChannel.out_channel</a></code></pre>
+<pre><span id="VALprint_uchar"><span class="keyword">val</span> print_uchar</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> unit</code></pre>
+<pre><span id="VALprint_ustring"><span class="keyword">val</span> print_ustring</span> : <code class="type"><a href="Unicode.html#TYPEustring">Unicode.ustring</a> -> unit</code></pre>
+<pre><span id="VALprint_line"><span class="keyword">val</span> print_line</span> : <code class="type"><a href="Unicode.html#TYPEustring">Unicode.ustring</a> -> unit</code></pre>
+<pre><span id="VALprint_char"><span class="keyword">val</span> print_char</span> : <code class="type">char -> unit</code></pre>
+<pre><span id="VALprint_string"><span class="keyword">val</span> print_string</span> : <code class="type">string -> unit</code></pre>
+<pre><span id="VALprint_int"><span class="keyword">val</span> print_int</span> : <code class="type">int -> unit</code></pre>
+<pre><span id="VALprint_bool"><span class="keyword">val</span> print_bool</span> : <code class="type">bool -> unit</code></pre>
+<pre><span id="VALprint_float"><span class="keyword">val</span> print_float</span> : <code class="type">float -> unit</code></pre>
+<pre><span id="VALprint_newline"><span class="keyword">val</span> print_newline</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprint_space"><span class="keyword">val</span> print_space</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprint_htab"><span class="keyword">val</span> print_htab</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprint_vtab"><span class="keyword">val</span> print_vtab</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprint_par"><span class="keyword">val</span> print_par</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprerr_uchar"><span class="keyword">val</span> prerr_uchar</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> unit</code></pre>
+<pre><span id="VALprerr_ustring"><span class="keyword">val</span> prerr_ustring</span> : <code class="type"><a href="Unicode.html#TYPEustring">Unicode.ustring</a> -> unit</code></pre>
+<pre><span id="VALprerr_line"><span class="keyword">val</span> prerr_line</span> : <code class="type"><a href="Unicode.html#TYPEustring">Unicode.ustring</a> -> unit</code></pre>
+<pre><span id="VALprerr_char"><span class="keyword">val</span> prerr_char</span> : <code class="type">char -> unit</code></pre>
+<pre><span id="VALprerr_string"><span class="keyword">val</span> prerr_string</span> : <code class="type">string -> unit</code></pre>
+<pre><span id="VALprerr_int"><span class="keyword">val</span> prerr_int</span> : <code class="type">int -> unit</code></pre>
+<pre><span id="VALprerr_bool"><span class="keyword">val</span> prerr_bool</span> : <code class="type">bool -> unit</code></pre>
+<pre><span id="VALprerr_float"><span class="keyword">val</span> prerr_float</span> : <code class="type">float -> unit</code></pre>
+<pre><span id="VALprerr_newline"><span class="keyword">val</span> prerr_newline</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprerr_space"><span class="keyword">val</span> prerr_space</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprerr_htab"><span class="keyword">val</span> prerr_htab</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprerr_vtab"><span class="keyword">val</span> prerr_vtab</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALprerr_par"><span class="keyword">val</span> prerr_par</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALflush_std"><span class="keyword">val</span> flush_std</span> : <code class="type">unit -> unit</code></pre>
+<pre><span id="VALread_uchar"><span class="keyword">val</span> read_uchar</span> : <code class="type">unit -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre>
+<pre><span id="VALread_line"><span class="keyword">val</span> read_line</span> : <code class="type">unit -> <a href="Unicode.html#TYPEustring">Unicode.ustring</a></code></pre></body></html>

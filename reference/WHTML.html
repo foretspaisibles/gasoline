@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="WSGML.html">
+<link rel="next" href="LoremIpsum.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><link title="META Data" rel="Section" href="#2_METAData">
+<link title="LINK Tags" rel="Section" href="#2_LINKTags">
+<link title="Structured text: Phrase elements" rel="Section" href="#2_StructuredtextPhraseelements">
+<link title="Quotations" rel="Section" href="#2_Quotations">
+<link title="Marking text changes" rel="Section" href="#2_Markingtextchanges">
+<link title="Lines and paragaphs" rel="Section" href="#2_Linesandparagaphs">
+<link title="Grouping elements" rel="Section" href="#2_Groupingelements">
+<link title="Headings" rel="Section" href="#2_Headings">
+<link title="The address element" rel="Section" href="#2_Theaddresselement">
+<link title="The image element" rel="Section" href="#2_Theimageelement">
+<link title="Lists" rel="Section" href="#2_Lists">
+<link title="The document" rel="Section" href="#2_Thedocument">
+<title>Gasoline library : WHTML</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="WSGML.html" title="WSGML">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="LoremIpsum.html" title="LoremIpsum">Next</a>
+</div>
+<h1>Module <a href="type_WHTML.html">WHTML</a></h1>
+
+<pre><span class="keyword">module</span> WHTML: <code class="code">sig</code> <a href="WHTML.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Simple writer for HTML files
+<p>
+
+We define rudimentary facilities to write HTML files. These facilites are
+built atop the WSGML module.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="VALcdata"><span class="keyword">val</span> cdata</span> : <code class="type"><a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Conversion from character data.<br>
+</div>
+
+<pre><span id="VALpcdata"><span class="keyword">val</span> pcdata</span> : <code class="type"><a href="WSGML.html#TYPEpcdata">WSGML.pcdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Conversion from character data.<br>
+</div>
+
+<pre><span id="VALc"><span class="keyword">val</span> c</span> : <code class="type">string -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Conversion from Latin-1 strings.<br>
+</div>
+<br>
+<h2 id="2_METAData">META Data</h2><br>
+
+<pre><span id="VALmeta"><span class="keyword">val</span> meta</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?http_equiv:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?name:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?scheme:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Create an META tag.<br>
+</div>
+
+<pre><span id="VALauthor"><span class="keyword">val</span> author</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Meta author tag.<br>
+</div>
+
+<pre><span id="VALgenerator"><span class="keyword">val</span> generator</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Meta generator tag.<br>
+</div>
+
+<pre><span id="VALcopyright"><span class="keyword">val</span> copyright</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Meta copyright tag.<br>
+</div>
+
+<pre><span id="VALkeywords"><span class="keyword">val</span> keywords</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Meta keywords tag.<br>
+</div>
+
+<pre><span id="VALdate"><span class="keyword">val</span> date</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Meta date tag.<br>
+</div>
+
+<pre><span id="VALdefault_style"><span class="keyword">val</span> default_style</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Meta default style tag.<br>
+</div>
+<br>
+<h2 id="2_LINKTags">LINK Tags</h2><br>
+
+<pre><span id="VALlink"><span class="keyword">val</span> link</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rel:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -><br>       ?typ:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+<code class="code">link href</code> creates a link tag with the given <code class="code">href</code> attribute. Optional
+parameters give control over other attributes.<br>
+</div>
+
+<pre><span id="VALcss_persistent"><span class="keyword">val</span> css_persistent</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+<code class="code">css_persistent href</code> link to persistent CSS.<br>
+</div>
+
+<pre><span id="VALcss_preferred"><span class="keyword">val</span> css_preferred</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+<code class="code">css_preferred ~title href</code> link to the author's preferred CSS.<br>
+</div>
+
+<pre><span id="VALcss_alternate"><span class="keyword">val</span> css_alternate</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+<code class="code">css_alternate ~title href</code> link to the author's preferred CSS.<br>
+</div>
+
+<pre><span id="VALstyle"><span class="keyword">val</span> style</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?typ:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+<code class="code">style s</code> insert inline style information.<br>
+</div>
+
+<pre><span id="VALcss_inline_persistent"><span class="keyword">val</span> css_inline_persistent</span> : <code class="type"><a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+<code class="code">css_inline_persistent style</code> link to persistent CSS.<br>
+</div>
+
+<pre><span id="VALcss_inline_preferred"><span class="keyword">val</span> css_inline_preferred</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+<code class="code">css_inline_preferred ~title style</code> link to the author's preferred CSS.<br>
+</div>
+
+<pre><span id="VALstart"><span class="keyword">val</span> start</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to the first document in a collection of documents. This link type
+tells search engines which document is considered by the author to be the
+starting point of the collection.<br>
+</div>
+
+<pre><span id="VALnext"><span class="keyword">val</span> next</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to the next document in a linear sequence of documents. User agents
+may choose to preload the "next" document, to reduce the perceived load
+time.<br>
+</div>
+
+<pre><span id="VALprev"><span class="keyword">val</span> prev</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to the previous document in an ordered series of documents. Some
+user agents also support the synonym "Previous".<br>
+</div>
+
+<pre><span id="VALcontents"><span class="keyword">val</span> contents</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a document serving as a table of contents. Some user agents also
+support the synonym ToC (from "Table of Contents").<br>
+</div>
+
+<pre><span id="VALindex"><span class="keyword">val</span> index</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a document providing an index for the current document.<br>
+</div>
+
+<pre><span id="VALglossary"><span class="keyword">val</span> glossary</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a document providing a glossary of terms that pertain to the
+current document.<br>
+</div>
+
+<pre><span id="VALcopyright_link"><span class="keyword">val</span> copyright_link</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a copyright statement for the current document.<br>
+</div>
+
+<pre><span id="VALchapter"><span class="keyword">val</span> chapter</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a document serving as a chapter in a collection of documents.<br>
+</div>
+
+<pre><span id="VALsection"><span class="keyword">val</span> section</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a document serving as a section in a collection of documents.<br>
+</div>
+
+<pre><span id="VALsubsection"><span class="keyword">val</span> subsection</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a document serving as a subsection in a collection of
+documents.<br>
+</div>
+
+<pre><span id="VALappendix"><span class="keyword">val</span> appendix</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a document serving as an appendix in a collection of
+documents.<br>
+</div>
+
+<pre><span id="VALhelp"><span class="keyword">val</span> help</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a document offering help (more information, links to other
+sources information, etc.)<br>
+</div>
+
+<pre><span id="VALbookmark"><span class="keyword">val</span> bookmark</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?charset:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?hreflang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?rev:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> list -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Refer to a bookmark. A bookmark is a link to a key entry point within an
+extended document. The title attribute may be used, for example, to label the
+bookmark. Note that several bookmarks may be defined in each document.<br>
+</div>
+<br>
+<h2 id="2_StructuredtextPhraseelements">Structured text: Phrase elements</h2><br>
+
+<pre><span id="VALanchor"><span class="keyword">val</span> anchor</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?href:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Anchor.<br>
+</div>
+
+<pre><span id="VALem"><span class="keyword">val</span> em</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate emphasis.<br>
+</div>
+
+<pre><span id="VALstrong"><span class="keyword">val</span> strong</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate stronger emphasis.<br>
+</div>
+
+<pre><span id="VALcite"><span class="keyword">val</span> cite</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Contains a citation or references to other sources.<br>
+</div>
+
+<pre><span id="VALdfn"><span class="keyword">val</span> dfn</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate that this is the defining instance of the enclosed term.<br>
+</div>
+
+<pre><span id="VALcode"><span class="keyword">val</span> code</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Designate a fragment of computer code.<br>
+</div>
+
+<pre><span id="VALsamp"><span class="keyword">val</span> samp</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Designate sample output from programs, scripts, etc.<br>
+</div>
+
+<pre><span id="VALkbd"><span class="keyword">val</span> kbd</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate text to be entered by the user.<br>
+</div>
+
+<pre><span id="VALvar"><span class="keyword">val</span> var</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate an instance of a variable or program argument.<br>
+</div>
+
+<pre><span id="VALabbr"><span class="keyword">val</span> abbr</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate an abbreviated form (e.g., WWW, HTTP, URI, Mass., etc.).<br>
+</div>
+
+<pre><span id="VALacronym"><span class="keyword">val</span> acronym</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate an acronym (e.g., WAC, radar, etc.).<br>
+</div>
+<br>
+<h2 id="2_Quotations">Quotations</h2><br>
+
+<pre><span id="VALblockquote"><span class="keyword">val</span> blockquote</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?cite:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+A paragraph containing a long quotation.<br>
+</div>
+
+<pre><span id="VALq"><span class="keyword">val</span> q</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?cite:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+A short quotation.<br>
+</div>
+<br>
+<h2 id="2_Markingtextchanges">Marking text changes</h2><br>
+
+<pre><span id="VALins"><span class="keyword">val</span> ins</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?cite:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?date:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate an insertion.<br>
+</div>
+
+<pre><span id="VALdel"><span class="keyword">val</span> del</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?cite:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> ?date:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Indicate a deletion.<br>
+</div>
+<br>
+<h2 id="2_Linesandparagaphs">Lines and paragaphs</h2><br>
+
+<pre><span id="VALp"><span class="keyword">val</span> p</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre>
+<pre><span id="VALbr"><span class="keyword">val</span> br</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> unit -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre>
+<pre><span id="VALpre"><span class="keyword">val</span> pre</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><br>
+<h2 id="2_Groupingelements">Grouping elements</h2><br>
+
+<pre><span id="VALspan"><span class="keyword">val</span> span</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Mark inline content.<br>
+</div>
+
+<pre><span id="VALdiv"><span class="keyword">val</span> div</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Mark block-level content.<br>
+</div>
+<br>
+<h2 id="2_Headings">Headings</h2><br>
+
+<pre><span id="VALh1"><span class="keyword">val</span> h1</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre>
+<pre><span id="VALh2"><span class="keyword">val</span> h2</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre>
+<pre><span id="VALh3"><span class="keyword">val</span> h3</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre>
+<pre><span id="VALh4"><span class="keyword">val</span> h4</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre>
+<pre><span id="VALh5"><span class="keyword">val</span> h5</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre>
+<pre><span id="VALh6"><span class="keyword">val</span> h6</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><br>
+<h2 id="2_Theaddresselement">The address element</h2><br>
+
+<pre><span id="VALaddress"><span class="keyword">val</span> address</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+The ADDRESS element may be used by authors to supply contact information
+for a document or a major part of a document such as a form. This element
+often appears at the beginning or end of a document.<br>
+</div>
+<br>
+<h2 id="2_Theimageelement">The image element</h2>
+<p>
+
+Nota: maps are not yet supported.<br>
+
+<pre><span id="VALimg"><span class="keyword">val</span> img</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?name:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?height:int -><br>       ?width:int -><br>       ?usemap:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?ismap:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?longdesc:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> alt:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+The IMG element. The alternate description is mandatory,
+internationalisation attributes refer to it.<br>
+</div>
+<br>
+<h2 id="2_Lists">Lists</h2><br>
+
+<pre><span id="VALol"><span class="keyword">val</span> ol</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Ordered lists.<br>
+</div>
+
+<pre><span id="VALul"><span class="keyword">val</span> ul</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Unordered lists.<br>
+</div>
+
+<pre><span id="VALli"><span class="keyword">val</span> li</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+List items.<br>
+</div>
+
+<pre><span id="VALdl"><span class="keyword">val</span> dl</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Definitions lists.<br>
+</div>
+
+<pre><span id="VALdt"><span class="keyword">val</span> dt</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Definition tag.<br>
+</div>
+
+<pre><span id="VALdd"><span class="keyword">val</span> dd</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Defintion description.<br>
+</div>
+<br>
+<h2 id="2_Thedocument">The document</h2><br>
+
+<pre><span id="VALbody"><span class="keyword">val</span> body</span> : <code class="type">?id:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?cls:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?style:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -><br>       ?title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+Body of the document.<br>
+</div>
+
+<pre><span id="VALhead"><span class="keyword">val</span> head</span> : <code class="type">?lang:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       ?dir:<a href="WSGML.html#TYPEnmtoken">WSGML.nmtoken</a> -><br>       title:<a href="WSGML.html#TYPEcdata">WSGML.cdata</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a></code></pre><div class="info ">
+The head of a document.<br>
+</div>
+
+<pre><span id="VALhtml"><span class="keyword">val</span> html</span> : <code class="type">?enc:<a href="Unicode.Encoding.html#TYPEt">Unicode.Encoding.t</a> -> <a href="WSGML.html#TYPEsnippet">WSGML.snippet</a> list -> <a href="WSGML.html#TYPEt">WSGML.t</a></code></pre><div class="info ">
+The full document.<br>
+</div>
+</body></html>

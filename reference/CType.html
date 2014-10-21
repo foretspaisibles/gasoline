@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Generic_application.html">
+<link rel="next" href="CConfigurationMap.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : CType</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Generic_application.html" title="Generic_application">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="CConfigurationMap.html" title="CConfigurationMap">Next</a>
+</div>
+<h1>Module <a href="type_CType.html">CType</a></h1>
+
+<pre><span class="keyword">module</span> CType: <code class="code">sig</code> <a href="CType.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Basic types for C-stylish applications.<br>
+</div>
+<hr width="100%">
+
+<pre><span class="keyword">module</span> <a href="CType.Data.html">Data</a>: <code class="type"><a href="Generic_type.DATA.html">Generic_type.DATA</a></code><code class="type"> 
+  with type word = char
+   and type block = string
+   and type out_channel = Pervasives.out_channel</code></pre><div class="info">
+Base data words and data blocks.
+</div>
+
+<pre><span class="keyword">module</span> <a href="CType.Buffer.html">Buffer</a>: <code class="type"><a href="Generic_type.BUFFER.html">Generic_type.BUFFER</a></code><code class="type"> 
+  with type t = Buffer.t
+  and type word = Data.word
+  and type block = Data.block
+  and type out_channel = Data.out_channel</code></pre><div class="info">
+Data buffers.
+</div>
+
+<pre><span class="keyword">module</span> <a href="CType.Locale.html">Locale</a>: <code class="code">sig</code> <a href="CType.Locale.html">..</a> <code class="code">end</code></pre><div class="info">
+Localisation parameters.
+</div>
+
+<pre><span class="keyword">module</span> <a href="CType.Value.html">Value</a>: <code class="code">sig</code> <a href="CType.Value.html">..</a> <code class="code">end</code></pre><div class="info">
+Dynamically typed values for plain applications.
+</div>
+
+<pre><span class="keyword">module</span> <a href="CType.Database.html">Database</a>: <code class="type"><a href="Generic_type.DATABASE.html">Generic_type.DATABASE</a></code><code class="type"> 
+  with type connection_token = unit</code></pre>
+<pre><span class="keyword">module</span> <a href="CType.Classification.html">Classification</a>: <code class="code">sig</code> <a href="CType.Classification.html">..</a> <code class="code">end</code></pre></body></html>

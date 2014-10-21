@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="CApplication.Locale.html">
+<link rel="next" href="CApplication.Classification.html">
+<link rel="Up" href="CApplication.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><link title="Creating and examining values" rel="Section" href="#6_Creatingandexaminingvalues">
+<link title="Comparison" rel="Section" href="#6_Comparison">
+<link title="Persistence" rel="Section" href="#6_Persistence">
+<link title="Formatted output" rel="Section" href="#6_Formattedoutput">
+<title>Gasoline library : CApplication.Value</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="CApplication.Locale.html" title="CApplication.Locale">Previous</a>
+&nbsp;<a class="up" href="CApplication.html" title="CApplication">Up</a>
+&nbsp;<a class="post" href="CApplication.Classification.html" title="CApplication.Classification">Next</a>
+</div>
+<h1>Module <a href="type_CApplication.Value.html">CApplication.Value</a></h1>
+
+<pre><span class="keyword">module</span> Value: <code class="code">sig</code> <a href="CApplication.Value.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Dynamically typed values.<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEkind"><span class="keyword">type</span> <code class="type">'a</code> kind</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTkind.Bool"><span class="constructor">Bool</span></span> <span class="keyword">:</span> <code class="type">bool <a href="CApplication.Value.html#TYPEkind">kind</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTkind.Int"><span class="constructor">Int</span></span> <span class="keyword">:</span> <code class="type">int <a href="CApplication.Value.html#TYPEkind">kind</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTkind.Char"><span class="constructor">Char</span></span> <span class="keyword">:</span> <code class="type">char <a href="CApplication.Value.html#TYPEkind">kind</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTkind.String"><span class="constructor">String</span></span> <span class="keyword">:</span> <code class="type">string <a href="CApplication.Value.html#TYPEkind">kind</a></code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTkind.Float"><span class="constructor">Float</span></span> <span class="keyword">:</span> <code class="type">float <a href="CApplication.Value.html#TYPEkind">kind</a></code></code></td>
+
+</tr></table>
+
+<div class="info ">
+The type tracking <code class="code">'a</code>.<br>
+</div>
+
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The abstract type of dynamically typed values.<br>
+</div>
+
+<br>
+<h6 id="6_Creatingandexaminingvalues">Creating and examining values</h6><br>
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">'a <a href="CApplication.Value.html#TYPEkind">kind</a> -> 'a -> <a href="CApplication.Value.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">make kind value</code> create a dynamically typed value.<br>
+</div>
+
+<pre><span id="VALget_option"><span class="keyword">val</span> get_option</span> : <code class="type">'a <a href="CApplication.Value.html#TYPEkind">kind</a> -> <a href="CApplication.Value.html#TYPEt">t</a> -> 'a option</code></pre><div class="info ">
+Get a dynamical value in a safe manner.
+<p>
+
+  It is important to note that there is no implicit conversions
+  performed on the value.<br>
+</div>
+
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">'a <a href="CApplication.Value.html#TYPEkind">kind</a> -> <a href="CApplication.Value.html#TYPEt">t</a> -> 'a</code></pre><div class="info ">
+Get a dynamical value in an unsafe manner.<br>
+<b>Raises</b> <code>Failure</code> if the value is of anouther kind.<br>
+</div>
+
+<pre><span id="VALis_of_kind"><span class="keyword">val</span> is_of_kind</span> : <code class="type">'a <a href="CApplication.Value.html#TYPEkind">kind</a> -> <a href="CApplication.Value.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Predicate recognising dynamical values of a specific kind.<br>
+</div>
+
+<pre><span id="VALis_of_same_kind"><span class="keyword">val</span> is_of_same_kind</span> : <code class="type"><a href="CApplication.Value.html#TYPEt">t</a> -> <a href="CApplication.Value.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Predicate recognising dynamic of values of the same kind.<br>
+</div>
+<br>
+<h6 id="6_Comparison">Comparison</h6><br>
+
+<pre><span id="VALequal"><span class="keyword">val</span> equal</span> : <code class="type"><a href="CApplication.Value.html#TYPEt">t</a> -> <a href="CApplication.Value.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Equality test for dynamic values.<br>
+</div>
+
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="CApplication.Value.html#TYPEt">t</a> -> <a href="CApplication.Value.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Comparison function for dynamic values.<br>
+</div>
+<br>
+<h6 id="6_Persistence">Persistence</h6><br>
+
+<pre><span id="VALtaste"><span class="keyword">val</span> taste</span> : <code class="type">'a <a href="CApplication.Value.html#TYPEkind">kind</a> -> string -> bool</code></pre><div class="info ">
+<code class="code">taste k s</code> recognise <code class="code">s</code> if it represents a value of kind <code class="code">k</code>.<br>
+</div>
+
+<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="CApplication.Value.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+<code class="code">to_string v</code> transform <code class="code">v</code> to a string.
+<p>
+
+  This string can be written in a file and read back later with <code class="code">of_string</code>.<br>
+</div>
+
+<pre><span id="VALof_string"><span class="keyword">val</span> of_string</span> : <code class="type">string -> <a href="CApplication.Value.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_string s</code> convert a string to a dynamic value.<br>
+</div>
+
+<pre><span id="VALof_string_kind"><span class="keyword">val</span> of_string_kind</span> : <code class="type">'a <a href="CApplication.Value.html#TYPEkind">kind</a> -> string -> 'a</code></pre><div class="info ">
+<code class="code">of_string_kind k s</code> convert <code class="code">s</code> to a dynamic value of kind <code class="code">k</code>.<br>
+<b>Raises</b> <code>Failure</code> if <code class="code">s</code> cannot be converted to a value of kind <code class="code">k</code>.<br>
+</div>
+
+<pre><span id="VALof_string_same"><span class="keyword">val</span> of_string_same</span> : <code class="type"><a href="CApplication.Value.html#TYPEt">t</a> -> string -> <a href="CApplication.Value.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_string_same v s</code> convert <code class="code">s</code> to a dynamic value of the same kind a <code class="code">v</code>.<br>
+<b>Raises</b> <code>Failure</code> if <code class="code">s</code> cannot be converted to a value of that kind.<br>
+</div>
+
+<pre><span id="VALreader_kind"><span class="keyword">val</span> reader_kind</span> : <code class="type">'a <a href="CApplication.Value.html#TYPEkind">kind</a> -> Scanf.Scanning.in_channel -> 'a</code></pre><div class="info ">
+Custom reader to use with <code class="code">scanf</code>.<br>
+</div>
+
+<pre><span id="VALreader_same"><span class="keyword">val</span> reader_same</span> : <code class="type"><a href="CApplication.Value.html#TYPEt">t</a> -> Scanf.Scanning.in_channel -> <a href="CApplication.Value.html#TYPEt">t</a></code></pre><div class="info ">
+Custom reader to use with <code class="code">scanf</code>.<br>
+</div>
+
+<pre><span id="VALprinter"><span class="keyword">val</span> printer</span> : <code class="type">Format.formatter -> <a href="CApplication.Value.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+A printer for the toplevel.<br>
+</div>
+<br>
+<h6 id="6_Formattedoutput">Formatted output</h6>
+<p>
+
+  The low-level functions <code class="code">add</code>, <code class="code">add_foramtted</code> and <code class="code">add_text</code> should
+  only be used in emergency cases.  The preferred way to output values
+  is through the use of messages.<br>
+
+<pre><span id="TYPElocale"><span class="keyword">type</span> <code class="type"></code>locale</span> = <code class="type"><a href="CApplication.Locale.html#TYPEt">CApplication.Locale.t</a></code> </pre>
+<div class="info ">
+The type of localisation parameters.<br>
+</div>
+
+
+<pre><code><span id="TYPEformat"><span class="keyword">type</span> <code class="type"></code>format</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTformat.specifier">specifier</span>&nbsp;: <code class="type">char</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTformat.left_justify">left_justify</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Left-justify within the given field width; Right justification
+    is the default (see width sub-specifier).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTformat.always_signed">always_signed</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Forces to precede the result with a plus or minus sign (+ or -)
+    even for positive numbers. By default, only negative numbers
+    are preceded with a - sign.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTformat.align_sign">align_sign</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >If no sign is going to be written, a blank space is inserted
+    before the value.
+<p>
+
+    This implies that the <code class="code">align_sign</code> flag is ignored when the the
+    <code class="code">always_signed</code> flag is set, as clarified by ANSI.
+<p>
+
+    <pre class="verbatim">    ``If the space and + flags both appear, the space
+      flag will be ignored.''
+      -- ANSI X3J11
+   </pre></td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTformat.alternative_format">alternative_format</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Choose an alternative format, depending on the value.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTformat.pad_with_zeroes">pad_with_zeroes</span>&nbsp;: <code class="type">bool</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTformat.width">width</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTformat.precision">precision</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+The type of formatting information for values.<br>
+</div>
+
+
+<pre><span id="VALstdformat"><span class="keyword">val</span> stdformat</span> : <code class="type"><a href="CApplication.Value.html#TYPEformat">format</a></code></pre><div class="info ">
+The standard format used when no other format is supplied.<br>
+</div>
+
+<pre><span id="VALformat_to_string"><span class="keyword">val</span> format_to_string</span> : <code class="type"><a href="CApplication.Value.html#TYPEformat">format</a> -> string</code></pre><div class="info ">
+Convert format information to concrete form.<br>
+</div>
+
+<pre><span id="VALformat_of_string"><span class="keyword">val</span> format_of_string</span> : <code class="type">string -> <a href="CApplication.Value.html#TYPEformat">format</a></code></pre><div class="info ">
+Convert concrete form to format information.<br>
+<b>Raises</b> <code>Invalid_arg</code> when the given argument cannot be converted.<br>
+</div>
+
+<pre><span id="TYPEbuffer"><span class="keyword">type</span> <code class="type"></code>buffer</span> = <code class="type">Buffer.t</code> </pre>
+<div class="info ">
+The type of data buffers.<br>
+</div>
+
+
+<pre><span id="VALadd_formatted"><span class="keyword">val</span> add_formatted</span> : <code class="type"><a href="CApplication.Value.html#TYPEbuffer">buffer</a> -><br>       <a href="CApplication.Value.html#TYPElocale">locale</a> -><br>       <a href="CApplication.Value.html#TYPEbuffer">buffer</a> -><br>       <a href="CApplication.Value.html#TYPEformat">format</a> -> <a href="CApplication.Value.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Write a formatted value to a data buffer.
+<p>
+
+  The first <code class="code">buffer</code> given in argument is a scratch buffer that is
+  empty when the function is called. The function is expected to add
+  the appropriate words to the second buffer.<br>
+</div>
+
+<pre><span id="VALadd"><span class="keyword">val</span> add</span> : <code class="type"><a href="CApplication.Value.html#TYPEbuffer">buffer</a> -><br>       <a href="CApplication.Value.html#TYPElocale">locale</a> -><br>       <a href="CApplication.Value.html#TYPEbuffer">buffer</a> -> <a href="CApplication.Value.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Write a value to a data buffer.
+<p>
+
+  See <code class="code">add_formatted</code> for comments on arguments.<br>
+</div>
+
+<pre><span id="VALadd_text"><span class="keyword">val</span> add_text</span> : <code class="type"><a href="CApplication.Value.html#TYPEbuffer">buffer</a> -><br>       <a href="CApplication.Value.html#TYPElocale">locale</a> -> <a href="CApplication.Value.html#TYPEbuffer">buffer</a> -> string -> unit</code></pre><div class="info ">
+Write a text to a data buffer.
+<p>
+
+  The precise interpretation of text has to be specified by concrete
+  implementations.
+<p>
+
+  See <code class="code">add_formatted</code> for comments on arguments.<br>
+</div>
+</body></html>

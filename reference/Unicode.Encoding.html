@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unicode.UInformation.html">
+<link rel="next" href="Unicode.UChar.html">
+<link rel="Up" href="Unicode.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : Unicode.Encoding</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unicode.UInformation.html" title="Unicode.UInformation">Previous</a>
+&nbsp;<a class="up" href="Unicode.html" title="Unicode">Up</a>
+&nbsp;<a class="post" href="Unicode.UChar.html" title="Unicode.UChar">Next</a>
+</div>
+<h1>Module <a href="type_Unicode.Encoding.html">Unicode.Encoding</a></h1>
+
+<pre><span class="keyword">module</span> Encoding: <code class="code">sig</code> <a href="Unicode.Encoding.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Codage and transcodage.
+<p>
+
+See also the <code class="code">UChannel</code> module, that contains procedure to adapt char
+channels to uchar channels.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="EXCEPTIONMalformed_code"><span class="keyword">exception</span> Malformed_code</span></pre>
+<div class="info ">
+Failure of decoding.<br>
+</div>
+
+<pre><span id="EXCEPTIONOut_of_range"><span class="keyword">exception</span> Out_of_range</span></pre>
+<div class="info ">
+Failure of encoding.<br>
+</div>
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+Type for encodings.<br>
+</div>
+
+
+<pre><span id="VALautomatic"><span class="keyword">val</span> automatic</span> : <code class="type">string -> <a href="Unicode.Encoding.html#TYPEt">t</a> list -> <a href="Unicode.Encoding.html#TYPEt">t</a> -> <a href="Unicode.Encoding.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">automatic name [enc_1; enc_2; ... enc_n] enc</code> creates the new
+encoding <code class="code">name</code> doing automatic decoding detection among <code class="code">enc_1</code>,
+<code class="code">enc_2</code>, ..., <code class="code">enc_n</code> by the given order.  <code class="code">enc</code> is used for
+encoding.<br>
+</div>
+
+<pre><span id="VALregister"><span class="keyword">val</span> register</span> : <code class="type">string -> <a href="Unicode.Encoding.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">register name enc</code> register the new encoding <code class="code">enc</code> under the name
+<code class="code">name</code><br>
+</div>
+
+<pre><span id="VALalias"><span class="keyword">val</span> alias</span> : <code class="type">string -> string -> unit</code></pre><div class="info ">
+<code class="code">alias alias name</code> : Define <code class="code">alias</code> as an alias of the encoding
+with the name <code class="code">name</code>.<br>
+</div>
+
+<pre><span id="VALfind"><span class="keyword">val</span> find</span> : <code class="type">string -> <a href="Unicode.Encoding.html#TYPEt">t</a></code></pre><div class="info ">
+Returns the encoding of the given name.<br>
+<b>Raises</b> <code>Not_found</code> if the encoding is unknown.
+<p>
+
+Encoding names are the same to codeset names in charmap files for the
+encodings defined by charmap.  See charmaps directory in the source
+directory for the available encodings.  In addition to the encodings
+via the charmap files, camomile supports ISO-2022-CN, ISO-2022-JP,
+ISO-2022-JP-2, ISO-2022-KR, jauto (Auto detection of Japanese
+encodings), UTF-8, UTF-16, UTF-16BE, UTF-16LE.  UTF-32, UTF-32BE,
+UTF-32LE, UCS-4(Big endian order). The encoding also can be referred
+by "IANA/&lt;IANA name&gt;", if the encoding is supported.<br>
+</div>
+
+<pre><span id="VALname"><span class="keyword">val</span> name</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Returns the name of the encoding.<br>
+</div>
+
+<pre><span id="VALascii"><span class="keyword">val</span> ascii</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre><div class="info ">
+Some encodings<br>
+</div>
+
+<pre><span id="VALlatin1"><span class="keyword">val</span> latin1</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlatin9"><span class="keyword">val</span> latin9</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALutf8"><span class="keyword">val</span> utf8</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALutf16"><span class="keyword">val</span> utf16</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALutf16be"><span class="keyword">val</span> utf16be</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALutf16le"><span class="keyword">val</span> utf16le</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALutf32"><span class="keyword">val</span> utf32</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALutf32be"><span class="keyword">val</span> utf32be</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALutf32le"><span class="keyword">val</span> utf32le</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALucs4"><span class="keyword">val</span> ucs4</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlocale"><span class="keyword">val</span> locale</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a></code></pre><div class="info ">
+The <code class="code">locale</code> is initialized according to the LANG environment
+    variable, and defaults to <code class="code">latin9</code> if the LANG variable is unset or
+    set with an unproper value.<br>
+</div>
+
+<pre><span id="VALrecode_string"><span class="keyword">val</span> recode_string</span> : <code class="type">in_enc:<a href="Unicode.Encoding.html#TYPEt">t</a> -> out_enc:<a href="Unicode.Encoding.html#TYPEt">t</a> -> string -> string</code></pre><div class="info ">
+<code class="code">recode_string ~in_enc ~out_enc s</code> converts the string <code class="code">s</code> from
+    <code class="code">in_enc</code> to <code class="code">out_enc</code>.<br>
+</div>
+
+<pre><span id="VALdecode"><span class="keyword">val</span> decode</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a> -> string -> <a href="Unicode.html#TYPEustring">Unicode.ustring</a></code></pre>
+<pre><span id="VALencode"><span class="keyword">val</span> encode</span> : <code class="type"><a href="Unicode.Encoding.html#TYPEt">t</a> -> <a href="Unicode.html#TYPEustring">Unicode.ustring</a> -> string</code></pre>
+<pre><span id="VALimport"><span class="keyword">val</span> import</span> : <code class="type">string -> <a href="Unicode.html#TYPEustring">Unicode.ustring</a></code></pre>
+<pre><span id="VALexport"><span class="keyword">val</span> export</span> : <code class="type"><a href="Unicode.html#TYPEustring">Unicode.ustring</a> -> string</code></pre><div class="info ">
+This is the same duo as decode/encode, using locale to read the data.<br>
+</div>
+</body></html>

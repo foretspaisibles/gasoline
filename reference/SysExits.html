@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unicode.html">
+<link rel="next" href="Getopt.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : SysExits</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unicode.html" title="Unicode">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Getopt.html" title="Getopt">Next</a>
+</div>
+<h1>Module <a href="type_SysExits.html">SysExits</a></h1>
+
+<pre><span class="keyword">module</span> SysExits: <code class="code">sig</code> <a href="SysExits.html">..</a> <code class="code">end</code></pre><div class="info module top">
+System exit codes
+<p>
+
+The <i>sysexits(3)</i> manual page gives advice for the use of system
+exit codes of a program. The definitions in this module helps to adhere to
+these recommendations.<br>
+</div>
+<hr width="100%">
+<br>
+<i>From sysexits(3):</i> According to <i>style(9)</i>, it is not a good
+practice to call <i>exit(3)</i> with arbitrary values to indicate a failure
+condition when ending a program.  Instead, the pre-defined exit codes
+from <i>sysexits(3)</i> should be used, so the caller of the process can get a
+rough estimation about the failure class without looking up the source
+code.
+<p>
+
+<b>Remark:</b> We added sybolic values <code class="code">EXIT_SUCCESS</code> and <code class="code">EXIT_FAILURE</code>
+to the list provided by <i>sysexits(3)</i>.<br>
+
+<pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_SUCCESS"><span class="constructor">EXIT_SUCCESS</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_SUCCESS</code> (0) The program succeeded.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_FAILURE"><span class="constructor">EXIT_FAILURE</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_FAILURE</code> (1) The program failed for an unspecified
+  reason.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_USAGE"><span class="constructor">EXIT_USAGE</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_USAGE</code> (64) The command was used incorrectly, e.g., with
+  the wrong number of arguments, a bad flag, a bad syntax in a
+  parameter, or whatever.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_DATAERR"><span class="constructor">EXIT_DATAERR</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_DATAERR</code> (65) The input data was incorrect in some
+  way. This should only be used for user's data and not system
+  files.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_NOINPUT"><span class="constructor">EXIT_NOINPUT</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_NOINPUT</code> (66) An input file (not a system file) did not
+  exist or was not readable. This could also include errors like ``No
+  message'' to a mailer (if it cared to catch it).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_NOUSER"><span class="constructor">EXIT_NOUSER</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_NOUSER</code> (67) The user specified did not exist. This might
+  be used for mail addresses or remote logins.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_NOHOST"><span class="constructor">EXIT_NOHOST</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_NOHOST</code> (68) The host specified did not exist. This is
+  used in mail addresses or network requests.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_UNAVAILABLE"><span class="constructor">EXIT_UNAVAILABLE</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_UNAVAILABLE</code> (69) A service is unavailable. This can occur
+  if a support program or file does not exist. This can also be used
+  as a catchall message when something you wanted to do does not work,
+  but you do not know why.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_SOFTWARE"><span class="constructor">EXIT_SOFTWARE</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_SOFTWARE</code> (70) An internal software error has been
+  detected. This should be limited to non-operating system related
+  errors as possible.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_OSERR"><span class="constructor">EXIT_OSERR</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_OSERR</code> (71) An operating system error has been
+  detected. This is intended to be used for such things as ``cannot
+  fork'', ``cannot create pipe'', or the like. It includes things like
+  getuid returning a user that does not exist in the passwd file.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_OSFILE"><span class="constructor">EXIT_OSFILE</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_OSFILE</code> (72) Some system file (e.g., /etc/passwd,
+  /var/run/utmp, etc.) does not exist, cannot be opened, or has some
+  sort of error (e.g., syntax error).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_CANTCREAT"><span class="constructor">EXIT_CANTCREAT</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_CANTCREAT</code> (73) A (user specified) output file cannot be
+  created.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_IOERR"><span class="constructor">EXIT_IOERR</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_IOERR</code> (74) An error occurred while doing I/O on some
+  file.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_TEMPFAIL"><span class="constructor">EXIT_TEMPFAIL</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_TEMPFAIL</code> (75) Temporary failure, indicating something
+  that is not really an error. In sendmail, this means that a mailer
+  (e.g.)  could not create a connection, and the request should be
+  reattempted later.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_PROTOCOL"><span class="constructor">EXIT_PROTOCOL</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_PROTOCOL</code> (76) The remote system returned something that
+  was ``not possible'' during a protocol exchange.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_NOPERM"><span class="constructor">EXIT_NOPERM</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_NOPERM</code> (77) You did not have sufficient permission to
+  perform the operation. This is not intended for file system
+  problems, which should use EX_NOINPUT or EX_CANTCREAT, but rather
+  for higher level permissions.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_CONFIG"><span class="constructor">EXIT_CONFIG</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">EXIT_CONFIG</code> (78) Something was found in an unconfigured or
+  misconfigured state.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.EXIT_RANDOM"><span class="constructor">EXIT_RANDOM</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >For emitting or decoding other exit codes.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info ">
+The type of symbolic error codes. The numerical values
+corresponding to the symbolical ones are given in parenthesis for
+easy reference.<br>
+</div>
+
+
+<pre><span id="VALexit"><span class="keyword">val</span> exit</span> : <code class="type"><a href="SysExits.html#TYPEt">t</a> -> 'a</code></pre><div class="info ">
+Terminate the process as <code class="code">Pervasives.exit</code> but uses a symbolic
+exit code.<br>
+</div>
+
+<pre><span id="VALto_int"><span class="keyword">val</span> to_int</span> : <code class="type"><a href="SysExits.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">to_int x</code> convert a symbolic error code to an error code, suited
+to be used with <code class="code">Pervasives.exit</code>.<br>
+</div>
+
+<pre><span id="VALof_int"><span class="keyword">val</span> of_int</span> : <code class="type">int -> <a href="SysExits.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_int x</code> convert the given exit code to a symbolic exit
+code. The <code class="code">EXIT_RANDOM</code> constructor is used for codes which do not
+have a name.<br>
+</div>
+</body></html>

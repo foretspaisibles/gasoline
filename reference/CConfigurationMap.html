@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="CType.html">
+<link rel="next" href="CMessage.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : CConfigurationMap</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="CType.html" title="CType">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="CMessage.html" title="CMessage">Next</a>
+</div>
+<h1>Module <a href="type_CConfigurationMap.html">CConfigurationMap</a></h1>
+
+<pre><span class="keyword">module</span> CConfigurationMap: <code class="code">sig</code> <a href="CConfigurationMap.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Configuration maps for C-Stylish applications.<br>
+</div>
+<hr width="100%">
+
+<pre><span class="keyword">include</span> <a href="ConfigurationMap.html">ConfigurationMap</a></pre>
+
+<pre><span id="VALkey_bool"><span class="keyword">val</span> key_bool</span> : <code class="type">string list -> string -> bool -> string -> bool key</code></pre><div class="info ">
+Create a boolean configuration item.<br>
+</div>
+
+<pre><span id="VALkey_char"><span class="keyword">val</span> key_char</span> : <code class="type">string list -> string -> char -> string -> char key</code></pre><div class="info ">
+Create a char configuration key.<br>
+</div>
+
+<pre><span id="VALkey_int"><span class="keyword">val</span> key_int</span> : <code class="type">string list -> string -> int -> string -> int key</code></pre><div class="info ">
+Create an integer configuration key.<br>
+</div>
+
+<pre><span id="VALkey_float"><span class="keyword">val</span> key_float</span> : <code class="type">string list -> string -> float -> string -> float key</code></pre><div class="info ">
+Create a float configuration key.<br>
+</div>
+
+<pre><span id="VALkey_string"><span class="keyword">val</span> key_string</span> : <code class="type">string list -> string -> string -> string -> string key</code></pre><div class="info ">
+Create a string configuration key.<br>
+</div>
+</body></html>

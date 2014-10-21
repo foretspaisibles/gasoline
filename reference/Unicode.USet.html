@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Unicode.UMap.html">
+<link rel="Up" href="Unicode.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Unicode" rel="Chapter" href="Unicode.html">
+<link title="SysExits" rel="Chapter" href="SysExits.html">
+<link title="Getopt" rel="Chapter" href="Getopt.html">
+<link title="ConfigurationMap" rel="Chapter" href="ConfigurationMap.html">
+<link title="Generic_component" rel="Chapter" href="Generic_component.html">
+<link title="Generic_type" rel="Chapter" href="Generic_type.html">
+<link title="Generic_message" rel="Chapter" href="Generic_message.html">
+<link title="Generic_diagnostic" rel="Chapter" href="Generic_diagnostic.html">
+<link title="Generic_asset" rel="Chapter" href="Generic_asset.html">
+<link title="Generic_application" rel="Chapter" href="Generic_application.html">
+<link title="CType" rel="Chapter" href="CType.html">
+<link title="CConfigurationMap" rel="Chapter" href="CConfigurationMap.html">
+<link title="CMessage" rel="Chapter" href="CMessage.html">
+<link title="CApplication" rel="Chapter" href="CApplication.html">
+<link title="ConfigurationParser" rel="Chapter" href="ConfigurationParser.html">
+<link title="UnitTest" rel="Chapter" href="UnitTest.html">
+<link title="WSGML" rel="Chapter" href="WSGML.html">
+<link title="WHTML" rel="Chapter" href="WHTML.html">
+<link title="LoremIpsum" rel="Chapter" href="LoremIpsum.html"><title>Gasoline library : Unicode.USet</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="Unicode.html" title="Unicode">Up</a>
+&nbsp;<a class="post" href="Unicode.UMap.html" title="Unicode.UMap">Next</a>
+</div>
+<h1>Module <a href="type_Unicode.USet.html">Unicode.USet</a></h1>
+
+<pre><span class="keyword">module</span> USet: <code class="code">sig</code> <a href="Unicode.USet.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Sets of Unicode characters
+<p>
+
+These sets are implemented as sets of intervals.  The signature is
+mostly same to Set.S in <i>stdlib</i>.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+
+
+<pre><span id="TYPEelt"><span class="keyword">type</span> <code class="type"></code>elt</span> = <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code> </pre>
+
+
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a></code></pre>
+<pre><span id="VALis_empty"><span class="keyword">val</span> is_empty</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> bool</code></pre>
+<pre><span id="VALmem"><span class="keyword">val</span> mem</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> bool</code></pre>
+<pre><span id="VALadd"><span class="keyword">val</span> add</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre>
+<pre><span id="VALadd_range"><span class="keyword">val</span> add_range</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">add_range u1 u2 s</code> adds the characters in the range from
+    <code class="code">u1 - u2</code> to <code class="code">s</code>. The range is determined by the code point order.<br>
+</div>
+
+<pre><span id="VALsingleton"><span class="keyword">val</span> singleton</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">singleton u</code> returns the one-element set containing only <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALremove"><span class="keyword">val</span> remove</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">remove u s</code> returns a set containing all elements of <code class="code">s</code>, except
+<code class="code">u</code>. If <code class="code">u</code> was not in <code class="code">s</code>, <code class="code">s</code> is returned unchanged.<br>
+</div>
+
+<pre><span id="VALremove_range"><span class="keyword">val</span> remove_range</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">remove_range u1 u2 s</code> removes the characters in the range <code class="code">u1</code> - <code class="code">u2</code>
+from <code class="code">s</code>.  The range is determined by the code point order.<br>
+</div>
+
+<pre><span id="VALunion"><span class="keyword">val</span> union</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+Set union.<br>
+</div>
+
+<pre><span id="VALinter"><span class="keyword">val</span> inter</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+Set intersection.<br>
+</div>
+
+<pre><span id="VALdiff"><span class="keyword">val</span> diff</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">diff s1 s2</code> is the set whose elements are those which belongs to
+only one of the sets <code class="code">s1</code> and <code class="code">s2</code>.<br>
+</div>
+
+<pre><span id="VALcompl"><span class="keyword">val</span> compl</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">compl s</code> is the compliment of <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Total ordering between sets. Can be used as the ordering function
+for doing, e.g., sets of sets.<br>
+</div>
+
+<pre><span id="VALequal"><span class="keyword">val</span> equal</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">equal s1 s2</code> tests whether the sets <code class="code">s1</code> and <code class="code">s2</code> are equal, that
+is, contain equal elements.<br>
+</div>
+
+<pre><span id="VALsubset"><span class="keyword">val</span> subset</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">subset s1 s2</code> is true iff <code class="code">s1</code> is a subset of <code class="code">s2</code>.<br>
+</div>
+
+<pre><span id="VALfrom"><span class="keyword">val</span> from</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">from u s</code> returns the set of elements of <code class="code">s</code>
+whose code points are equal or greater than <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALafter"><span class="keyword">val</span> after</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">after u s</code> returns the set of elements of <code class="code">s</code>
+whose code points are greater than <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALuntil"><span class="keyword">val</span> until</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">until u s</code> returns the set of elements of <code class="code">s</code>
+whose code points are equal or smaller than <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALbefore"><span class="keyword">val</span> before</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">until u s</code> returns the set of elements of <code class="code">s</code>
+whose code points are smaller than <code class="code">u</code>.<br>
+</div>
+
+<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> unit) -> <a href="Unicode.USet.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Iter a function over the elements of a set.<br>
+</div>
+
+<pre><span id="VALiter_range"><span class="keyword">val</span> iter_range</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> unit) -> <a href="Unicode.USet.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">iter_range proc s</code> feeds the intervals contained in <code class="code">s</code> to
+<code class="code">proc</code> in increasing order.  The intervals given to <code class="code">proc</code>
+are always separated by the character not in <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALfold"><span class="keyword">val</span> fold</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a -> 'a) -> <a href="Unicode.USet.html#TYPEt">t</a> -> 'a -> 'a</code></pre><div class="info ">
+Fold over elements of a set.<br>
+</div>
+
+<pre><span id="VALfold_range"><span class="keyword">val</span> fold_range</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> 'a -> 'a) -> <a href="Unicode.USet.html#TYPEt">t</a> -> 'a -> 'a</code></pre><div class="info ">
+<code class="code">fold_range f s x</code> is equivalent to
+<code class="code">f u_i u_(i+1) (... (f u_3 u_4 (f u_1 u_2 x)))</code> if <code class="code">s</code> is consisted of
+the intervals <code class="code">u1</code>-<code class="code">u2</code>, <code class="code">u3</code>-<code class="code">u4</code>, ..., <code class="code">u_i</code>-<code class="code">u_(i + 1)</code>
+in increasing order.  The intervals given to <code class="code">proc</code>
+are always separated by the character not in <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALfor_all"><span class="keyword">val</span> for_all</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> bool) -> <a href="Unicode.USet.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">for_all p s</code> checks if all elements of the set satisfy the
+predicate <code class="code">p</code>.<br>
+</div>
+
+<pre><span id="VALexists"><span class="keyword">val</span> exists</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> bool) -> <a href="Unicode.USet.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">exists p s</code> checks if at least one element of the set satisfies
+the predicate <code class="code">p</code>.<br>
+</div>
+
+<pre><span id="VALfilter"><span class="keyword">val</span> filter</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> bool) -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">filter p s</code> returns the set of all elements in <code class="code">s</code> that satisfy
+predicate <code class="code">p</code>.<br>
+</div>
+
+<pre><span id="VALpartition"><span class="keyword">val</span> partition</span> : <code class="type">(<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> bool) -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a> * <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">partition p s</code> returns a pair of sets <code class="code">(s1, s2)</code>, where <code class="code">s1</code> is
+the set of all the elements of <code class="code">s</code> that satisfy the predicate <code class="code">p</code>, and
+<code class="code">s2</code> is the set of all the elements of <code class="code">s</code> that do not satisfy <code class="code">p</code>.<br>
+</div>
+
+<pre><span id="VALcardinal"><span class="keyword">val</span> cardinal</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Return the number of elements of a set.<br>
+</div>
+
+<pre><span id="VALelements"><span class="keyword">val</span> elements</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a> list</code></pre><div class="info ">
+Return the list of all elements of the given set.
+The returned list is sorted in increasing order with respect
+to the ordering <code class="code">UChar.compare</code>.<br>
+</div>
+
+<pre><span id="VALranges"><span class="keyword">val</span> ranges</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> (<a href="Unicode.html#TYPEuchar">Unicode.uchar</a> * <a href="Unicode.html#TYPEuchar">Unicode.uchar</a>) list</code></pre><div class="info ">
+The list of the intervals contained in the set.
+The returned intervals are always separated
+by the character not in <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALmin_elt"><span class="keyword">val</span> min_elt</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+Return the smallest element of the given set
+(with respect to the <code class="code">UChar.compare</code> ordering), or raise
+<code class="code">Not_found</code> if the set is empty.<br>
+</div>
+
+<pre><span id="VALmax_elt"><span class="keyword">val</span> max_elt</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+Same as <a href="Unicode.USet.html#VALmin_elt"><code class="code">Unicode.USet.min_elt</code></a>, but returns the largest element of the
+given set.<br>
+</div>
+
+<pre><span id="VALchoose"><span class="keyword">val</span> choose</span> : <code class="type"><a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.html#TYPEuchar">Unicode.uchar</a></code></pre><div class="info ">
+Returns a element roughly in the middle of the set.
+It is not guaranteed to return the same element for
+the sets with the same elements<br>
+</div>
+
+<pre><span id="VALsplit"><span class="keyword">val</span> split</span> : <code class="type"><a href="Unicode.html#TYPEuchar">Unicode.uchar</a> -> <a href="Unicode.USet.html#TYPEt">t</a> -> <a href="Unicode.USet.html#TYPEt">t</a> * bool * <a href="Unicode.USet.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">split u s</code> returns a triple <code class="code">(l, present, r)</code>, where <code class="code">l</code> is the
+set of elements of <code class="code">s</code> that are strictly less than <code class="code">u</code>; <code class="code">r</code> is the set
+of elements of <code class="code">s</code> that are strictly greater than <code class="code">u</code>; <code class="code">present</code> is
+<code class="code">false</code> if <code class="code">s</code> contains no element equal to <code class="code">u</code>, or <code class="code">true</code> if <code class="code">s</code>
+contains an element equal to <code class="code">u</code>.<br>
+</div>
+</body></html>
