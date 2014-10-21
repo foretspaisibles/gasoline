@@ -17,6 +17,9 @@
 SUBDIR+=	unit-testing
 SUBDIR+=	trip-trap
 
+install:
+	${NOP}
+
 .include "gasoline.subdir.mk"
 
 ### End of file `Makefile'
