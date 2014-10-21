@@ -48,6 +48,40 @@ See the [ocamldoc generated documentation][8] of the `master` branch
 for more details.
 
 
+## Setup guide
+
+The installation procedure is based on the portable build system
+[bsdowl][10] based on BSD Make.
+
+1. Verify that prerequisites are installed:
+   - BSD Make
+   - [BSD OWl][11]
+   - OCaml
+   - GNU Autoconf
+
+2. Get the source, either by cloning the repository or by exploding a
+   [distribution tarball](releases).
+
+3. Optionally run `autoconf` to produce a configuration script. This
+   is only required if the script is not already present.
+
+4. Run `./configure`, you can choose the installation prefix with
+   `--prefix`.
+
+5. Run `make build`.
+
+6. Optionally run `make test` to test your build.
+
+7. Finally run `make install`.
+
+Depending on how BSD Make is called on your system, you may need to
+replace `make` by `bsdmake` or `bmake` in steps 5, 6, and 7.  The GNU
+Make program usually give up the ghost, croaking `*** missing
+separator. Stop.`
+
+Step 7 requires that you can `su -` if you are not already `root`.
+
+
 Michael Grünewald in Bonn, on October 21, 2014
 
    [1]: http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
@@ -58,3 +92,5 @@ Michael Grünewald in Bonn, on October 21, 2014
    [6]: http://michipili.github.io/gasoline/reference/Unicode.html
    [8]: http://michipili.github.io/gasoline/reference/index.html
    [9]: wiki/UnitTesting
+   [10]: /michipili/bsdowl
+   [11]: /michipili/bsdowl/wiki/Install
