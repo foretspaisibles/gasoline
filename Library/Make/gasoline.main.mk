@@ -25,6 +25,7 @@ SUBDIR+=	manual
 test: all
 	@cd testsuite && ${MAKE} test
 
+.include "bps.init.mk"
 .include "bps.project.mk"
 
 ### End of file `gasoline.main.mk'
