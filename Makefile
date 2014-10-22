@@ -19,6 +19,7 @@ AUTHOR=		Michael Grünewald
 
 CONFIGURE=	meta/gasoline.in
 
+PROJECTDISTEXCLUDE=	Wiki
 
 .MAKEFLAGS: -I${.CURDIR}/Library/Make
 .include "gasoline.main.mk"
