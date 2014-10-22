@@ -28,5 +28,6 @@ DIRS+= ${PROJECTBASE}/${module}
 
 PACKAGE=	gasoline
 PACKAGEDIR=	/${PACKAGE}
+LIBDIR?=	${PREFIX}/lib/ocaml/site-lib${PACKAGEDIR}
 
 ### End of file `gasoline.init.mk'
