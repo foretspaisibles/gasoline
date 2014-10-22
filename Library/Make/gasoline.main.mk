@@ -19,6 +19,7 @@
 SUBDIR+=	${PROJECTMODULE}
 SUBDIR+=	toplevel
 SUBDIR+=	testsuite
+SUBDIR+=	meta
 SUBDIR+=	example
 SUBDIR+=	manual
 
