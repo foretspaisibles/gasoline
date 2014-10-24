@@ -87,7 +87,7 @@ Michael Grünewald in Bonn, on October 21, 2014
    [1]: http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
    [2]: http://github.com/michipili/gasoline/wiki/DiagnosticFacility
    [3]: http://github.com/michipili/gasoline/wiki/Configuration
-   [4]: http://github.com/michipili/gasoline/wiki/CascadingRules
+   [4]: https://github.com/michipili/gasoline/wiki/Configuration#configuration-cascade
    [5]: http://github.com/michipili/gasoline/wiki/Component
    [6]: http://michipili.github.io/gasoline/reference/Unicode.html
    [8]: http://michipili.github.io/gasoline/reference/index.html
