@@ -61,6 +61,9 @@ CLEANFILES+= ${test}.cmi
 
 .include "gasoline.trip-trap.mk"
 
+.SUFFIXES: .ml
+.PATH.ml: ../../../example/punishment
+
 punishment.byte: ${GASOLINELIBS} punishment.ml
 	${GASOLINEOCAMLC} ${.ALLSRC:M*.cma} -o ${.TARGET} ${.ALLSRC:M*.ml}
 
