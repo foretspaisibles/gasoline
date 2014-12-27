@@ -254,7 +254,7 @@ let pr_generator =
 let pr_name prefix suffix =
   let pr_number = (Random.State.bits pr_generator) land 0xFFFFFF in
   let pr_basename = (sprintf "%s%06x%s" prefix pr_number suffix) in
-    Filename.concat Filename.temp_dir_name pr_basename
+    Filename.concat (Filename.get_temp_dir_name()) pr_basename
 
 let tmpfile prefix suffix r =
   let sname = ref "\000" in	(* An invalid filename *)

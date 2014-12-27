@@ -1017,6 +1017,13 @@ sig
 
   type tag = string
 
+  type formatter_out_functions = {
+    out_string : string -> int -> int -> unit;
+    out_flush : unit -> unit;
+    out_newline : unit -> unit;
+    out_spaces : int -> unit;
+  }
+
   type formatter_tag_functions = {
     mark_open_tag : tag -> string;
     mark_close_tag : tag -> string;
@@ -1024,7 +1031,8 @@ sig
     print_close_tag : tag -> unit;
   }
 
-  val formatter_of_out_channel : ?enc:Encoding.t -> Pervasives.out_channel -> formatter
+  val formatter_of_out_channel :
+    ?enc:Encoding.t -> Pervasives.out_channel -> formatter
   val formatter_of_formatter : ?enc:Encoding.t -> Format.formatter -> formatter
   val formatter_of_buffer : ?enc:Encoding.t -> Buffer.t -> formatter
   val stdbuf : Buffer.t
@@ -1087,35 +1095,24 @@ sig
   val pp_get_formatter_output_functions :
     formatter ->
     unit -> (string -> int -> int -> unit) * (unit -> unit)
-  val pp_set_all_formatter_output_functions :
-    formatter ->
-    out:(string -> int -> int -> unit) ->
-    flush:(unit -> unit) ->
-    newline:(unit -> unit) -> spaces:(int -> unit) -> unit
-  val pp_get_all_formatter_output_functions :
-    formatter ->
-    unit ->
-    (string -> int -> int -> unit) * (unit -> unit) * (unit -> unit) *
-    (int -> unit)
   val pp_set_formatter_tag_functions :
     formatter -> formatter_tag_functions -> unit
   val pp_get_formatter_tag_functions :
     formatter -> unit -> formatter_tag_functions
-  val fprintf :
-    formatter -> ('a, Format.formatter, unit) Pervasives.format -> 'a
-  val sprintf : ('a, unit, string) Pervasives.format -> 'a
-  val bprintf :
-    Buffer.t -> ('a, Format.formatter, unit) Pervasives.format -> 'a
-  val kfprintf :
-    (formatter -> 'a) ->
-    formatter ->
-    ('b, Format.formatter, unit, 'a) Pervasives.format4 -> 'b
-  val ifprintf :
-    formatter -> ('a, Format.formatter, unit) Pervasives.format -> 'a
-  val ksprintf :
-    (string -> 'a) -> ('b -> 'c, unit, string, 'a) Pervasives.format4 -> 'b -> 'c
-  val kprintf :
-    (string -> 'a) -> ('b -> 'c, unit, string, 'a) Pervasives.format4 -> 'b -> 'c
+  val pp_set_formatter_out_functions :
+    formatter -> formatter_out_functions -> unit
+  val pp_get_formatter_out_functions :
+    formatter -> unit -> formatter_out_functions
+  val pp_print_list:
+    ?pp_sep:(formatter -> unit -> unit) ->
+    (formatter -> 'a -> unit) -> (formatter -> 'a list -> unit)
+  val pp_print_text : formatter -> string -> unit
+  val fprintf : formatter -> ('a, Format.formatter, unit) format -> 'a
+  val sprintf : ('a, unit, string) format -> 'a
+  val asprintf : ('a, Format.formatter, unit, string) format4 -> 'a
+  val ifprintf : formatter -> ('a, Format.formatter, unit) format -> 'a
+  val ikfprintf : (formatter -> 'a) -> formatter ->
+    ('b, Format.formatter, unit, 'a) format4 -> 'b
 end
 
 
