@@ -109,6 +109,60 @@ type udata = mutability data
 type utext = [`Immutable] data
 type ustring = [`Mutable] data
 
+module Encoding =
+struct
+  exception Malformed_code
+  exception Out_of_range
+  type t = Camomile_encoding.t
+
+  let automatic = Camomile_encoding.automatic
+  let register = Camomile_encoding.new_enc
+  let alias = Camomile_encoding.alias
+  let find = Camomile_encoding.of_name
+  let name = Camomile_encoding.name_of
+
+  let ascii = Camomile_encoding.ascii
+  let latin1 = Camomile_encoding.latin1
+  let iso_8859_15 = find "ISO-8859-15"
+  let _ = alias "Latin9" "ISO-8859-15"
+  let latin9 = find "Latin9"
+  let utf8 = Camomile_encoding.utf8
+  let utf16 = Camomile_encoding.utf16
+  let utf16be = Camomile_encoding.utf16be
+  let utf16le = Camomile_encoding.utf16le
+  let utf32 = Camomile_encoding.utf32
+  let utf32be = Camomile_encoding.utf32be
+  let utf32le = Camomile_encoding.utf32le
+  let ucs4 = Camomile_encoding.ucs4
+
+  let locale =
+    try
+      let l = Sys.getenv "LANG" in
+      let i = String.index l '.' in
+      find (String.sub l (i+1) (String.length l - i - 1))
+    with _ -> latin9
+
+  let handle_error f x =
+    try f x with
+    | Camomile_encoding.Malformed_code -> raise Malformed_code
+    | Camomile_encoding.Out_of_range -> raise Out_of_range
+
+  let recode_string ~in_enc ~out_enc text =
+    handle_error (Camomile_encoding.recode_string ~in_enc ~out_enc) text
+
+  let decode code text =
+    handle_error (Camomile_transcode.decode code) text
+
+  let encode code text =
+    handle_error (Camomile_transcode.encode code) text
+
+  let import text =
+    handle_error (Camomile_transcode.decode locale) text
+
+  let export text =
+    handle_error (Camomile_transcode.encode locale) text
+end
+
 module USet =
 struct
   include Camomile_set
@@ -163,6 +217,21 @@ struct
   let nextline = of_int 0x0085
   let line = of_int 0x2028
   let par = of_int 0x2029
+
+  let to_ustring u =
+    Camomile_text.make 1 u
+
+  let format enc f u =
+    Format.pp_print_string f (Encoding.encode enc (to_ustring u))
+
+  let output enc c u =
+    output_string c (Encoding.encode enc (to_ustring u))
+
+  let print enc u =
+    output enc stdout u
+
+  let prerr enc u =
+    output enc stderr u
 
   let printer ppt c =
     Format.fprintf ppt "U+%04X" (to_int c)
@@ -750,61 +819,6 @@ struct
   let to_lower c = table_get lower_table c
   let to_upper c = table_get upper_table c
   let to_title c = table_get title_table c
-
-end
-
-module Encoding =
-struct
-  exception Malformed_code
-  exception Out_of_range
-  type t = Camomile_encoding.t
-
-  let automatic = Camomile_encoding.automatic
-  let register = Camomile_encoding.new_enc
-  let alias = Camomile_encoding.alias
-  let find = Camomile_encoding.of_name
-  let name = Camomile_encoding.name_of
-
-  let ascii = Camomile_encoding.ascii
-  let latin1 = Camomile_encoding.latin1
-  let iso_8859_15 = find "ISO-8859-15"
-  let _ = alias "Latin9" "ISO-8859-15"
-  let latin9 = find "Latin9"
-  let utf8 = Camomile_encoding.utf8
-  let utf16 = Camomile_encoding.utf16
-  let utf16be = Camomile_encoding.utf16be
-  let utf16le = Camomile_encoding.utf16le
-  let utf32 = Camomile_encoding.utf32
-  let utf32be = Camomile_encoding.utf32be
-  let utf32le = Camomile_encoding.utf32le
-  let ucs4 = Camomile_encoding.ucs4
-
-  let locale =
-    try
-      let l = Sys.getenv "LANG" in
-      let i = String.index l '.' in
-	find (String.sub l (i+1) (String.length l - i - 1))
-    with _ -> latin9
-
-  let handle_error f x =
-    try f x with
-    | Camomile_encoding.Malformed_code -> raise Malformed_code
-    | Camomile_encoding.Out_of_range -> raise Out_of_range
-
-  let recode_string ~in_enc ~out_enc text =
-    handle_error (Camomile_encoding.recode_string ~in_enc ~out_enc) text
-
-  let decode code text =
-    handle_error (Camomile_transcode.decode code) text
-
-  let encode code text =
-    handle_error (Camomile_transcode.encode code) text
-
-  let import text =
-    handle_error (Camomile_transcode.decode locale) text
-
-  let export text =
-    handle_error (Camomile_transcode.encode locale) text
 
 end
 

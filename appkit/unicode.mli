@@ -689,76 +689,86 @@ end
 (** Operations on Unicode characters *)
 module UChar :
 sig
+  exception Out_of_range
 
-exception Out_of_range
+  (** Unicode characters. All 31 bits code points are allowed.*)
+  type t = uchar
 
-(** Unicode characters. All 31 bits code points are allowed.*)
-type t = uchar
+  val to_char : t -> char
+  (** [to_char u] returns the Latin-9 representation of [u].
+  @raise Out_of_range if [u] can not be represented by Latin-9. *)
 
-val to_char : t -> char
-(** [to_char u] returns the Latin-9 representation of [u].
-@raise Out_of_range if [u] can not be represented by Latin-9. *)
+  val of_char : char -> t
+  (** [of_char c] returns the Unicode character of the Latin-1 character [c]. *)
 
-val of_char : char -> t
-(** [of_char c] returns the Unicode character of the Latin-1 character [c]. *)
+  val code : t -> int
+  (** [code u] returns the Unicode code number of [u].
+  @raise Out_of_range if [u] cannot be represented by a positive integer. *)
 
-val code : t -> int
-(** [code u] returns the Unicode code number of [u].
-@raise Out_of_range if [u] cannot be represented by a positive integer. *)
+  val chr : int -> t
+  (** [chr n] returns the Unicode character with the code number [n].
+  @raise Invalid_arg if n >= 2^32 or n < 0. *)
 
-val chr : int -> t
-(** [chr n] returns the Unicode character with the code number [n].
-@raise Invalid_arg if n >= 2^32 or n < 0. *)
+  val uint_code : t -> int
+  (** [uint_code u] returns the Unicode code number of [u].
+  The returned int is unsigned, that is, on 32-bits platforms,
+  the sign bit is used for storing the 31-th bit of the code number. *)
 
-val uint_code : t -> int
-(** [uint_code u] returns the Unicode code number of [u].
-The returned int is unsigned, that is, on 32-bits platforms,
-the sign bit is used for storing the 31-th bit of the code number. *)
+  val uint_chr: int -> t
+  (** [uint_chr n] returns the Unicode character of the code number [n].
+  [n] is interpreted as unsigned, that is, on 32-bits platforms,
+  the sign bit is treated as the 31-th bit of the code number.
+  @raise Invalid_arg if [n] exceed 31-bits values. *)
 
-val uint_chr: int -> t
-(** [uint_chr n] returns the Unicode character of the code number [n].
-[n] is interpreted as unsigned, that is, on 32-bits platforms,
-the sign bit is treated as the 31-th bit of the code number.
-@raise Invalid_arg if [n] exceed 31-bits values. *)
+  val eq : t -> t -> bool
+  (** Equality by code point comparison *)
 
-val eq : t -> t -> bool
-(** Equality by code point comparison *)
+  val compare : t -> t -> int
+  (** [compare u1 u2] returns,
+     a value > 0 if [u1] has a larger Unicode code number than [u2],
+     0 if [u1] and [u2] are the same Unicode character,
+     a value < 0 if [u1] has a smaller Unicode code number than [u2]. *)
 
-val compare : t -> t -> int
-(** [compare u1 u2] returns,
-   a value > 0 if [u1] has a larger Unicode code number than [u2],
-   0 if [u1] and [u2] are the same Unicode character,
-   a value < 0 if [u1] has a smaller Unicode code number than [u2]. *)
+  val to_int : t -> int
+  (** Alias of [uint_code] *)
 
-val to_int : t -> int
-(** Alias of [uint_code] *)
+  val of_int : int -> uchar
+  (** Alias of [uint_chr] *)
 
-val of_int : int -> uchar
-(** Alias of [uint_chr] *)
+  val newline: uchar
+  (** The newline character. *)
 
-val newline: uchar
-(** The newline character. *)
+  val space : uchar
+  (** The space character. *)
 
-val space : uchar
-(** The space character. *)
+  val htab: uchar
+  (** The horizontal tab character. *)
 
-val htab: uchar
-(** The horizontal tab character. *)
+  val vtab: uchar
+  (** The vertical tab character. *)
 
-val vtab: uchar
-(** The vertical tab character. *)
+  val nextline: uchar
+  (** The nextline character. *)
 
-val nextline: uchar
-(** The nextline character. *)
+  val line: uchar
+  (** The line separator character. *)
 
-val line: uchar
-(** The line separator character. *)
+  val par: uchar
+  (** The paragraph separator character. *)
 
-val par: uchar
-(** The paragraph separator character. *)
 
-val printer : Format.formatter -> uchar -> unit
-(** A printer for the toplevel. *)
+  (** {2 Output on standard structures} *)
+
+  val format : Encoding.t -> Format.formatter -> uchar -> unit
+
+  val output : Encoding.t -> Pervasives.out_channel -> uchar -> unit
+
+  val print : Encoding.t -> uchar -> unit
+
+  val prerr : Encoding.t -> uchar -> unit
+
+  val printer : Format.formatter -> uchar -> unit
+  (** A printer for the toplevel. *)
 end
 
 
@@ -1009,112 +1019,6 @@ sig
   val input_line : in_channel -> ustring
 end
 
-(** Pretty printing with unicode support. *)
-module UFormat :
-sig
-
-  type formatter
-
-  type tag = string
-
-  type formatter_out_functions = {
-    out_string : string -> int -> int -> unit;
-    out_flush : unit -> unit;
-    out_newline : unit -> unit;
-    out_spaces : int -> unit;
-  }
-
-  type formatter_tag_functions = {
-    mark_open_tag : tag -> string;
-    mark_close_tag : tag -> string;
-    print_open_tag : tag -> unit;
-    print_close_tag : tag -> unit;
-  }
-
-  val formatter_of_out_channel :
-    ?enc:Encoding.t -> Pervasives.out_channel -> formatter
-  val formatter_of_formatter : ?enc:Encoding.t -> Format.formatter -> formatter
-  val formatter_of_buffer : ?enc:Encoding.t -> Buffer.t -> formatter
-  val stdbuf : Buffer.t
-  val str_formatter : formatter
-  val flush_str_formatter : unit -> string
-  val make_formatter : ?enc:Encoding.t ->
-    (string -> int -> int -> unit) -> (unit -> unit) -> formatter
-  val pp_open_hbox : formatter -> unit -> unit
-  val pp_open_vbox : formatter -> int -> unit
-  val pp_open_hvbox : formatter -> int -> unit
-  val pp_open_hovbox : formatter -> int -> unit
-  val pp_open_box : formatter -> int -> unit
-  val pp_close_box : formatter -> unit -> unit
-  val pp_open_tag : formatter -> string -> unit
-  val pp_close_tag : formatter -> unit -> unit
-  val pp_print_string : formatter -> string -> unit
-  val pp_print_ustring : formatter -> ustring -> unit
-  val pp_print_as : formatter -> int -> string -> unit
-  val pp_print_int : formatter -> int -> unit
-  val pp_print_float : formatter -> float -> unit
-  val pp_print_char : formatter -> char -> unit
-  val pp_print_uchar : formatter -> uchar -> unit
-  val pp_print_bool : formatter -> bool -> unit
-  val pp_print_break : formatter -> int -> int -> unit
-  val pp_print_cut : formatter -> unit -> unit
-  val pp_print_space : formatter -> unit -> unit
-  val pp_force_newline : formatter -> unit -> unit
-  val pp_print_flush : formatter -> unit -> unit
-  val pp_print_newline : formatter -> unit -> unit
-  val pp_print_if_newline : formatter -> unit -> unit
-  val pp_open_tbox : formatter -> unit -> unit
-  val pp_close_tbox : formatter -> unit -> unit
-  val pp_print_tbreak : formatter -> int -> int -> unit
-  val pp_set_tab : formatter -> unit -> unit
-  val pp_print_tab : formatter -> unit -> unit
-  val pp_set_tags : formatter -> bool -> unit
-  val pp_set_print_tags : formatter -> bool -> unit
-  val pp_set_mark_tags : formatter -> bool -> unit
-  val pp_get_print_tags : formatter -> unit -> bool
-  val pp_get_mark_tags : formatter -> unit -> bool
-  val pp_set_margin : formatter -> int -> unit
-  val pp_get_margin : formatter -> unit -> int
-  val pp_set_max_indent : formatter -> int -> unit
-  val pp_get_max_indent : formatter -> unit -> int
-  val pp_set_max_boxes : formatter -> int -> unit
-  val pp_get_max_boxes : formatter -> unit -> int
-  val pp_over_max_boxes : formatter -> unit -> bool
-
-  val pp_get_formatter_encoding : formatter -> unit -> Encoding.t
-  val pp_set_formatter_encoding : formatter -> Encoding.t -> unit
-
-  val pp_set_ellipsis_text : formatter -> string -> unit
-  val pp_get_ellipsis_text : formatter -> unit -> string
-
-  val pp_set_formatter_out_channel :
-    formatter -> Pervasives.out_channel -> unit
-  val pp_set_formatter_output_functions :
-    formatter ->
-    (string -> int -> int -> unit) -> (unit -> unit) -> unit
-  val pp_get_formatter_output_functions :
-    formatter ->
-    unit -> (string -> int -> int -> unit) * (unit -> unit)
-  val pp_set_formatter_tag_functions :
-    formatter -> formatter_tag_functions -> unit
-  val pp_get_formatter_tag_functions :
-    formatter -> unit -> formatter_tag_functions
-  val pp_set_formatter_out_functions :
-    formatter -> formatter_out_functions -> unit
-  val pp_get_formatter_out_functions :
-    formatter -> unit -> formatter_out_functions
-  val pp_print_list:
-    ?pp_sep:(formatter -> unit -> unit) ->
-    (formatter -> 'a -> unit) -> (formatter -> 'a list -> unit)
-  val pp_print_text : formatter -> string -> unit
-  val fprintf : formatter -> ('a, Format.formatter, unit) format -> 'a
-  val sprintf : ('a, unit, string) format -> 'a
-  val asprintf : ('a, Format.formatter, unit, string) format4 -> 'a
-  val ifprintf : formatter -> ('a, Format.formatter, unit) format -> 'a
-  val ikfprintf : (formatter -> 'a) -> formatter ->
-    ('b, Format.formatter, unit, 'a) format4 -> 'b
-end
-
 
 (** Standard Input/Output.
 
@@ -1200,95 +1104,6 @@ sig
 
   module Make(P:PARAMETER): S
 end
-
-(** Pretty printing on standard Input/Output *)
-module UFormat_stdio :
-sig
-
-  module type PARAMETER =
-  sig
-    val ustdin: UChannel.in_channel
-    val ustdout: UChannel.out_channel
-    val ustderr: UChannel.out_channel
-  end
-
-  module type S =
-  sig
-    open UFormat
-
-    val std_formatter : formatter
-    val err_formatter : formatter
-
-    val open_box : int -> unit
-    val close_box : unit -> unit
-    val print_string : string -> unit
-    val print_ustring : ustring -> unit
-    val print_as : int -> string -> unit
-    val print_int : int -> unit
-    val print_float : float -> unit
-    val print_char : char -> unit
-    val print_uchar : uchar -> unit
-    val print_bool : bool -> unit
-    val print_space : unit -> unit
-    val print_cut : unit -> unit
-    val print_break : int -> int -> unit
-    val print_flush : unit -> unit
-    val print_newline : unit -> unit
-    val force_newline : unit -> unit
-    val print_if_newline : unit -> unit
-    val set_margin : int -> unit
-    val get_margin : unit -> int
-    val set_max_indent : int -> unit
-    val get_max_indent : unit -> int
-    val set_max_boxes : int -> unit
-    val get_max_boxes : unit -> int
-    val over_max_boxes : unit -> bool
-    val open_hbox : unit -> unit
-    val open_vbox : int -> unit
-    val open_hvbox : int -> unit
-    val open_hovbox : int -> unit
-    val open_tbox : unit -> unit
-    val close_tbox : unit -> unit
-    val print_tbreak : int -> int -> unit
-    val set_tab : unit -> unit
-    val print_tab : unit -> unit
-    val set_ellipsis_text : string -> unit
-    val get_ellipsis_text : unit -> string
-
-    val open_tag : tag -> unit
-    val close_tag : unit -> unit
-    val set_tags : bool -> unit
-    val set_print_tags : bool -> unit
-    val set_mark_tags : bool -> unit
-    val get_print_tags : unit -> bool
-    val get_mark_tags : unit -> bool
-
-    val get_formatter_encoding : unit -> Encoding.t
-    val set_formatter_encoding : Encoding.t -> unit
-
-    val set_formatter_out_channel : Pervasives.out_channel -> unit
-    val set_formatter_output_functions :
-      (string -> int -> int -> unit) -> (unit -> unit) -> unit
-    val get_formatter_output_functions :
-      unit -> (string -> int -> int -> unit) * (unit -> unit)
-    val set_formatter_tag_functions : formatter_tag_functions -> unit
-    val get_formatter_tag_functions : unit -> formatter_tag_functions
-    val set_all_formatter_output_functions :
-      out:(string -> int -> int -> unit) ->
-      flush:(unit -> unit) ->
-      newline:(unit -> unit) -> spaces:(int -> unit) -> unit
-    val get_all_formatter_output_functions :
-      unit ->
-      (string -> int -> int -> unit) * (unit -> unit) * (unit -> unit) *
-      (int -> unit)
-
-    val printf : ('a, Format.formatter, unit) Pervasives.format -> 'a
-    val eprintf : ('a, Format.formatter, unit) Pervasives.format -> 'a
-
-  end
-
-end
-
 
 
 (** Buffers containing unicode characters *)
