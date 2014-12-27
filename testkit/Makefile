@@ -14,8 +14,10 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-SRCS+= unitTest.ml
+LIBRARY=		gasoline_testkit
 
-.include "gasoline.library.mk"
+SRCS+=			unitTest.ml
+
+.include "ocaml.lib.mk"
 
 ### End of file `Makefile'

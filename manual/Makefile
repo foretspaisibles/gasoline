@@ -14,6 +14,12 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-.include "gasoline.manual.mk"
+ODOC_TITLE=		Gasoline library
+
+ODOC_HTML_CSS_FILE=	${PROJECTLIBRARY}/Data/gasoline.css
+ODOC_HTML_INTRO=	intro.text
+ODOC_HTML_CHARSET=	utf-8
+
+.include "ocaml.manual.mk"
 
 ### End of file `Makefile'
