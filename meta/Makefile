@@ -14,8 +14,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-META=	gasoline
+META=			gasoline
 
-.include "gasoline.meta.mk"
+.include "ocaml.meta.mk"
 
 ### End of file `Makefile'

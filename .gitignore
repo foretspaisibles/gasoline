@@ -19,12 +19,13 @@
 #
 # Autoconf files
 #
+.product
 autom4te.cache/
 config.log
 config.status
 configure
 meta/META
-Makefile.inc
+Makefile.config
 #
 # Manual files
 #

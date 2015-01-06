@@ -1,7 +1,7 @@
-### Makefile -- Gasoline
+### Makefile -- Punishment
 
 # Author: Michael Grünewald
-# Date: Tue Jun  3 12:44:50 CEST 2014
+# Date: Fri Oct 24 12:07:58 CEST 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
@@ -13,18 +13,9 @@
 # you should have received as part of this distribution. The terms
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
-TOPLEVEL?= ${.CURDIR:T}
 
-.include "gasoline.init.mk"
+PROGRAM=	punishment
 
-TOPLEVELMODULE?= ${PROJECTMODULE}
+.include "gasoline.program.mk"
 
-.for s in ${TOPLEVELMODULE}
-LIBS+= gasoline_${s}
-.endfor
-
-PKGS+=	compiler-libs
-
-.include "ocaml.toplevel.mk"
-
-### End of file `gasoline.toplevel.mk'
+### End of file `Makefile'

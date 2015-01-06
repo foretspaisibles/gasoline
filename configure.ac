@@ -14,9 +14,12 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-AC_INIT(meta/gasoline.in)
-AC_SUBST([version], [0.1])
-AC_OUTPUT(Makefile.inc)
-AC_OUTPUT(meta/gasoline)
+AC_INIT([meta/gasoline.in])
+AC_CONFIG_MACRO_DIR([Library/Autoconf])
+AC_PROG_OCAML
+AC_PROG_FINDLIB
+AC_WITH_OCAML_SITE_LIB
+AC_CONFIG_FILES([Makefile.config meta/gasoline])
+AC_OUTPUT
 
 ### End of file `configure.ac'
