@@ -1,9 +1,9 @@
-### Makefile -- Examples
+### Makefile -- Punishment
 
 # Author: Michael Grünewald
-# Date: Tue Jun  3 11:12:28 CEST 2014
+# Date: Fri Oct 24 12:07:58 CEST 2014
 
-# GIT-Toolkit (https://github.com/michipili/gasoline)
+# Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
 #
 # Copyright © 2014 Michael Grünewald
@@ -14,10 +14,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-SUBDIR+=	punishment
-SUBDIR+=	wordcount
-SUBDIR+=	wordgen
+PROGRAM=	punishment
 
-.include "gasoline.subdir.mk"
+.include "gasoline.program.mk"
 
 ### End of file `Makefile'

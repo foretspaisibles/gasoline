@@ -89,7 +89,7 @@ end
 let main lst =
   match lst with
   | [] -> Monolith.perform ()
-  | _ -> Application.usage ()
+  | _ -> Application.usage "spurious argument"
 
 let () =
   let configuration =
