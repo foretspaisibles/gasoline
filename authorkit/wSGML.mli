@@ -84,9 +84,6 @@ val make : ?declaration:nmtoken -> ?dtd:nmtoken -> snippet list -> t
 content. It is possible to preprend a declaration and a
 DTD identifier to the resulting document. *)
 
-val uformat : Unicode.UFormat.formatter -> t -> unit
-(** [format f d] format document [d] to unicode formatter [f]. *)
-
 val format : ?enc:Unicode.Encoding.t -> Format.formatter -> t -> unit
 (** [format f d] format document [d] to formatter [f]. *)
 

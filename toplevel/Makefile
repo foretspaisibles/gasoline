@@ -14,10 +14,10 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-TOPLEVEL=	gasoline
+TOPLEVEL=		gasoline
 
-SRCS+=		gasoline_config.ml
-SRCS+=		gasoline_toplevel.ml
+SRCS+=			gasoline_config.ml
+SRCS+=			gasoline_toplevel.ml
 
 
 BPS_AUTOCONF_VARIABLE=	LIBDIR
@@ -40,6 +40,6 @@ BPS_AUTOCONF_REPLACE=	${_BPS_AUTOCONF_REPLACE} ${_BPS_AUTOCONF_EXPAND}
 gasoline_config.ml: gasoline_config.ml.in
 	${SED} ${BPS_AUTOCONF_REPLACE} ${.ALLSRC} > ${.TARGET}
 
-CLEANFILES+=	gasoline_config.ml
+CLEANFILES+=		gasoline_config.ml
 
-.include "gasoline.toplevel.mk"
+.include "ocaml.toplevel.mk"

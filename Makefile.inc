@@ -1,7 +1,7 @@
-### gasoline.init.mk -- Initialisation
+### Makefile.inc -- Project configuration
 
 # Author: Michael Grünewald
-# Date: Thu Nov  7 07:35:59 CET 2013
+# Date: Sat Dec 27 11:37:01 CET 2014
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
@@ -14,20 +14,19 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROJECTMODULE+=	appkit
-PROJECTMODULE+=	testkit
-PROJECTMODULE+=	authorkit
+.if "${THISMODULE}" == "ocaml.lib"
+OCAMLCFLAGS+=	-warn-error +3
 
-PKGS+= camomile
+ODOC_NAME=	${LIBRARY}
+ODOC_FORMAT=	odoc
+ODOC_TITLE=	Ocamldoc dump for ${LIBRARY}
 
-.for module in ${PROJECTMODULE}
-DIRS+= ${PROJECTBASE}/${module}
-.endfor
+USE_ODOC=	no
+.endif
 
-.sinclude "${PROJECTBASE}/Makefile.build"
 
-PACKAGE=	gasoline
-PACKAGEDIR=	/${PACKAGE}
-LIBDIR?=	${PREFIX}/lib/ocaml/site-lib${PACKAGEDIR}
+.if "${THISMODULE}" == "ocaml.toplevel"
+EXTERNAL+=	ocaml.findlib:compiler-libs
+.endif
 
-### End of file `gasoline.init.mk'
+### End of file `Makefile.inc'

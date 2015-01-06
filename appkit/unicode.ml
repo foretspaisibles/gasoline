@@ -13,8 +13,6 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-open Format
-
 module XString = CamomileLibrary.XString
 module Camomile = CamomileLibraryDefault.Camomile
 module Camomile_set = Camomile.USet
@@ -111,6 +109,60 @@ type udata = mutability data
 type utext = [`Immutable] data
 type ustring = [`Mutable] data
 
+module Encoding =
+struct
+  exception Malformed_code
+  exception Out_of_range
+  type t = Camomile_encoding.t
+
+  let automatic = Camomile_encoding.automatic
+  let register = Camomile_encoding.new_enc
+  let alias = Camomile_encoding.alias
+  let find = Camomile_encoding.of_name
+  let name = Camomile_encoding.name_of
+
+  let ascii = Camomile_encoding.ascii
+  let latin1 = Camomile_encoding.latin1
+  let iso_8859_15 = find "ISO-8859-15"
+  let _ = alias "Latin9" "ISO-8859-15"
+  let latin9 = find "Latin9"
+  let utf8 = Camomile_encoding.utf8
+  let utf16 = Camomile_encoding.utf16
+  let utf16be = Camomile_encoding.utf16be
+  let utf16le = Camomile_encoding.utf16le
+  let utf32 = Camomile_encoding.utf32
+  let utf32be = Camomile_encoding.utf32be
+  let utf32le = Camomile_encoding.utf32le
+  let ucs4 = Camomile_encoding.ucs4
+
+  let locale =
+    try
+      let l = Sys.getenv "LANG" in
+      let i = String.index l '.' in
+      find (String.sub l (i+1) (String.length l - i - 1))
+    with _ -> latin9
+
+  let handle_error f x =
+    try f x with
+    | Camomile_encoding.Malformed_code -> raise Malformed_code
+    | Camomile_encoding.Out_of_range -> raise Out_of_range
+
+  let recode_string ~in_enc ~out_enc text =
+    handle_error (Camomile_encoding.recode_string ~in_enc ~out_enc) text
+
+  let decode code text =
+    handle_error (Camomile_transcode.decode code) text
+
+  let encode code text =
+    handle_error (Camomile_transcode.encode code) text
+
+  let import text =
+    handle_error (Camomile_transcode.decode locale) text
+
+  let export text =
+    handle_error (Camomile_transcode.encode locale) text
+end
+
 module USet =
 struct
   include Camomile_set
@@ -166,8 +218,23 @@ struct
   let line = of_int 0x2028
   let par = of_int 0x2029
 
+  let to_ustring u =
+    Camomile_text.make 1 u
+
+  let format enc f u =
+    Format.pp_print_string f (Encoding.encode enc (to_ustring u))
+
+  let output enc c u =
+    output_string c (Encoding.encode enc (to_ustring u))
+
+  let print enc u =
+    output enc stdout u
+
+  let prerr enc u =
+    output enc stderr u
+
   let printer ppt c =
-    fprintf ppt "U+%04X" (to_int c)
+    Format.fprintf ppt "U+%04X" (to_int c)
 
 end
 
@@ -755,61 +822,6 @@ struct
 
 end
 
-module Encoding =
-struct
-  exception Malformed_code
-  exception Out_of_range
-  type t = Camomile_encoding.t
-
-  let automatic = Camomile_encoding.automatic
-  let register = Camomile_encoding.new_enc
-  let alias = Camomile_encoding.alias
-  let find = Camomile_encoding.of_name
-  let name = Camomile_encoding.name_of
-
-  let ascii = Camomile_encoding.ascii
-  let latin1 = Camomile_encoding.latin1
-  let iso_8859_15 = find "ISO-8859-15"
-  let _ = alias "Latin9" "ISO-8859-15"
-  let latin9 = find "Latin9"
-  let utf8 = Camomile_encoding.utf8
-  let utf16 = Camomile_encoding.utf16
-  let utf16be = Camomile_encoding.utf16be
-  let utf16le = Camomile_encoding.utf16le
-  let utf32 = Camomile_encoding.utf32
-  let utf32be = Camomile_encoding.utf32be
-  let utf32le = Camomile_encoding.utf32le
-  let ucs4 = Camomile_encoding.ucs4
-
-  let locale =
-    try
-      let l = Sys.getenv "LANG" in
-      let i = String.index l '.' in
-	find (String.sub l (i+1) (String.length l - i - 1))
-    with _ -> latin9
-
-  let handle_error f x =
-    try f x with
-    | Camomile_encoding.Malformed_code -> raise Malformed_code
-    | Camomile_encoding.Out_of_range -> raise Out_of_range
-
-  let recode_string ~in_enc ~out_enc text =
-    handle_error (Camomile_encoding.recode_string ~in_enc ~out_enc) text
-
-  let decode code text =
-    handle_error (Camomile_transcode.decode code) text
-
-  let encode code text =
-    handle_error (Camomile_transcode.encode code) text
-
-  let import text =
-    handle_error (Camomile_transcode.decode locale) text
-
-  let export text =
-    handle_error (Camomile_transcode.encode locale) text
-
-end
-
 module UString =
 struct
   type t = ustring
@@ -872,7 +884,7 @@ struct
   let uncapitalize = transform UInformation.to_lower
 
   let format e f u =
-    pp_print_string f (Encoding.encode e u)
+    Format.pp_print_string f (Encoding.encode e u)
 
   let output e c u =
     output_string c (Encoding.encode e u)
@@ -884,9 +896,9 @@ struct
     output e stderr u
 
   let printer ppt s =
-    pp_print_string ppt "u8\"";
+    Format.pp_print_string ppt "u8\"";
     format Encoding.utf8 ppt s;
-    pp_print_string ppt "\""
+    Format.pp_print_string ppt "\""
 
 end
 
@@ -974,14 +986,14 @@ struct
 
     method output s a b =
       for i = 0 to b - 1 do
-	  pp_print_char f s.[a + i]
+	  Format.pp_print_char f s.[a + i]
       done; b
 
     method flush () =
-      pp_print_flush f ()
+      Format.pp_print_flush f ()
 
     method close_out () =
-      pp_print_flush f ()
+      Format.pp_print_flush f ()
 
   end
 
@@ -1067,239 +1079,6 @@ struct
 
 end
 
-module UFormat =
-struct
-
-  type formatter = {
-    mutable encoding: Encoding.t;
-    mutable formatter: Format.formatter;
-  }
-
-  type tag = string
-
-  type formatter_tag_functions = {
-    mark_open_tag : tag -> string;
-    mark_close_tag : tag -> string;
-    print_open_tag : tag -> unit;
-    print_close_tag : tag -> unit;
-  }
-
-  let tags_import x = {
-    mark_open_tag = x.Format.mark_open_tag;
-    mark_close_tag = x.Format.mark_close_tag;
-    print_open_tag = x.Format.print_open_tag;
-    print_close_tag = x.Format.print_close_tag;
-  }
-
-  let tags_export x = {
-    Format.mark_open_tag = x.mark_open_tag;
-    Format.mark_close_tag = x.mark_close_tag;
-    Format.print_open_tag = x.print_open_tag;
-    Format.print_close_tag = x.print_close_tag;
-  }
-
-  let create ?(enc = Encoding.locale ) f =
-    {
-      encoding = enc;
-      formatter = f;
-    }
-
-  let formatter_of_formatter =
-    create
-
-  let formatter_of_out_channel ?enc c =
-    create ?enc (Format.formatter_of_out_channel c)
-
-  let formatter_of_buffer ?enc b =
-    create ?enc (Format.formatter_of_buffer b)
-
-  let stdbuf =
-    Format.stdbuf
-
-  let str_formatter =
-    create Format.str_formatter
-
-  let flush_str_formatter =
-    Format.flush_str_formatter
-
-  let make_formatter ?enc output flush =
-    create ?enc (Format.make_formatter output flush)
-
-  let pp_open_hbox f z =
-    Format.pp_open_hbox f.formatter z
-
-  let pp_open_vbox f z =
-    Format.pp_open_vbox f.formatter z
-
-  let pp_open_hvbox f z =
-    Format.pp_open_hvbox f.formatter z
-
-  let pp_open_hovbox f z =
-    Format.pp_open_hovbox f.formatter z
-
-  let pp_open_box f z =
-    Format.pp_open_box f.formatter z
-
-  let pp_close_box f z =
-    Format.pp_close_box f.formatter z
-
-  let pp_open_tag f z =
-    Format.pp_open_tag f.formatter z
-
-  let pp_close_tag f z =
-    Format.pp_close_tag f.formatter z
-
-  let pp_print_string f z =
-    Format.pp_print_string f.formatter z
-
-  let pp_print_ustring f z =
-    pp_print_string f (Encoding.encode f.encoding z)
-
-  let pp_print_as f y z =
-    Format.pp_print_as f.formatter y z
-
-  let pp_print_int f z =
-    Format.pp_print_int f.formatter z
-
-  let pp_print_float f z =
-    Format.pp_print_float f.formatter z
-
-  let pp_print_char f z =
-    Format.pp_print_char f.formatter z
-
-  let pp_print_uchar f z =
-    pp_print_ustring f (UString.of_uchar z)
-
-  let pp_print_bool f z =
-    Format.pp_print_bool f.formatter z
-
-  let pp_print_break f y z =
-    Format.pp_print_break f.formatter y z
-
-  let pp_print_cut f z =
-    Format.pp_print_cut f.formatter z
-
-  let pp_print_space f z =
-    Format.pp_print_space f.formatter z
-
-  let pp_force_newline f z =
-    Format.pp_force_newline f.formatter z
-
-  let pp_print_flush f z =
-    Format.pp_print_flush f.formatter z
-
-  let pp_print_newline f z =
-    Format.pp_print_newline f.formatter z
-
-  let pp_print_if_newline f z =
-    Format.pp_print_if_newline f.formatter z
-
-  let pp_open_tbox f z =
-    Format.pp_open_tbox f.formatter z
-
-  let pp_close_tbox f z =
-    Format.pp_close_tbox f.formatter z
-
-  let pp_print_tbreak f x z =
-    Format.pp_print_tbreak f.formatter x z
-
-  let pp_set_tab f z =
-    Format.pp_set_tab f.formatter z
-
-  let pp_print_tab f z =
-    Format.pp_print_tab f.formatter z
-
-  let pp_set_tags f z =
-    Format.pp_set_tags f.formatter z
-
-  let pp_set_print_tags f z =
-    Format.pp_set_print_tags f.formatter z
-
-  let pp_set_mark_tags f z =
-    Format.pp_set_mark_tags f.formatter z
-
-  let pp_get_print_tags f z =
-    Format.pp_get_print_tags f.formatter z
-
-  let pp_get_mark_tags f z =
-    Format.pp_get_mark_tags f.formatter z
-
-  let pp_set_margin f z =
-    Format.pp_set_margin f.formatter z
-
-  let pp_get_margin f z =
-    Format.pp_get_margin f.formatter z
-
-  let pp_set_max_indent f z =
-    Format.pp_set_max_indent f.formatter z
-
-  let pp_get_max_indent f z =
-    Format.pp_get_max_indent f.formatter z
-
-  let pp_set_max_boxes f z =
-    Format.pp_set_max_boxes f.formatter z
-
-  let pp_get_max_boxes f z =
-    Format.pp_get_max_boxes f.formatter z
-
-  let pp_over_max_boxes f z =
-    Format.pp_over_max_boxes f.formatter z
-
-  let pp_get_formatter_encoding f () =
-    f.encoding
-
-  let pp_set_formatter_encoding f e =
-    f.encoding <- e
-
-  let pp_set_ellipsis_text f s =
-    Format.pp_set_ellipsis_text f.formatter s
-
-  let pp_get_ellipsis_text f () =
-    Format.pp_get_ellipsis_text f.formatter ()
-
-  let pp_set_formatter_out_channel f c =
-    Format.pp_set_formatter_out_channel f.formatter c
-
-  let pp_set_formatter_output_functions f output flush =
-    Format.pp_set_formatter_output_functions f.formatter output flush
-
-  let pp_get_formatter_output_functions f =
-    Format.pp_get_formatter_output_functions f.formatter
-
-  let pp_set_all_formatter_output_functions f ~out ~flush ~newline ~spaces =
-    Format.pp_set_all_formatter_output_functions f.formatter
-      ~out ~flush ~newline ~spaces
-
-  let pp_get_all_formatter_output_functions f () =
-    Format.pp_get_all_formatter_output_functions f.formatter ()
-
-  let pp_set_formatter_tag_functions f t =
-    Format.pp_set_formatter_tag_functions f.formatter (tags_export t)
-
-  let pp_get_formatter_tag_functions f () =
-    tags_import (Format.pp_get_formatter_tag_functions f.formatter ())
-
-  let kfprintf k f x =
-    let callback _ = k f in
-    Format.kfprintf callback f.formatter x
-
-  let fprintf f x =
-    Format.fprintf f.formatter x
-
-  let bprintf b x =
-    Format.bprintf b x
-
-  let sprintf x =
-    Format.sprintf x
-
-  let ksprintf k f x =
-    Format.ksprintf k f x
-
-  let kprintf = ksprintf
-
-    let ifprintf f x =
-      Format.ifprintf f.formatter x
-end
 
 module UChannel_stdio =
 struct
@@ -1487,218 +1266,6 @@ struct
       let stderr_enc = Encoding.locale
     end
     include UChannel_stdio.Make(Parameter)
-  end
-
-end
-
-module UFormat_stdio =
-struct
-
-
-  module type PARAMETER =
-  sig
-    val ustdin: UChannel.in_channel
-    val ustdout: UChannel.out_channel
-    val ustderr: UChannel.out_channel
-  end
-
-
-  module type S =
-  sig
-    open UFormat
-    val std_formatter : formatter
-    val err_formatter : formatter
-
-    val open_box : int -> unit
-    val close_box : unit -> unit
-    val print_string : string -> unit
-    val print_ustring : ustring -> unit
-    val print_as : int -> string -> unit
-    val print_int : int -> unit
-    val print_float : float -> unit
-    val print_char : char -> unit
-    val print_uchar : uchar -> unit
-    val print_bool : bool -> unit
-    val print_space : unit -> unit
-    val print_cut : unit -> unit
-    val print_break : int -> int -> unit
-    val print_flush : unit -> unit
-    val print_newline : unit -> unit
-    val force_newline : unit -> unit
-    val print_if_newline : unit -> unit
-    val set_margin : int -> unit
-    val get_margin : unit -> int
-    val set_max_indent : int -> unit
-    val get_max_indent : unit -> int
-    val set_max_boxes : int -> unit
-    val get_max_boxes : unit -> int
-    val over_max_boxes : unit -> bool
-    val open_hbox : unit -> unit
-    val open_vbox : int -> unit
-    val open_hvbox : int -> unit
-    val open_hovbox : int -> unit
-    val open_tbox : unit -> unit
-    val close_tbox : unit -> unit
-    val print_tbreak : int -> int -> unit
-    val set_tab : unit -> unit
-    val print_tab : unit -> unit
-    val set_ellipsis_text : string -> unit
-    val get_ellipsis_text : unit -> string
-
-    val open_tag : tag -> unit
-    val close_tag : unit -> unit
-    val set_tags : bool -> unit
-    val set_print_tags : bool -> unit
-    val set_mark_tags : bool -> unit
-    val get_print_tags : unit -> bool
-    val get_mark_tags : unit -> bool
-
-    val get_formatter_encoding : unit -> Encoding.t
-    val set_formatter_encoding : Encoding.t -> unit
-
-    val set_formatter_out_channel :
-      Pervasives.out_channel -> unit
-    val set_formatter_output_functions :
-      (string -> int -> int -> unit) -> (unit -> unit) -> unit
-    val get_formatter_output_functions :
-      unit -> (string -> int -> int -> unit) * (unit -> unit)
-    val set_formatter_tag_functions :
-      formatter_tag_functions -> unit
-    val get_formatter_tag_functions :
-      unit -> formatter_tag_functions
-    val set_all_formatter_output_functions :
-      out:(string -> int -> int -> unit) ->
-      flush:(unit -> unit) ->
-      newline:(unit -> unit) -> spaces:(int -> unit) -> unit
-    val get_all_formatter_output_functions :
-      unit ->
-      (string -> int -> int -> unit) * (unit -> unit) * (unit -> unit) *
-	(int -> unit)
-    val printf : ('a, Format.formatter, unit) Pervasives.format -> 'a
-    val eprintf : ('a, Format.formatter, unit) Pervasives.format -> 'a
-
-  end
-
-
-  module Make(P:PARAMETER) =
-  struct
-    open UFormat
-
-    let std_formatter =
-      create Format.std_formatter
-
-    let err_formatter =
-      create Format.err_formatter
-
-    let printf x =
-      Format.fprintf std_formatter.formatter x
-
-    let eprintf x =
-      Format.fprintf err_formatter.formatter x
-
-    let open_box =
-      pp_open_box std_formatter
-    let close_box =
-      pp_close_box std_formatter
-    let print_string =
-      pp_print_string std_formatter
-    let print_ustring =
-      pp_print_ustring std_formatter
-    let print_as =
-      pp_print_as std_formatter
-    let print_int =
-      pp_print_int std_formatter
-    let print_float =
-      pp_print_float std_formatter
-    let print_char =
-      pp_print_char std_formatter
-    let print_uchar =
-      pp_print_uchar std_formatter
-    let print_bool =
-      pp_print_bool std_formatter
-    let print_space =
-      pp_print_space std_formatter
-    let print_cut =
-      pp_print_cut std_formatter
-    let print_break =
-      pp_print_break std_formatter
-    let print_flush =
-      pp_print_flush std_formatter
-    let print_newline =
-      pp_print_newline std_formatter
-    let force_newline =
-      pp_force_newline std_formatter
-    let print_if_newline =
-      pp_print_if_newline std_formatter
-    let set_margin =
-      pp_set_margin std_formatter
-    let get_margin =
-      pp_get_margin std_formatter
-    let set_max_indent =
-      pp_set_max_indent std_formatter
-    let get_max_indent =
-      pp_get_max_indent std_formatter
-    let set_max_boxes =
-      pp_set_max_boxes std_formatter
-    let get_max_boxes =
-      pp_get_max_boxes std_formatter
-    let over_max_boxes =
-      pp_over_max_boxes std_formatter
-    let open_hbox =
-      pp_open_hbox std_formatter
-    let open_vbox =
-      pp_open_vbox std_formatter
-    let open_hvbox =
-      pp_open_hvbox std_formatter
-    let open_hovbox =
-      pp_open_hovbox std_formatter
-    let open_tbox =
-      pp_open_tbox std_formatter
-    let close_tbox =
-      pp_close_tbox std_formatter
-    let print_tbreak =
-      pp_print_tbreak std_formatter
-    let set_tab =
-      pp_set_tab std_formatter
-    let print_tab =
-      pp_print_tab std_formatter
-    let set_ellipsis_text =
-      pp_set_ellipsis_text std_formatter
-    let get_ellipsis_text =
-      pp_get_ellipsis_text std_formatter
-    let open_tag =
-      pp_open_tag std_formatter
-    let close_tag =
-      pp_close_tag std_formatter
-    let set_tags =
-      pp_set_tags std_formatter
-    let set_print_tags =
-      pp_set_print_tags std_formatter
-    let set_mark_tags =
-      pp_set_mark_tags std_formatter
-    let get_print_tags =
-      pp_get_print_tags std_formatter
-    let get_mark_tags =
-      pp_get_mark_tags std_formatter
-    let get_formatter_encoding =
-      pp_get_formatter_encoding std_formatter
-    let set_formatter_encoding =
-      pp_set_formatter_encoding std_formatter
-    let set_formatter_out_channel =
-      pp_set_formatter_out_channel std_formatter
-    let set_formatter_output_functions =
-      pp_set_formatter_output_functions std_formatter
-    let get_formatter_output_functions =
-      pp_get_formatter_output_functions std_formatter
-    let set_formatter_tag_functions =
-      pp_set_formatter_tag_functions std_formatter
-    let get_formatter_tag_functions =
-      pp_get_formatter_tag_functions std_formatter
-    let set_all_formatter_output_functions =
-      pp_set_all_formatter_output_functions std_formatter
-    let get_all_formatter_output_functions =
-      pp_get_all_formatter_output_functions std_formatter
-
   end
 end
 

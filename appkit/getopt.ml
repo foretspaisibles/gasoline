@@ -511,7 +511,10 @@ let long_option_callback o f s =
     in
     let a = String.sub s (i+1) (l-i-1) in
     try m.long_callback a
-    with Error(mesg) -> (mesg.[String.index mesg '?'] <- o; raise(Error(mesg)))
+    with Error(mesg) -> ( let i = String.index mesg '?' in
+                          let m = Bytes.of_string mesg in
+                          Bytes.set m i o;
+                          raise(Error(Bytes.to_string mesg)))
   else
     m.long_callback ""
 

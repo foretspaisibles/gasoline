@@ -14,7 +14,7 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 open Unicode
-open UFormat
+open Format
 
 (* Some boxes *)
 let withbox openbox ppt a f =
@@ -125,39 +125,39 @@ let make ?(declaration = "") ?(dtd = "") content = {
   snips = content;
 }
 
-let put_uchar f x =
+let put_uchar enc ppt x =
   if UInformation.is_space x then
-    pp_print_space f ()
+    pp_print_space ppt ()
   else
-    pp_print_uchar f x
+    UChar.format enc ppt x
 
-let put_ustring ppt x =
-  UString.iter (put_uchar ppt) x
+let put_ustring enc ppt x =
+  UString.iter (put_uchar enc ppt) x
 
-let pp_print_pcdata ppt x =
-  escape_loop (put_ustring ppt) (put_uchar ppt) x
+let pp_print_pcdata enc ppt x =
+  escape_loop (put_ustring enc ppt) (put_uchar enc ppt) x
 
-let pp_print_attribute ppt (k,v) =
-  let pp_print_binding ppt =
+let pp_print_attribute enc ppt (k,v) =
+  let pp_print_binding enc ppt =
     pp_print_string ppt k;
     pp_print_char ppt '=';
     pp_print_char ppt '"';
-    pp_print_ustring ppt v;
+    UString.format enc ppt v;
     pp_print_char ppt '"';
   in
   begin
     pp_print_space ppt ();
-    withhbox ppt pp_print_binding;
+    withhbox ppt (pp_print_binding enc);
   end
 
 
-let pp_print_element_open_tag ppt e =
+let pp_print_element_open_tag enc ppt e =
   begin
     pp_open_hvbox ppt 0;
     pp_open_hvbox ppt indent_sz;
     pp_print_char ppt '<';
     pp_print_string ppt e.name;
-    List.iter (pp_print_attribute ppt) e.attribute;
+    List.iter (pp_print_attribute enc ppt) e.attribute;
     pp_close_box ppt ();
     pp_print_cut ppt ();
     pp_print_char ppt '>';
@@ -175,13 +175,13 @@ let pp_print_element_close_tag ppt e =
     pp_close_box ppt ();
   end
 
-let pp_print_nonempty_element f ppt e =
+let pp_print_nonempty_element f enc ppt e =
   let cutonlyforblocks () =
     if e.block then pp_print_cut ppt ()
   in
   let pack x =
     cutonlyforblocks();
-    f ppt x
+    f enc ppt x
   in
   begin
     pp_open_hvbox ppt 0;
@@ -190,7 +190,7 @@ let pp_print_nonempty_element f ppt e =
      else
 	pp_open_hovbox ppt 0
     );
-    pp_print_element_open_tag ppt e;
+    pp_print_element_open_tag enc ppt e;
     List.iter pack e.content;
     pp_close_box ppt ();
     if e.block then pp_force_newline ppt ();
@@ -199,51 +199,48 @@ let pp_print_nonempty_element f ppt e =
   end
 
 
-let pp_print_element f ppt e =
+let pp_print_element f enc ppt e =
   if e.empty then
-    pp_print_element_open_tag ppt e
+    pp_print_element_open_tag enc ppt e
   else
-    pp_print_nonempty_element f ppt e
+    pp_print_nonempty_element f enc ppt e
 
-let rec pp_print_snippet_loop ppt d =
+let rec pp_print_snippet_loop enc ppt d =
   match d with
-  | PCDATA c -> pp_print_pcdata ppt c
-  | CDATA c -> pp_print_ustring ppt c
-  | ELEMENT e -> pp_print_element pp_print_snippet_loop ppt e
+  | PCDATA c -> pp_print_pcdata enc ppt c
+  | CDATA c -> UString.format enc ppt c
+  | ELEMENT e -> pp_print_element pp_print_snippet_loop enc ppt e
 
 
 
-let uformat ppt d =
-  let pp_maybe_print_uline ppt l =
+let format ?(enc = Encoding.locale) ppt d =
+  let pp_maybe_print_uline enc ppt l =
     if not (l = uempty) then
       begin
 	pp_open_hbox ppt ();
-	pp_print_ustring ppt l;
+	UString.format enc ppt l;
 	pp_close_box ppt ();
 	pp_print_cut ppt ();
       end
   in
-  let pp_print_snippet ppt s =
+  let pp_print_snippet enc ppt s =
     begin
       pp_open_hbox ppt ();
-      pp_print_snippet_loop ppt s;
+      pp_print_snippet_loop enc ppt s;
       pp_close_box ppt ();
       pp_print_cut ppt ();
     end
   in
   begin
     pp_open_vbox ppt 0;
-    pp_maybe_print_uline ppt d.declaration;
-    pp_maybe_print_uline ppt d.dtd;
-    List.iter (pp_print_snippet ppt) d.snips;
+    pp_maybe_print_uline enc ppt d.declaration;
+    pp_maybe_print_uline enc ppt d.dtd;
+    List.iter (pp_print_snippet enc ppt) d.snips;
     pp_close_box ppt ();
   end
 
-let format ?enc ppt d =
-  uformat (formatter_of_formatter ?enc ppt) d
-
 let add_to_buffer ?enc b d =
-  uformat (formatter_of_buffer ?enc b) d
+  format ?enc (formatter_of_buffer b) d
 
 let to_buffer ?enc d =
   let b = Buffer.create 4096 in
@@ -256,8 +253,8 @@ let to_string ?enc d =
   Buffer.contents (to_buffer ?enc d)
 
 let output ?enc c d =
-  let ppt = formatter_of_out_channel ?enc c in
-  uformat ppt d;
+  let ppt = formatter_of_out_channel c in
+  format ?enc ppt d;
   pp_print_flush ppt ()
 
 let print ?enc d =

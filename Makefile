@@ -14,14 +14,24 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PACKAGE=	gasoline
-AUTHOR=		Michael Grünewald
+PACKAGE=		gasoline
+VERSION=		0.1
+OFFICER=		michipili@gmail.com
 
-CONFIGURE=	meta/gasoline.in
+MODULE+=		ocaml.lib:appkit
+MODULE+=		ocaml.lib:testkit
+MODULE+=		ocaml.lib:authorkit
+MODULE+=		ocaml.toplevel:toplevel
+MODULE+=		ocaml.meta:meta
+MODULE+=		ocaml.manual:manual
+
+EXTERNAL+=		ocaml.findlib:camomile
 
 PROJECTDISTEXCLUDE=	Wiki
 
-.MAKEFLAGS: -I${.CURDIR}/Library/Make
-.include "gasoline.main.mk"
+CONFIGURE=		meta/gasoline.in
+CONFIGURE+=		Makefile.config.in
+
+.include "generic.project.mk"
 
 ### End of file `Makefile'
