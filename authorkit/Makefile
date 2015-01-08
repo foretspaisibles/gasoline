@@ -14,7 +14,7 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-LIBRARY=		gasoline_testkit
+LIBRARY=		gasoline_authorkit
 
 SRCS=			wSGML.ml
 SRCS+=			wHTML.ml

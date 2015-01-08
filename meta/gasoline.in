@@ -1,3 +1,5 @@
 name="gasoline"
 version="@version@"
 description="Rapid application development package"
+archive(byte) = "gasoline_appkit.cma gasoline_authorkit.cma gasoline_testkit.cma"
+archive(native) = "gasoline_appkit.cmxa gasoline_authorkit.cmxa gasoline_testkit.cmxa"
