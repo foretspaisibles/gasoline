@@ -18,16 +18,14 @@ PACKAGE=		gasoline
 VERSION=		0.2.1-current
 OFFICER=		michipili@gmail.com
 
-MODULE+=		ocaml.lib:appkit
+MODULE=			ocaml.lib:appkit
 MODULE+=		ocaml.lib:testkit
 MODULE+=		ocaml.lib:authorkit
 MODULE+=		ocaml.toplevel:toplevel
 MODULE+=		ocaml.meta:meta
 MODULE+=		ocaml.manual:manual
 
-EXTERNAL+=		ocaml.findlib:camomile
-
-PROJECTDISTEXCLUDE=	Wiki
+EXTERNAL=		ocaml.findlib:camomile
 
 CONFIGURE=		meta/gasoline.in
 CONFIGURE+=		Makefile.config.in
