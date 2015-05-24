@@ -1,0 +1,24 @@
+opam-version: "1.2"
+version: "0.2.1-current"
+maintainer: "michipili@gmail.com"
+authors: "Michael Grünewald"
+license: "CeCILL-B"
+homepage: "https://github.com/michipili/gasoline"
+ocaml-version: [>= "4.02.0"]
+tags: [
+  "application"
+]
+depends: [
+  "bsdowl"
+  "ocamlfind"
+  "camomile"
+]
+build: [
+  ["./configure" "--prefix" prefix]
+  ["bmake" "-I%{bsdowl:share}%" "all"] {os != "freebsd"}
+  ["make" "-I%{bsdowl:share}%" "all"]  {os  = "freebsd"}
+]
+install: [
+  ["bmake" "-I%{bsdowl:share}%" "install"] {os != "freebsd"}
+  ["make" "-I%{bsdowl:share}%" "install"]  {os  = "freebsd"}
+]
