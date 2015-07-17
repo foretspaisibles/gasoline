@@ -14,11 +14,11 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 
-open UnitTest
+open Broken
 
 
 let assert_ustring id ?expected_failure f x y =
-  let open Unicode in
+  let open Gasoline_Unicode in
   assert_equal id ?expected_failure
     ~printer:(UString.format Encoding.utf8)
     ~equal:UString.equal
@@ -39,22 +39,22 @@ struct
   ]
 
   let length text =
-    let open Unicode in
+    let open Gasoline_Unicode in
     UString.length (u8 text)
 
   let assert_length (text, expected) =
     assert_int text length text expected
 
-  let init suite =
-    add_challenge suite assert_length challenge
-
+  let suite () =
+    make_suite "length" "validate length computation"
+    |@ List.map assert_length challenge
 end
 
 
 (* Test case change *)
 module Changecase =
 struct
-  open Unicode
+  open Gasoline_Unicode
 
   let challenge = [
     "éléphant", "ÉLÉPHANT";
@@ -78,34 +78,28 @@ struct
     assert_ustring ("ul-" ^ uppercase)
       UString.lowercase (u8 uppercase) (u8 lowercase)
 
-  let init suite =
-    begin
-      add_challenge suite assert_ll challenge;
-      add_challenge suite assert_uu challenge;
-      add_challenge suite assert_ul challenge;
-      add_challenge suite assert_lu challenge;
-      add_challenge suite assert_lu [("daß", "DASS")];
-    end
+  let suite () =
+    make_suite "changecase" "validate case transformations"
+    |@ Lemonade_List.Infix.
+      ((@@) <$> [ assert_ll; assert_uu; assert_ul; assert_lu ] <*> challenge)
+    |& assert_lu ("daß", "DASS")
 end
 
 
 (* Test encoding procedures *)
 module Transcoding =
 struct
-  let init suite =
-    List.iter (add_case suite) [
-      assert_exception "udecode" Unicode.Encoding.Malformed_code
-	Unicode.Encoding.(decode utf8 ) "\xC0";
-      assert_exception "find" Not_found
-	Unicode.Encoding.find "this is not the name of an encoding"
-    ]
+  let suite () =
+    make_suite "transcoding" "validate transcoding"
+    |& assert_exception "udecode" Gasoline_Unicode.Encoding.Malformed_code
+      Gasoline_Unicode.Encoding.(decode utf8 ) "\xC0"
+    |& assert_exception "find" Not_found
+      Gasoline_Unicode.Encoding.find "this is not the name of an encoding"
 end
 
-let init suite =
-  List.iter (fun f -> f suite) [
-    Length.init;
-    Changecase.init;
-    Transcoding.init;
-  ]
-
-let () = with_registered_suite "Unicode" init
+let () =
+  make_suite "Unicode" "validate unicode operations"
+  |* Length.suite ()
+  |* Changecase.suite ()
+  |* Transcoding.suite ()
+  |> register

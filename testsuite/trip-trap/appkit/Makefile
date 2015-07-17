@@ -14,17 +14,28 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-TESTS+=		test_bootstrap_failure
-TESTS+=		test_configfile_syntax
-TESTS+=		test_convert_config
-TESTS+=		test_convert_environment
-TESTS+=		test_convert_getopt
-TESTS+=		test_cyclic_dependency
-TESTS+=		test_execution_failure
-TESTS+=		test_execution_shutdown_failure
-TESTS+=		test_help
-TESTS+=		test_rcorder
-TESTS+=		test_usage
+TEST+=		test_bootstrap_failure
+TEST+=		test_configfile_syntax
+TEST+=		test_convert_config
+TEST+=		test_convert_environment
+TEST+=		test_convert_getopt
+TEST+=		test_cyclic_dependency
+TEST+=		test_execution_failure
+TEST+=		test_execution_shutdown_failure
+TEST+=		test_help
+TEST+=		test_rcorder
+TEST+=		test_usage
+
+PROGRAM=	punishment
+
+FIXPATH=	${SED_INPLACE} -e "s@'[^']*/@'@"
+
+test_configfile_syntax.got: test_configfile_syntax.byte test_configfile_syntax.conf
+	-${.ALLSRC:M*.byte:tA} ${.ALLSRC:M*.conf:tA} 2> ${.TARGET}
+	${FIXPATH} ${.TARGET}
+
+test_bootstrap_failure.got: test_bootstrap_failure.byte
+	-./${.ALLSRC} 2> ${.TARGET}
 
 test_convert_environment.got: punishment.byte
 	-env NUMBER='@' ./${.ALLSRC} > ${.TARGET} 2>&1
@@ -32,49 +43,27 @@ test_convert_environment.got: punishment.byte
 test_convert_getopt.got: punishment.byte
 	-./${.ALLSRC} -n '@' > ${.TARGET} 2>&1
 
-test_convert_config.got: punishment.byte
-	-./${.ALLSRC} -c punishment.conf > ${.TARGET} 2>&1
+test_convert_config.got: punishment.byte punishment.conf
+	-${.ALLSRC:M*.byte:tA} -c ${.ALLSRC:M*.conf:tA} > ${.TARGET} 2>&1
+	${FIXPATH} ${.TARGET}
+
+test_cyclic_dependency.got: test_cyclic_dependency.byte
+	./${.ALLSRC} 2> ${.TARGET} || [ $$? -eq 70 ]
+
+test_execution_failure.got: test_execution_failure.byte
+	./${.ALLSRC} 2> ${.TARGET} || [ $$? -eq 70 ]
+
+test_execution_shutdown_failure.got: test_execution_shutdown_failure.byte
+	./${.ALLSRC} 2> ${.TARGET} || [ $$? -eq 70 ]
 
 test_help.got: punishment.byte
 	./${.ALLSRC} -h > ${.TARGET}
 
 test_usage.got: punishment.byte
-	-./${.ALLSRC} -x > ${.TARGET} 2>&1
+	./${.ALLSRC} -x > ${.TARGET} 2>&1 || [ $$? -eq 64 ]
 
-.for test in ${TESTS}
-.if!target(${test}.got)
-${test}.got: ${test}.byte
-.if defined(TESTENV)
-	-${ENVTOOL} ${TESTENV} ./${test}.byte > ${test}.got 2>&1
-.else
-	-./${test}.byte > ${test}.got 2>&1
-.endif
-.endif
-.if!target(${test}.byte)&&exists(${test}.ml)
-${test}.byte: ${test}.ml
-	${GASOLINEOCAMLC} ${.ALLSRC:M*.cma} -o ${test}.byte ${test}.ml
-CLEANFILES+= ${test}.byte
-CLEANFILES+= ${test}.cmo
-CLEANFILES+= ${test}.cmi
-.endif
-.endfor
+.PATH: ${SRCDIR}/example/punishment
 
 .include "gasoline.trip-trap.mk"
-
-.SUFFIXES: .ml
-.PATH.ml: ../../../example/punishment
-
-punishment.byte: ${GASOLINELIBS} punishment.ml
-	${GASOLINEOCAMLC} ${.ALLSRC:M*.cma} -o ${.TARGET} ${.ALLSRC:M*.ml}
-
-CLEANFILES+= punishment.byte
-CLEANFILES+= punishment.cmo
-CLEANFILES+= punishment.cmi
-
-.for test in ${TESTS}
-.if target(${test}.byte)
-${test}.byte: ${GASOLINELIBS}
-.endif
-.endfor
 
 ### End of file `Makefile'

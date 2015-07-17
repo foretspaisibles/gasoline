@@ -1,12 +1,12 @@
-### Makefile -- Unicode
+### Makefile -- Document writers
 
 # Author: Michael Grünewald
-# Date: Mon Jun  2 11:44:40 CEST 2014
+# Date: Sat 21 Feb 2009 09:19:53 CET
 
 # Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
 #
-# Copyright © 2014 Michael Grünewald
+# Copyright © 2009–2014 Michael Grünewald
 #
 # This file must be used under the terms of the CeCILL-B.
 # This source file is licensed as described in the file COPYING, which
@@ -14,8 +14,12 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-TEST=			test_output_channel
+LIBRARY=		gasoline_authorkit
 
-.include "gasoline.trip-trap.mk"
+SRCS=			gasoline_Author_SGML.ml
+SRCS+=			gasoline_Author_HTML.ml
+SRCS+=			gasoline_LoremIpsum.ml
+
+.include "ocaml.lib.mk"
 
 ### End of file `Makefile'

@@ -14,7 +14,7 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 
-open Unicode
+open Gasoline_Unicode
 
 let buffer_sz = 32
 
@@ -31,16 +31,16 @@ struct
     let b = UBuffer.create buffer_sz in
     let maybe_issue () =
       if UBuffer.length b > 0 then begin
-	Stdio.print_ustring (UBuffer.contents b);
-	Stdio.print_newline();
-	UBuffer.clear b;
+        Stdio.print_ustring (UBuffer.contents b);
+        Stdio.print_newline();
+        UBuffer.clear b;
       end
     in
     let loop u =
       if UInformation.is_alpha u then
-	UBuffer.add_uchar b u
+        UBuffer.add_uchar b u
       else
-	maybe_issue()
+        maybe_issue()
     in
     UString.iter loop (u8 data)
 end

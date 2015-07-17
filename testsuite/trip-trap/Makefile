@@ -14,12 +14,10 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-SUBDIR+=	unittest
 SUBDIR+=	unicode
 SUBDIR+=	authorkit
-SUBDIR+=	configuration
 SUBDIR+=	appkit
 
-.include "gasoline.subdir.mk"
+.include "generic.subdir.mk"
 
 ### End of file `Makefile'

@@ -1,0 +1,536 @@
+(* Gasoline_Generic_Application -- Generic application
+
+Author: Michael Grünewald
+Date: Sun May 12 13:22:40 CEST 2013
+
+Copyright © 2013 Michael Grünewald
+
+This file must be used under the terms of the CeCILL-B.
+This source file is licensed as described in the file COPYING, which
+you should have received as part of this distribution. The terms
+are also available at
+http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
+
+type component = {
+  name : string;
+  version : string option;
+  description : string;
+  require: string list;
+  provide : string list;
+  config_prefix : string list;
+  getopt_prefix : char option;
+  bootstrap: unit -> unit;
+  shutdown: unit -> unit;
+}
+
+type error =
+  | Bootstrap of string * string * (string list)
+  (* Bootstrap(mesg, name, lst) signals an error while bootstrapping
+     the component [name]. The list [lst] enumerates the components
+     which have been correctly bootstrapped. *)
+
+  | Shutdown of string * string * (string list)
+  (* Shutdown(mesg, name, lst) signals an error while shutting down
+     the component [name]. The list [lst] enumerates the components
+     which still need to be shut down. *)
+
+  | Software of string
+  | Usage of string
+
+let ( $ ) f g =
+  fun x -> f (g x)
+
+module Success =
+  Lemonade_Success.Make(struct type t = error end)
+
+module Maybe =
+  Lemonade_Maybe
+
+let progname () =
+  Filename.basename Sys.executable_name
+
+let die code argv =
+  Printf.fprintf stderr "%s: " (progname());
+  Printf.kfprintf
+    (fun outc -> output_char outc '\n'; Gasoline_SysExits.exit code) stderr
+    argv
+
+let wlog argv =
+  Printf.fprintf stderr "%s: " (progname());
+  Printf.kfprintf
+    (fun outc -> output_char outc '\n') stderr
+    argv
+
+let error argv =
+  Printf.ksprintf (fun s -> Success.throw (Software s)) argv
+
+let error_bootstrap name lst argv =
+  Printf.ksprintf (fun s -> Success.throw(Bootstrap(s, name, lst))) argv
+
+let error_shutdown name lst argv =
+  Printf.ksprintf (fun s -> Success.throw(Shutdown(s, name, lst))) argv
+
+let error_usage argv =
+  Printf.ksprintf (fun s -> Success.throw(Usage(s))) argv
+
+(* Rules to sort the component list.
+
+   1. If two independent components provide the same thing, then both
+   component must be executed to meet the barrier.
+
+   2. If two interdependent components provide the same thing, then
+   both component must be executed in graph order to meet the
+   barrier.
+
+   3. We pick a component, stack it as “in progress” and try to
+   satisfy all its requirements. Once all of an in-progress script
+   are met, we can remove it from the “in progress” stack. *)
+
+let dfs graph visited startnode =
+  let rec explore path visited node =
+    if List.mem node path then
+      Printf.ksprintf failwith
+        "Cyclic dependency on component '%s'."
+        node
+    else if List.mem node visited then
+      visited
+    else
+      let nextpath = node :: path in
+      let edges = List.assoc node graph in
+      let dfsvisited =
+        List.fold_left (explore nextpath) visited edges
+      in
+      node :: dfsvisited
+  in
+  explore [] visited startnode
+
+let toposort graph =
+  try
+    Success.return
+    @@ List.fold_left
+      (fun visited (node,_) -> dfs graph visited node)
+      [] graph
+  with Failure(mesg) -> error "%s" mesg
+
+
+module type P =
+sig
+  type 'a kind
+  type t
+  val make : 'a kind -> 'a -> t
+  val to_string : t -> string
+  val of_string : string -> t
+  val of_string_kind : 'a kind -> string -> 'a
+  val kind_name : 'a kind -> string
+end
+
+module type S =
+sig
+  module Component :
+  sig
+    type t
+    val make :
+      ?bootstrap:(unit -> unit) ->
+      ?shutdown:(unit -> unit) ->
+      ?require:(string list) ->
+      ?provide:(string list) ->
+      ?version:string ->
+      ?config_prefix: string list ->
+      ?getopt_prefix: char ->
+      name:string ->
+      description:string ->
+      unit -> t
+  end
+
+  module Configuration :
+  sig
+    type 'a kind
+    type component =
+      Component.t
+
+    val make : 'a kind -> component ->
+      ?flag:char -> ?env:string -> ?shy:bool ->
+      string -> 'a -> string -> (unit -> 'a)
+
+    type spec =
+    | Empty
+    | Command_line
+    | Environment
+    | File of string
+    | UserFile of string list * string
+    | Heredoc of string
+    | Alist of ((string list * string) * string) list
+    | Merge of spec * spec
+    | Override of spec * spec
+  end
+
+  val run : string -> string -> string ->
+    ?notes:(Getopts.note list) ->
+    ?configuration:Configuration.spec ->
+    (string list -> unit) -> unit
+end
+
+module Make(Parameter:P) =
+struct
+
+  module Component =
+  struct
+    type t = component
+
+    let _expected_sz =
+      16
+
+    let _component_table =
+      Hashtbl.create _expected_sz
+
+    let make
+        ?(bootstrap = ignore)
+        ?(shutdown = ignore)
+        ?(require = [])
+        ?(provide = [])
+        ?version
+        ?(config_prefix = [])
+        ?getopt_prefix
+        ~name
+        ~description
+        ()
+      =
+      let comp = {
+        bootstrap;
+        shutdown;
+        require;
+        provide;
+        version;
+        config_prefix;
+        getopt_prefix;
+        name;
+        description;
+      }
+      in
+      (Hashtbl.add _component_table name comp; comp)
+
+    module NodeSet =
+      Set.Make(String)
+
+    module EdgeSet =
+      Set.Make(struct
+        type t = string * string
+        let compare = Pervasives.compare
+      end)
+
+    let _graph table =
+      let require comp =
+        List.map (fun r -> (comp.name, r)) comp.require
+      in
+      let provide comp =
+        List.map (fun p -> (p, comp.name)) comp.provide
+      in
+      let edges table =
+        let loop _ comp ax =
+          ax
+          |> List.fold_right EdgeSet.add (require comp)
+          |> List.fold_right EdgeSet.add (provide comp)
+        in
+        Hashtbl.fold loop table EdgeSet.empty
+        |> EdgeSet.filter (fun edge -> fst edge <> snd edge)
+        |> EdgeSet.elements
+      in
+      let nodes table =
+        let loop _ comp ax =
+          comp.name :: ax
+        in
+        Hashtbl.fold loop table []
+      in
+      let select edges node =
+        (node, List.map snd (List.filter (fun (x,_) -> x = node) edges))
+      in
+      List.map (select (edges table)) (nodes table)
+
+    let graph () =
+      Success.return(_graph _component_table)
+
+    let process f acc lst =
+      let open Success.Infix in
+      let rec loop m name =
+        Success.bind2
+          (try Success.return(Hashtbl.find _component_table name)
+           with Not_found -> error "%s: No such a component." name)
+          m f
+      in
+      List.fold_left loop (Success.return acc) lst
+
+    let bootstrap () =
+      let open Success.Infix in
+      let f comp acc =
+        try (comp.bootstrap (); Success.return(comp.name :: acc))
+        with
+        | Failure(mesg) -> error_bootstrap comp.name acc "%s" mesg
+        | exn -> error_bootstrap comp.name acc "%s" (Printexc.to_string exn)
+      in
+      graph ()
+      >>= toposort
+      >>= (Success.return $ List.rev)
+      >>= process f []
+      >>= (Success.return $ ignore)
+
+    let shutdown () =
+      let open Success.Infix in
+      let f comp acc =
+        try (comp.shutdown (); Success.return(List.filter ((<>) comp.name) acc))
+        with
+        | Failure(mesg) -> error_shutdown comp.name acc "%s" mesg
+        | exn -> error_shutdown comp.name acc "%s" (Printexc.to_string exn)
+      in
+      let rec loop lst =
+        Success.catch
+          (process f lst lst)
+          (function
+            | Shutdown(name, mesg, pending) ->
+                (wlog "%s: shutdown: %s" name mesg;
+                 loop pending >>= fun _ -> error "An error occured during shutdown.")
+            | whatever -> Success.throw whatever)
+      in
+      graph ()
+      >>= toposort
+      >>= loop
+      >>= function
+      | [] -> Success.return ()
+      | whatever ->
+          error
+            "%s: Skept by the shutdown procedure."
+            (String.concat ", " whatever)
+  end
+
+  (* Keep trace of environment variables mapped to configurations. *)
+  module Configuration_Environment :
+  sig
+    (* [add path name env] *)
+    val add : string list -> string -> string -> unit
+    val query : unit -> Configuration_Map.t Success.t
+  end = struct
+    let _table = ref []
+
+    let add path name env =
+      _table := (path, name, env) :: !_table
+
+    let query () =
+      let loop ax (path, name, envname) =
+        try Configuration_Map.add (path, name) (Sys.getenv envname) ax
+        with Not_found -> ax
+      in
+      Success.return(List.fold_left loop Configuration_Map.empty !_table)
+  end
+
+  (* Keep trace of command line options mapped to configurations. *)
+  module Configuration_Getopts :
+  sig
+    val init : string -> string -> Getopts.note list -> unit
+    (* [add path name flag description] *)
+    val add : string list -> string -> char -> string -> unit
+    val query : unit -> Configuration_Map.t Success.t
+    val rest : unit -> string list Success.t
+  end = struct
+    let _table = ref []
+    let _context = ref None
+
+    let spec () =
+      let open Success.Infix in
+      (match !_context with
+       | Some(whatever) -> Success.return whatever
+       | None -> error "Configuration_Getopt: Context not initialised.")
+      >>= fun (usage, description, notes) ->
+      Success.return
+        (Getopts.spec usage description !_table
+           (fun s (config,rest) -> (config, s :: rest)) notes)
+
+    let init usage description notes =
+      _context := Some(usage, description, notes)
+
+    let add path name flag description =
+      let option =
+        Getopts.option
+          (fun s -> s)
+          flag
+          (fun value (config, rest) ->
+             (Configuration_Map.add (path, name) value config, rest))
+          description
+      in
+      _table := option :: !_table
+
+    let _parse () =
+      let open Success.Infix in
+      spec () >>= fun s ->
+      Success.return
+        (Getopts.parse_argv s (Configuration_Map.empty, []))
+      >>= fun (config, rest) -> Success.return(config, List.rev rest)
+
+    let query () =
+      let open Success.Infix in
+      _parse () >>= (Success.return $ fst)
+
+    let rest () =
+      let open Success.Infix in
+      _parse () >>= (Success.return $ snd)
+  end
+
+
+  module Configuration =
+  struct
+    type 'a kind =
+      'a Parameter.kind
+
+    type component =
+      Component.t
+
+    let _config =
+      ref Configuration_Map.empty
+
+    let _hidden =
+      (* The '#' character is used for comments in configuration files,
+         so that no identifier will ever start with '#'. *)
+      let count = ref 0 in
+      fun () -> (incr count; Printf.sprintf "#%12d" !count)
+
+    let query () =
+      !_config
+
+    let make kind comp ?flag ?env ?shy name default description =
+      let component_path info =
+        info.config_prefix @ [ info.name ]
+      in
+      let concrete =
+        let of_string text =
+          try Parameter.of_string_kind kind text
+          with Failure(_) ->
+            Printf.ksprintf failwith "%s" (Parameter.kind_name kind)
+        in
+        let to_string x =
+          Parameter.to_string
+            (Parameter.make kind x)
+        in
+        Configuration_Map.{
+          of_string;
+          to_string;
+        }
+      in
+      let k =
+        Configuration_Map.key
+          concrete
+          (component_path comp)
+          name
+          default
+          description
+      in
+      let open Configuration_Map in
+      (match flag with
+       | Some c -> Configuration_Getopts.add k.path k.name c k.description
+       | None -> ());
+      (match env with
+       | Some id -> Configuration_Environment.add k.path k.name id
+       | None -> ());
+      (fun () -> Configuration_Map.get !_config k)
+
+
+    type spec =
+      | Empty
+      | Command_line
+      | Environment
+      | File of string
+      | UserFile of string list * string
+      | Heredoc of string
+      | Alist of ((string list * string) * string) list
+      | Merge of spec * spec
+      | Override of spec * spec
+
+    let rec _map spec =
+      let read_file name =
+        (* Configuration values used in UserFile should be
+           initialised to the empty string. *)
+        if name <> "" then
+          try Success.return(Configuration_Map.from_file name)
+          with
+          | Failure(mesg) -> error "Failure: %s" mesg
+          | Sys_error(mesg) -> error "Error: %s" mesg
+          | exn -> error "%s: %s" name (Printexc.to_string exn)
+        else
+          Success.return(Configuration_Map.empty)
+      in
+      let user_file path name =
+        let open Configuration_Map in
+        let open Success.Infix in
+        Success.map2
+          merge
+          (Configuration_Getopts.query())
+          (Configuration_Environment.query())
+        >>= fun config ->
+        Success.return(get config {
+          concrete = {
+            of_string = (fun x -> x);
+            to_string = (fun x -> x);
+          };
+          path;
+          name;
+          default = "";
+          description = "User confiuration file";
+          })
+        >>= read_file
+      in
+      match spec with
+      | Empty -> Success.return Configuration_Map.empty
+      | Command_line -> Configuration_Getopts.query ()
+      | Environment -> Configuration_Environment.query ()
+      | File(name) -> read_file name
+      | UserFile(path,name) -> user_file path name
+      | Heredoc(doc) ->
+          (try Success.return(Configuration_Map.from_string doc)
+           with
+           |Failure(mesg) -> error "in here-document: %s" mesg
+           | exn -> error "in here-document: %s" (Printexc.to_string exn))
+      | Alist(bindings) -> Success.return(Configuration_Map.from_alist bindings)
+      | Merge(a,b) -> Success.map2 Configuration_Map.merge (_map a) (_map b)
+      | Override(a,b) -> Success.map2 Configuration_Map.override (_map a) (_map b)
+      | exception Failure(mesg) -> error "Failure: %s" mesg
+      | exception exn -> error "%s" (Printexc.to_string exn)
+
+    let init spec =
+      let open Success.Infix in
+      _map spec >>= fun config ->
+      (_config := config; Success.return())
+
+  end
+
+  let run name usage description
+      ?(notes = [])
+      ?(configuration = Configuration.Empty)
+      main =
+    let open Success.Infix in
+    let safemain rest =
+      try Success.return(main rest)
+      with
+      | Failure(mesg) -> error "Failure: %s" mesg
+      | exn -> error "%s" (Printexc.to_string exn)
+    in
+    let program =
+      (Configuration_Getopts.init name usage notes;
+       Configuration.init configuration)
+      >>= fun () ->
+      Component.bootstrap ()
+      >>= fun () ->
+      (Success.catch
+         (Configuration_Getopts.rest() >>= safemain)
+         (fun error -> Component.shutdown () >>= fun () -> Success.throw error))
+      >>= Component.shutdown
+    in
+    let open Gasoline_SysExits in
+    let open Success in
+    match Success.run program with
+    | Success() -> exit EXIT_SUCCESS
+    | Error(Bootstrap(mesg, name, _)) ->
+        die EXIT_SOFTWARE "bootstrap: %s: %s" name mesg
+    | Error(Shutdown(mesg, name, _)) ->
+        die EXIT_SOFTWARE "shutdown: %s: %s" name mesg
+    | Error(Software(mesg)) ->
+        die EXIT_SOFTWARE "%s" mesg
+    | Error(Usage(mesg)) ->
+        die EXIT_USAGE "%s" mesg
+end

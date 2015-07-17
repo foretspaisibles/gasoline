@@ -14,12 +14,12 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-TESTS=		test_sgml_simple_1
-TESTS+=		test_sgml_simple_2
-TESTS+=		test_sgml_simple_3
-TESTS+=		test_html_simple_1
-TESTS+=		test_html_simple_2
-TESTS+=		test_html_simple_3
+TEST=		test_sgml_simple_1
+TEST+=		test_sgml_simple_2
+TEST+=		test_sgml_simple_3
+TEST+=		test_html_simple_1
+TEST+=		test_html_simple_2
+TEST+=		test_html_simple_3
 
 TESTENV=	LANG=en_US.UTF-8
 

@@ -14,20 +14,21 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-SRCS+=		testUnitTest.ml
-SRCS+=		testUnicode.ml
-SRCS+=		testCTypeValue.ml
-SRCS+=		testConfigurationMap.ml
+PROGRAM=	unit_testing
+
+SRCS=		testUnicode.ml
+SRCS+=		testPlainDefinitionValue.ml
 
 SRCS+=		main.ml
 
-PKGS+=		unix
-
 OCAMLLFLAGS+=	-linkall
 
-test: all
-	./unit-testing
+do-test: ${PROGRAM}
+	${.ALLSRC:tA}
 
-.include "gasoline.program.mk"
+do-install:
+	${NOP}
+
+.include "ocaml.prog.mk"
 
 ### End of file `Makefile'
