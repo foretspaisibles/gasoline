@@ -46,6 +46,9 @@ module Success =
 module Maybe =
   Lemonade_Maybe
 
+type validate =
+  (string -> string -> string -> string Success.t) -> string Success.t Configuration_Map.key
+
 let progname () =
   Filename.basename Sys.executable_name
 
@@ -165,7 +168,7 @@ sig
   end
 
   val run : string -> string -> string ->
-    ?notes:(Getopts.note list) ->
+    ?notes:((string * string) list) ->
     ?configuration:Configuration.spec ->
     (string list -> unit) -> unit
 end
@@ -305,28 +308,40 @@ struct
   module Configuration_Environment :
   sig
     (* [add path name env] *)
-    val add : string list -> string -> string -> unit
+    val add : validate -> string-> unit
     val query : unit -> Configuration_Map.t Success.t
   end = struct
     let _table = ref []
 
-    let add path name env =
-      _table := (path, name, env) :: !_table
+    let add validatekey env =
+      _table := (validatekey, env) :: !_table
 
     let query () =
-      let loop ax (path, name, envname) =
-        try Configuration_Map.add (path, name) (Sys.getenv envname) ax
+      let loop ax (validatekey, envname) =
+        let catch kindname text _ =
+          error_usage "Invalid Argument -- %s %S: Bad %s value."
+            envname text kindname
+        in
+        let configkey =
+          validatekey catch
+        in
+        try
+          Success.map2
+            (fun optarg acc -> Configuration_Map.
+                             (add (configkey.path, configkey.name) optarg acc))
+            (Configuration_Map.value configkey (Sys.getenv envname))
+            ax
         with Not_found -> ax
       in
-      Success.return(List.fold_left loop Configuration_Map.empty !_table)
+      List.fold_left loop (Success.return Configuration_Map.empty) !_table
   end
 
   (* Keep trace of command line options mapped to configurations. *)
   module Configuration_Getopts :
   sig
-    val init : string -> string -> Getopts.note list -> unit
+    val init : string -> string -> (string*string) list -> unit
     (* [add path name flag description] *)
-    val add : string list -> string -> char -> string -> unit
+    val add : validate -> char -> unit
     val query : unit -> Configuration_Map.t Success.t
     val rest : unit -> string list Success.t
   end = struct
@@ -341,27 +356,39 @@ struct
       >>= fun (usage, description, notes) ->
       Success.return
         (Getopts.spec usage description !_table
-           (fun s (config,rest) -> (config, s :: rest)) notes)
+           (fun arg m ->
+              (Success.map (fun (config, rest) -> (config, arg :: rest)) m))
+           (List.map (fun (title, body) -> Getopts.note title body) notes))
 
     let init usage description notes =
       _context := Some(usage, description, notes)
 
-    let add path name flag description =
+    let add validatekey flag =
+      let catch kindname text _ =
+        error_usage "Invalid Argument -- %c %S: Bad %s value."
+          flag text kindname
+      in
+      let configkey =
+        validatekey catch
+      in
+      let fold validoptarg (config, rest) =
+        Configuration_Map.(add (configkey.path, configkey.name)
+                             validoptarg config, rest)
+      in
       let option =
         Getopts.option
           (fun s -> s)
           flag
-          (fun value (config, rest) ->
-             (Configuration_Map.add (path, name) value config, rest))
-          description
+          (fun optarg m ->
+             (Success.map2 fold (Configuration_Map.value configkey optarg) m))
+          configkey.Configuration_Map.description
       in
       _table := option :: !_table
 
     let _parse () =
       let open Success.Infix in
       spec () >>= fun s ->
-      Success.return
-        (Getopts.parse_argv s (Configuration_Map.empty, []))
+      (Getopts.parse_argv s (Success.return (Configuration_Map.empty, [])))
       >>= fun (config, rest) -> Success.return(config, List.rev rest)
 
     let query () =
@@ -373,6 +400,50 @@ struct
       _parse () >>= (Success.return $ snd)
   end
 
+  module Configuration_File :
+  sig
+    (* [add path name env] *)
+    val add : validate -> unit
+    val parse : string -> Configuration_Map.t Success.t
+    val heredoc : string -> Configuration_Map.t Success.t
+  end = struct
+    let _table = ref []
+    let add validatekey =
+      _table := validatekey :: !_table
+
+    let _validate catch config =
+      let challenge m validatekey =
+        Success.bind
+          m
+          (fun () -> Success.map ignore
+              (Configuration_Map.get config (validatekey catch)))
+      in
+      Success.map
+        (fun () -> config)
+        (List.fold_left challenge (Success.return()) !_table)
+
+    let parse name =
+      (* Configuration values used in UserFile should be
+           initialised to the empty string. *)
+      let open Success.Infix in
+      (if name <> "" then
+         try Success.return(Configuration_Map.from_file name)
+         with
+         | Failure(mesg) -> error "Failure: %s" mesg
+         | Sys_error(mesg) -> error "Error: %s" mesg
+         | exn -> error "%s: %s" name (Printexc.to_string exn)
+       else
+         Success.return(Configuration_Map.empty))
+      >>= _validate (fun _ _ mesg -> error_usage "%s" mesg)
+
+    let heredoc data =
+      let open Success.Infix in
+      (try Success.return(Configuration_Map.from_string data)
+       with
+         | Failure(mesg) -> error "Failure: %s" mesg
+         | exn -> error "%s" (Printexc.to_string exn))
+      >>= _validate (fun _ _ mesg -> error "Failure: %s" mesg)
+  end
 
   module Configuration =
   struct
@@ -395,25 +466,22 @@ struct
       !_config
 
     let make kind comp ?flag ?env ?shy name default description =
-      let component_path info =
-        info.config_prefix @ [ info.name ]
+      let component_path comp =
+        comp.config_prefix @ [ comp.name ]
       in
       let concrete =
-        let of_string text =
-          try Parameter.of_string_kind kind text
-          with Failure(_) ->
-            Printf.ksprintf failwith "%s" (Parameter.kind_name kind)
-        in
-        let to_string x =
-          Parameter.to_string
-            (Parameter.make kind x)
-        in
         Configuration_Map.{
-          of_string;
-          to_string;
+          of_string =
+            (fun text ->
+               try Parameter.of_string_kind kind text
+               with Failure(_) ->
+                 Printf.ksprintf failwith "%s" (Parameter.kind_name kind));
+          to_string = (fun x ->
+              Parameter.to_string
+                (Parameter.make kind x));
         }
       in
-      let k =
+      let configkey =
         Configuration_Map.key
           concrete
           (component_path comp)
@@ -421,15 +489,39 @@ struct
           default
           description
       in
+      let validate catch =
+        Configuration_Map.{
+          of_string =
+            (fun text ->
+               try (ignore(Parameter.of_string_kind kind text);
+                    Success.return text)
+               with Failure(mesg) -> catch (Parameter.kind_name kind) text mesg);
+          to_string = (fun x ->
+              match Success.run x
+              with
+              | Success.Success(s) -> s
+              | whatever -> "<failure>");
+        }
+      in
+      let validatekey catch =
+        Configuration_Map.key
+          (validate catch)
+          (component_path comp)
+          name
+          (Success.return "")
+          description
+      in
       let open Configuration_Map in
       (match flag with
-       | Some c -> Configuration_Getopts.add k.path k.name c k.description
+       | Some c -> Configuration_Getopts.add validatekey c
        | None -> ());
       (match env with
-       | Some id -> Configuration_Environment.add k.path k.name id
+       | Some id -> Configuration_Environment.add validatekey id
        | None -> ());
-      (fun () -> Configuration_Map.get !_config k)
-
+      (match env with
+       | Some id -> Configuration_File.add validatekey
+       | None -> ());
+      (fun () -> Configuration_Map.get !_config configkey )
 
     type spec =
       | Empty
@@ -443,18 +535,6 @@ struct
       | Override of spec * spec
 
     let rec _map spec =
-      let read_file name =
-        (* Configuration values used in UserFile should be
-           initialised to the empty string. *)
-        if name <> "" then
-          try Success.return(Configuration_Map.from_file name)
-          with
-          | Failure(mesg) -> error "Failure: %s" mesg
-          | Sys_error(mesg) -> error "Error: %s" mesg
-          | exn -> error "%s: %s" name (Printexc.to_string exn)
-        else
-          Success.return(Configuration_Map.empty)
-      in
       let user_file path name =
         let open Configuration_Map in
         let open Success.Infix in
@@ -471,21 +551,17 @@ struct
           path;
           name;
           default = "";
-          description = "User confiuration file";
+          description = "User configuration file";
           })
-        >>= read_file
+        >>= Configuration_File.parse
       in
       match spec with
       | Empty -> Success.return Configuration_Map.empty
       | Command_line -> Configuration_Getopts.query ()
       | Environment -> Configuration_Environment.query ()
-      | File(name) -> read_file name
+      | File(name) -> Configuration_File.parse name
       | UserFile(path,name) -> user_file path name
-      | Heredoc(doc) ->
-          (try Success.return(Configuration_Map.from_string doc)
-           with
-           |Failure(mesg) -> error "in here-document: %s" mesg
-           | exn -> error "in here-document: %s" (Printexc.to_string exn))
+      | Heredoc(doc) -> Configuration_File.heredoc doc
       | Alist(bindings) -> Success.return(Configuration_Map.from_alist bindings)
       | Merge(a,b) -> Success.map2 Configuration_Map.merge (_map a) (_map b)
       | Override(a,b) -> Success.map2 Configuration_Map.override (_map a) (_map b)
@@ -513,8 +589,7 @@ struct
     let program =
       (Configuration_Getopts.init name usage notes;
        Configuration.init configuration)
-      >>= fun () ->
-      Component.bootstrap ()
+      >>= Component.bootstrap
       >>= fun () ->
       (Success.catch
          (Configuration_Getopts.rest() >>= safemain)

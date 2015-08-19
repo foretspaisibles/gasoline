@@ -112,7 +112,7 @@ sig
   end
 
   val run : string -> string -> string ->
-    ?notes:(Getopts.note list) ->
+    ?notes:((string * string) list) ->
     ?configuration:Configuration.spec ->
     (string list -> unit) -> unit
   (** [run name usage description ?notes main] run the application.

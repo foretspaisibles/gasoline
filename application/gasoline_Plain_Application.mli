@@ -80,7 +80,7 @@ end
 with type 'a kind = 'a Gasoline_Plain_Definition.Value.kind
 
 val run : string -> string -> string ->
-  ?notes:(Getopts.note list) ->
+  ?notes:((string * string) list) ->
   ?configuration:Configuration.spec ->
   (string list -> unit) -> unit
 (** [run name usage description ?notes main] run the application.
