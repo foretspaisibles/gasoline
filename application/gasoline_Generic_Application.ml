@@ -36,6 +36,7 @@ type error =
 
   | Software of string
   | Usage of string
+  | Getopts of string
 
 let ( $ ) f g =
   fun x -> f (g x)
@@ -75,6 +76,9 @@ let error_shutdown name lst argv =
 
 let error_usage argv =
   Printf.ksprintf (fun s -> Success.throw(Usage(s))) argv
+
+let error_getopts argv =
+  Printf.ksprintf (fun s -> Success.throw(Getopts(s))) argv
 
 (* Rules to sort the component list.
 
@@ -365,7 +369,7 @@ struct
 
     let add validatekey flag =
       let catch kindname text _ =
-        error_usage "Invalid Argument -- %c %S: Bad %s value."
+        error_getopts "Invalid Argument -- %c %S: Bad %s value."
           flag text kindname
       in
       let configkey =
@@ -411,12 +415,13 @@ struct
     let add validatekey =
       _table := validatekey :: !_table
 
-    let _validate catch config =
+    let _validate config =
       let challenge m validatekey =
         Success.bind
           m
           (fun () -> Success.map ignore
-              (Configuration_Map.get config (validatekey catch)))
+              (try Configuration_Map.get config (validatekey failwith)
+               with Failure(mesg) -> error_usage "Failure: %s" mesg))
       in
       Success.map
         (fun () -> config)
@@ -434,7 +439,7 @@ struct
          | exn -> error "%s: %s" name (Printexc.to_string exn)
        else
          Success.return(Configuration_Map.empty))
-      >>= _validate (fun _ _ mesg -> error_usage "%s" mesg)
+      >>= _validate
 
     let heredoc data =
       let open Success.Infix in
@@ -442,7 +447,7 @@ struct
        with
          | Failure(mesg) -> error "Failure: %s" mesg
          | exn -> error "%s" (Printexc.to_string exn))
-      >>= _validate (fun _ _ mesg -> error "Failure: %s" mesg)
+      >>= _validate
   end
 
   module Configuration =
@@ -608,4 +613,6 @@ struct
         die EXIT_SOFTWARE "%s" mesg
     | Error(Usage(mesg)) ->
         die EXIT_USAGE "%s" mesg
+    | Error(Getopts(mesg)) ->
+        die EXIT_USAGE "%s\nUsage: %s %s" mesg (progname()) usage
 end
