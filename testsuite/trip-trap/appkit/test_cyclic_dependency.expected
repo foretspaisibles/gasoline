@@ -1,1 +1,1 @@
-test_cyclic_dependency.byte: failure: Cyclic dependency on provision 'bike'.
+test_cyclic_dependency.byte: Failure: Cyclic dependency on component 'bike'.

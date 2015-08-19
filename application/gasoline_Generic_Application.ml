@@ -103,7 +103,10 @@ let dfs graph visited startnode =
       visited
     else
       let nextpath = node :: path in
-      let edges = List.assoc node graph in
+      let edges =
+        try List.assoc node graph
+        with Not_found -> []
+      in
       let dfsvisited =
         List.fold_left (explore nextpath) visited edges
       in
@@ -117,7 +120,7 @@ let toposort graph =
     @@ List.fold_left
       (fun visited (node,_) -> dfs graph visited node)
       [] graph
-  with Failure(mesg) -> error "%s" mesg
+  with Failure(mesg) -> error "Failure: %s" mesg
 
 
 module type P =
@@ -261,7 +264,7 @@ struct
       let rec loop m name =
         Success.bind2
           (try Success.return(Hashtbl.find _component_table name)
-           with Not_found -> error "%s: No such a component." name)
+           with Not_found -> error "%s: No such component." name)
           m f
       in
       List.fold_left loop (Success.return acc) lst
