@@ -14,25 +14,16 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 module Application =
-  CApplication
+  Gasoline_Plain_Application
 
 module Monolith =
 struct
-  let comp = {
-    Application.Component.
-    name = "monolith";
-    version = "1.0";
-    require = [];
-    provide = [];
-    description = "The monolithic component of our application";
-    config_prefix = [];
-    getopt_prefix = None;
-  }
-
-  let shutdown _ =
-    failwith "This error was also triggered on purpose."
-
-  let () = Application.Component.register ~shutdown comp
+  let comp =
+    Application.Component.make
+      ~name:"monolith"
+      ~description:"The monolithic component of our application"
+      ~shutdown:(fun _ -> failwith "This error was also triggered on purpose.")
+      ()
 end
 
 let () =

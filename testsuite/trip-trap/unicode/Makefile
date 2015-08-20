@@ -14,7 +14,7 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-TESTS=		test_output_channel
+TEST=			test_output_channel
 
 .include "gasoline.trip-trap.mk"
 

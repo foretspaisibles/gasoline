@@ -25,7 +25,8 @@ config.log
 config.status
 configure
 meta/META
-Makefile.config
+/Makefile.config
+/Makefile.local
 #
 # Manual files
 #

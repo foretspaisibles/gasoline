@@ -1,1 +1,1 @@
-test_configfile_syntax.byte: failure: Syntax error in configuration file 'test_configfile_syntax.conf' on line 1.
+test_configfile_syntax.byte: Failure: Syntax error in configuration file 'test_configfile_syntax.conf' on line 1.

@@ -1,1 +1,1 @@
-test_bootstrap_failure.byte: failure: This error was triggered on purpose.
+test_bootstrap_failure.byte: Bootstrap: monolith: This error was triggered on purpose.

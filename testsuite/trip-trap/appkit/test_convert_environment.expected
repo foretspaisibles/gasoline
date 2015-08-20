@@ -1,1 +1,1 @@
-punishment.byte: failure: Bad integer value '@' for 'monolith.number'.
+punishment.byte: Invalid Argument -- NUMBER "@": Bad integer value.

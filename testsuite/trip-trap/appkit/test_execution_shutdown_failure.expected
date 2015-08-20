@@ -1,2 +1,2 @@
-test_execution_shutdown_failure.byte: failure: This error was triggered on purpose.
-test_execution_shutdown_failure.byte: failure: This error was also triggered on purpose.
+test_execution_shutdown_failure.byte: Failure: This error was triggered on purpose.
+test_execution_shutdown_failure.byte: Shutdown: monolith: This error was also triggered on purpose.

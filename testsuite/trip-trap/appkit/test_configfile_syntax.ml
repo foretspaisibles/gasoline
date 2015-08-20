@@ -14,12 +14,12 @@ you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 module Application =
-  CApplication
+  Gasoline_Plain_Application
 
 let () =
   let configuration =
     let open Application.Configuration in
-    File "test_configfile_syntax.conf"  in
+    File Sys.argv.(1) in
   Application.run
     "test_config_file_syntax" "" ""
     ~configuration

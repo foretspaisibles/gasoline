@@ -1,1 +1,1 @@
-test_execution_failure.byte: failure: This error was triggered on purpose.
+test_execution_failure.byte: Failure: This error was triggered on purpose.

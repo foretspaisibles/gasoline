@@ -20,6 +20,6 @@ SUBDIR+=	trip-trap
 install build:
 	${NOP}
 
-.include "gasoline.subdir.mk"
+.include "generic.subdir.mk"
 
 ### End of file `Makefile'
