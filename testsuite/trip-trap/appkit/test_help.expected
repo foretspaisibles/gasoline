@@ -1,7 +1,7 @@
 Usage: punishment.byte [-n number] [-p paragraph] [-c configfile]
  I must not talk in class.
 Options:
+ -c The name of an additional configuration file to read
  -h Display available options.
  -n The number of times our punishment must be printed
  -p The paragraph we must copy as punishment
- -c The name of an additional configuration file to read
