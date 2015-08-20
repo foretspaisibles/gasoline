@@ -18,21 +18,12 @@ module Application =
 
 module Monolith =
 struct
-  let comp = {
-    Application.Component.
-    name = "monolith";
-    version = "1.0";
-    require = [];
-    provide = [];
-    description = "The monolithic component of our application";
-    config_prefix = [];
-    getopt_prefix = None;
-  }
-
-  let shutdown _ =
-    failwith "This error was also triggered on purpose."
-
-  let () = Application.Component.register ~shutdown comp
+  let comp =
+    Application.Component.make
+      ~name:"monolith"
+      ~description:"The monolithic component of our application"
+      ~shutdown:(fun _ -> failwith "This error was also triggered on purpose.")
+      ()
 end
 
 let () =

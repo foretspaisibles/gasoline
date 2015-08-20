@@ -24,22 +24,27 @@ type component = {
 }
 
 type error =
-  | Bootstrap of string * string * (string list)
-  (* Bootstrap(mesg, name, lst) signals an error while bootstrapping
+  | Bootstrap of string * (string list)
+  (* Bootstrap(name, lst) signals an error while bootstrapping
      the component [name]. The list [lst] enumerates the components
      which have been correctly bootstrapped. *)
 
-  | Shutdown of string * string * (string list)
+  | Shutdown of string * (string list)
   (* Shutdown(mesg, name, lst) signals an error while shutting down
      the component [name]. The list [lst] enumerates the components
      which still need to be shut down. *)
 
-  | Software of string
-  | Usage of string
-  | Getopts of string
+  | Software
+  | Usage
 
 let ( $ ) f g =
   fun x -> f (g x)
+
+let memoize f =
+  let m = ref None in
+  fun () -> match !m with
+    | None -> (fun x -> m := Some(x); x) (f())
+    | Some(x) -> x
 
 module Success =
   Lemonade_Success.Make(struct type t = error end)
@@ -53,32 +58,37 @@ type validate =
 let progname () =
   Filename.basename Sys.executable_name
 
-let die code argv =
-  Printf.fprintf stderr "%s: " (progname());
-  Printf.kfprintf
-    (fun outc -> output_char outc '\n'; Gasoline_SysExits.exit code) stderr
-    argv
+let wlog mesg =
+  Printf.eprintf "%s: %s\n" (progname()) mesg
 
-let wlog argv =
-  Printf.fprintf stderr "%s: " (progname());
-  Printf.kfprintf
-    (fun outc -> output_char outc '\n') stderr
-    argv
+let die code fmt =
+  let quit () =
+    Gasoline_SysExits.exit code
+  in
+  Printf.ksprintf (quit $ wlog) fmt
 
-let error argv =
-  Printf.ksprintf (fun s -> Success.throw (Software s)) argv
+let _error error fmt =
+  Printf.ksprintf (fun mesg -> wlog mesg; Success.throw error) fmt
 
-let error_bootstrap name lst argv =
-  Printf.ksprintf (fun s -> Success.throw(Bootstrap(s, name, lst))) argv
+let error fmt =
+  _error Software fmt
 
-let error_shutdown name lst argv =
-  Printf.ksprintf (fun s -> Success.throw(Shutdown(s, name, lst))) argv
+let error_bootstrap name lst fmt =
+  _error (Bootstrap(name, lst)) fmt
 
-let error_usage argv =
-  Printf.ksprintf (fun s -> Success.throw(Usage(s))) argv
+let error_shutdown name lst fmt =
+  _error (Shutdown(name, lst)) fmt
 
-let error_getopts argv =
-  Printf.ksprintf (fun s -> Success.throw(Getopts(s))) argv
+let error_usage fmt =
+  _error Usage fmt
+
+let error_getopts usage fmt =
+  Printf.ksprintf
+    (fun mesg ->
+       wlog mesg;
+       Printf.eprintf "Usage: %s %s\n" (progname()) usage;
+       Success.throw Usage)
+    fmt
 
 (* Rules to sort the component list.
 
@@ -274,8 +284,8 @@ struct
       let f comp acc =
         try (comp.bootstrap (); Success.return(comp.name :: acc))
         with
-        | Failure(mesg) -> error_bootstrap comp.name acc "%s" mesg
-        | exn -> error_bootstrap comp.name acc "%s" (Printexc.to_string exn)
+        | Failure(mesg) -> error_bootstrap comp.name acc "Bootstrap: %s: %s" comp.name mesg
+        | exn -> error_bootstrap comp.name acc "Bootstrap: %s: %s" comp.name (Printexc.to_string exn)
       in
       graph ()
       >>= toposort
@@ -286,18 +296,18 @@ struct
     let shutdown () =
       let open Success.Infix in
       let f comp acc =
-        try (comp.shutdown (); Success.return(List.filter ((<>) comp.name) acc))
+        let pending = List.filter ((<>) comp.name) acc in
+        try (comp.shutdown (); Success.return pending)
         with
-        | Failure(mesg) -> error_shutdown comp.name acc "%s" mesg
-        | exn -> error_shutdown comp.name acc "%s" (Printexc.to_string exn)
+        | Failure(mesg) -> error_shutdown comp.name pending "Shutdown: %s: %s" comp.name mesg
+        | exn -> error_shutdown comp.name pending "Shutdown: %s: %s" comp.name (Printexc.to_string exn)
       in
       let rec loop lst =
         Success.catch
           (process f lst lst)
           (function
-            | Shutdown(name, mesg, pending) ->
-                (wlog "%s: shutdown: %s" name mesg;
-                 loop pending >>= fun _ -> error "An error occured during shutdown.")
+            | Shutdown(name, pending) as error ->
+                (loop pending >>= fun _ -> Success.throw error)
             | whatever -> Success.throw whatever)
       in
       graph ()
@@ -323,7 +333,7 @@ struct
     let add validatekey env =
       _table := (validatekey, env) :: !_table
 
-    let query () =
+    let _query () =
       let loop ax (validatekey, envname) =
         let catch kindname text _ =
           error_usage "Invalid Argument -- %s %S: Bad %s value."
@@ -341,6 +351,9 @@ struct
         with Not_found -> ax
       in
       List.fold_left loop (Success.return Configuration_Map.empty) !_table
+
+    let query =
+      memoize _query
   end
 
   (* Keep trace of command line options mapped to configurations. *)
@@ -372,8 +385,13 @@ struct
 
     let add validatekey flag =
       let catch kindname text _ =
-        error_getopts "Invalid Argument -- %c %S: Bad %s value."
-          flag text kindname
+        match !_context with
+        | None ->
+            error_usage "Invalid Argument -- %c %S: Bad %s value."
+              flag text kindname
+        | Some(usage,_,_) ->
+            error_getopts usage "Invalid Argument -- %c %S: Bad %s value."
+              flag text kindname
       in
       let configkey =
         validatekey catch
@@ -398,13 +416,16 @@ struct
       (Getopts.parse_argv s (Success.return (Configuration_Map.empty, [])))
       >>= fun (config, rest) -> Success.return(config, List.rev rest)
 
+    let _memo_parse =
+      memoize _parse
+
     let query () =
       let open Success.Infix in
-      _parse () >>= (Success.return $ fst)
+      _memo_parse () >>= (Success.return $ fst)
 
     let rest () =
       let open Success.Infix in
-      _parse () >>= (Success.return $ snd)
+      _memo_parse () >>= (Success.return $ snd)
   end
 
   module Configuration_File :
@@ -595,7 +616,7 @@ struct
       | exn -> error "%s" (Printexc.to_string exn)
     in
     let program =
-      (Configuration_Getopts.init name usage notes;
+      (Configuration_Getopts.init usage description notes;
        Configuration.init configuration)
       >>= Component.bootstrap
       >>= fun () ->
@@ -608,14 +629,10 @@ struct
     let open Success in
     match Success.run program with
     | Success() -> exit EXIT_SUCCESS
-    | Error(Bootstrap(mesg, name, _)) ->
-        die EXIT_SOFTWARE "bootstrap: %s: %s" name mesg
-    | Error(Shutdown(mesg, name, _)) ->
-        die EXIT_SOFTWARE "shutdown: %s: %s" name mesg
-    | Error(Software(mesg)) ->
-        die EXIT_SOFTWARE "%s" mesg
-    | Error(Usage(mesg)) ->
-        die EXIT_USAGE "%s" mesg
-    | Error(Getopts(mesg)) ->
-        die EXIT_USAGE "%s\nUsage: %s %s" mesg (progname()) usage
+    | Error(Bootstrap(_, _))
+    | Error(Shutdown(_, _))
+    | Error(Software) ->
+        exit EXIT_SOFTWARE
+    | Error(Usage) ->
+        exit EXIT_USAGE
 end
