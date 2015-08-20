@@ -14,17 +14,22 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROGRAM=	unit_testing
+PROGRAM=		unit_testing
+PROGRAM+=		rcorder_testing
 
-SRCS=		testUnicode.ml
-SRCS+=		testPlainDefinitionValue.ml
+SRCS.unit_testing=	testUnicode.ml
+SRCS.unit_testing+=	testPlainDefinitionValue.ml
+SRCS.unit_testing+=	main.ml
 
-SRCS+=		main.ml
+#SRCS.rcorder_testing=	rcorder_testing.ml
 
-OCAMLLFLAGS+=	-linkall
+OCAMLLFLAGS+=		-linkall
 
-do-test: ${PROGRAM}
+.for program in ${PROGRAM}
+do-test: do-test-${program}
+do-test-${program}: ${program}
 	${.ALLSRC:tA}
+.endfor
 
 do-install:
 	${NOP}

@@ -90,19 +90,6 @@ let error_getopts usage fmt =
        Success.throw Usage)
     fmt
 
-(* Rules to sort the component list.
-
-   1. If two independent components provide the same thing, then both
-   component must be executed to meet the barrier.
-
-   2. If two interdependent components provide the same thing, then
-   both component must be executed in graph order to meet the
-   barrier.
-
-   3. We pick a component, stack it as “in progress” and try to
-   satisfy all its requirements. Once all of an in-progress script
-   are met, we can remove it from the “in progress” stack. *)
-
 let dfs graph visited startnode =
   let rec explore path visited node =
     if List.mem node path then
@@ -238,36 +225,68 @@ struct
         let compare = Pervasives.compare
       end)
 
-    let _graph table =
-      let require comp =
-        List.map (fun r -> (comp.name, r)) comp.require
+    (* Rules to sort the component list.
+
+       1. If two independent components provide the same thing, then
+       both component must be executed to meet the barrier.
+
+       2. If two interdependent components provide the same thing,
+       then both component must be executed in graph order to meet the
+       barrier.
+
+       3. We pick a component, stack it as “in progress” and try to
+       satisfy all its requirements. Once all of an in-progress script
+       are met, we can remove it from the “in progress” stack. *)
+
+    let _graphspec table =
+      Hashtbl.fold
+        (fun _ comp acc -> (comp.name, (comp.provide, comp.require)) :: acc)
+        table
+        []
+
+    let _graph spec =
+      let require (name, (_, requirelst)) =
+        List.map (fun r -> (name, r)) requirelst
       in
-      let provide comp =
-        List.map (fun p -> (p, comp.name)) comp.provide
+      let provide (name, (providelst, _)) =
+        List.map (fun p -> (p, name)) providelst
       in
-      let edges table =
-        let loop _ comp ax =
+      let edges spec =
+        let loop ax comp =
           ax
           |> List.fold_right EdgeSet.add (require comp)
           |> List.fold_right EdgeSet.add (provide comp)
         in
-        Hashtbl.fold loop table EdgeSet.empty
+        List.fold_left loop EdgeSet.empty spec
         |> EdgeSet.filter (fun edge -> fst edge <> snd edge)
         |> EdgeSet.elements
       in
-      let nodes table =
-        let loop _ comp ax =
-          comp.name :: ax
-        in
-        Hashtbl.fold loop table []
+      let nodes spec =
+        List.fold_left (fun acc (node, (providelst, requirelst)) ->
+            NodeSet.union acc (NodeSet.of_list (node :: providelst @ requirelst)))
+          NodeSet.empty spec
+        |> NodeSet.elements
       in
       let select edges node =
         (node, List.map snd (List.filter (fun (x,_) -> x = node) edges))
       in
-      List.map (select (edges table)) (nodes table)
+      List.map (select (edges spec)) (nodes spec)
 
-    let graph () =
-      Success.return(_graph _component_table)
+    let rcorder () =
+      let barrier =
+        Hashtbl.fold
+          (fun _ comp acc ->
+             List.rev_append (List.filter ((<>) comp.name) comp.provide) acc)
+          _component_table
+          []
+        |> NodeSet.of_list
+      in
+      let _filter lst =
+        List.filter (fun x -> not(NodeSet.mem x barrier)) lst
+      in
+      Success.bind
+        (toposort (_graph (_graphspec _component_table)))
+        (Success.return $ _filter)
 
     let process f acc lst =
       let open Success.Infix in
@@ -287,8 +306,7 @@ struct
         | Failure(mesg) -> error_bootstrap comp.name acc "Bootstrap: %s: %s" comp.name mesg
         | exn -> error_bootstrap comp.name acc "Bootstrap: %s: %s" comp.name (Printexc.to_string exn)
       in
-      graph ()
-      >>= toposort
+      rcorder ()
       >>= (Success.return $ List.rev)
       >>= process f []
       >>= (Success.return $ ignore)
@@ -310,8 +328,7 @@ struct
                 (loop pending >>= fun _ -> Success.throw error)
             | whatever -> Success.throw whatever)
       in
-      graph ()
-      >>= toposort
+      rcorder ()
       >>= loop
       >>= function
       | [] -> Success.return ()

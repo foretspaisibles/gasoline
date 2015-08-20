@@ -23,7 +23,6 @@ TEST+=		test_cyclic_dependency
 TEST+=		test_execution_failure
 TEST+=		test_execution_shutdown_failure
 TEST+=		test_help
-TEST+=		test_rcorder
 TEST+=		test_usage
 
 PROGRAM=	punishment
