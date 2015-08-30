@@ -13,31 +13,32 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-open CApplication
+module Application =
+  Gasoline_Plain_Application
 
-module Component_automaton :
+module Component_Automaton :
 sig
-  val comp : Component.info
+  val comp : Application.Component.t
 
   module Configuration :
   sig
-    val generate_n : int Configuration.t
-    val generate_min : int Configuration.t
-    val generate_max : int Configuration.t
-    val length : int Configuration.t
+    val generate_n : unit -> int
+    val generate_min : unit -> int
+    val generate_max : unit -> int
+    val length : unit -> int
   end
 
   val compile : string -> Persistant.t
   val generate : Persistant.t -> string list
 end
 
-module Component_library :
+module Component_Library :
 sig
-  val comp : Component.info
+  val comp : Application.Component.t
 
   module Configuration :
   sig
-    val dump : string Configuration.t
+    val dump : unit -> string
   end
 
   val load : string -> Persistant.t
@@ -46,8 +47,11 @@ sig
 end
 
 
-val help : unit -> unit
-val list : unit -> unit
-val compile : string -> unit
-val generate : string -> unit
-val main : string list -> unit
+module Component_Main :
+sig
+  val help : unit -> unit
+  val list : unit -> unit
+  val compile : string -> unit
+  val generate : string -> unit
+  val run : string list -> unit
+end

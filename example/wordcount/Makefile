@@ -14,14 +14,14 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROGRAM=	wordcount
+PROGRAM=		wordcount
 
-SRCS+=		count.ml
-SRCS+=		display.ml
-SRCS+=		wordcount.ml
+SRCS+=			count.ml
+SRCS+=			display.ml
+SRCS+=			wordcount.ml
 
-USE_ODOC=	yes
+USES+=			odoc
 
-.include "gasoline.program.mk"
+.include "ocaml.prog.mk"
 
 ### End of file `Makefile'
