@@ -40,20 +40,11 @@ end
 module Configuration :
 sig
 
-  (** The type tracking ['a]. *)
-  type 'a kind =
-  | Bool : bool kind
-  | Int : int kind
-  | Char : char kind
-  | String : string kind
-  | Float : float kind
-
-
   (** The type of application components. *)
   type component =
     Component.t
 
-    val make : 'a kind -> component ->
+    val make : (string -> 'a) -> component ->
       ?flag:char -> ?env:string -> ?shy:bool ->
       string -> 'a -> string -> (unit -> 'a)
     (** [make kind comp name default description] create a
@@ -64,6 +55,27 @@ sig
         @param flag the letter used for command line flag.
         @param env the environment variable used to get a value.
         @param shy flag governing description in the short help. *)
+
+
+    val make_bool : component ->
+      ?flag:char -> ?env:string -> ?shy:bool ->
+      string -> bool -> string -> (unit -> bool)
+    (** A version of [make] specialised on [bool_of_string]. *)
+
+    val make_int : component ->
+      ?flag:char -> ?env:string -> ?shy:bool ->
+      string -> int -> string -> (unit -> int)
+    (** A version of [make] specialised on [int_of_string]. *)
+
+    val make_float : component ->
+      ?flag:char -> ?env:string -> ?shy:bool ->
+      string -> float -> string -> (unit -> float)
+    (** A version of [make] specialised on [float_of_string]. *)
+
+    val make_string : component ->
+      ?flag:char -> ?env:string -> ?shy:bool ->
+      string -> string -> string -> (unit -> string)
+    (** A version of [make] specialised on the identitiy function. *)
 
     (** The type of configuration specifications. *)
     type spec =
@@ -77,7 +89,6 @@ sig
     | Merge of spec * spec
     | Override of spec * spec
 end
-with type 'a kind = 'a Gasoline_Plain_Definition.Value.kind
 
 val run : string -> string -> string ->
   ?notes:((string * string) list) ->

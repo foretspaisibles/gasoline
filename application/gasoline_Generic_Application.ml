@@ -122,13 +122,6 @@ let toposort graph =
 
 module type P =
 sig
-  type 'a kind
-  type t
-  val make : 'a kind -> 'a -> t
-  val to_string : t -> string
-  val of_string : string -> t
-  val of_string_kind : 'a kind -> string -> 'a
-  val kind_name : 'a kind -> string
 end
 
 module type S =
@@ -151,11 +144,10 @@ sig
 
   module Configuration :
   sig
-    type 'a kind
     type component =
       Component.t
 
-    val make : 'a kind -> component ->
+    val make : (string -> 'a) -> component ->
       ?flag:char -> ?env:string -> ?shy:bool ->
       string -> 'a -> string -> (unit -> 'a)
 
@@ -493,9 +485,6 @@ struct
 
   module Configuration =
   struct
-    type 'a kind =
-      'a Parameter.kind
-
     type component =
       Component.t
 
@@ -511,27 +500,22 @@ struct
     let query () =
       !_config
 
-    let make kind comp ?flag ?env ?shy name default description =
+    let make value_of_string comp ?flag ?env ?shy name default description =
       let component_path comp =
         comp.config_prefix @ [ comp.name ]
       in
-      let of_string text =
-        try Parameter.of_string_kind kind text
-        with Failure(_) ->
-          Printf.ksprintf failwith "%s" (Parameter.kind_name kind)
-      in
       let configkey =
         Configuration_Map.key
-          of_string
+          value_of_string
           (component_path comp)
           name
           default
           description
       in
       let validate catch text =
-        try (ignore(Parameter.of_string_kind kind text);
+        try (ignore(value_of_string text);
              Success.return text)
-        with Failure(mesg) -> catch (Parameter.kind_name kind) text mesg
+        with Failure(mesg) -> catch mesg text mesg
       in
       let validatekey catch =
         Configuration_Map.key

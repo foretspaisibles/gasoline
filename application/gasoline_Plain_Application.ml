@@ -23,18 +23,31 @@ module Component =
 
 module Configuration =
 struct
-  type 'a kind = 'a Gasoline_Plain_Definition.Value.kind =
-  | Bool : bool kind
-  | Int : int kind
-  | Char : char kind
-  | String : string kind
-  | Float : float kind
-
   type component =
     Internal.Component.t
 
-  let make kind component ?flag ?env ?shy name default description =
-    Internal.Configuration.make kind component ?flag ?env ?shy name default description
+  let make value_of_string component
+      ?flag ?env ?shy name default description =
+    Internal.Configuration.make value_of_string component
+      ?flag ?env ?shy name default description
+
+  let _make value_of_string name =
+    make
+      (fun s ->
+         try value_of_string s
+         with Invalid_argument(_) | Failure(_) -> failwith name)
+
+  let make_bool =
+    _make bool_of_string "boolean"
+
+  let make_int =
+    _make int_of_string "integer"
+
+  let make_float =
+    _make float_of_string "floating point"
+
+  let make_string =
+    _make (fun s -> s) "string"
 
   type spec = Internal.Configuration.spec =
     | Empty
