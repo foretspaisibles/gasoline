@@ -15,7 +15,7 @@ are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 
 module Application =
-  CApplication
+  Gasoline_Plain_Application
 
 exception Error
 
@@ -24,31 +24,17 @@ exception Error
 module Component_count =
 struct
 
-  let comp = {
-    Application.Component.
-    name = "count";
-    version = "1.0";
-    require = [];
-    provide = [];
-    description = "Count words";
-    config_prefix = [];
-    getopt_prefix = None;
-  }
+  let comp =
+    Application.Component.make
+      ~name:"count"
+      ~description:"Count words"
+      ()
 
   module Message =
   struct
-    open Application.Value
-    open Application.Message
-    open Application.Classification
-
-    let sink =
-      Application.Component.sink comp
-
+    open Printf
     let cannot_open name reason =
-      send sink Error "${FILENAME}: cannot open (${REASON})"
-	[ "FILENAME", make String name;
-	  "REASON", make String reason;
-	]
+      eprintf  "Error: %s: cannot open (%s)" name reason
   end
 
   let count_channel c =
@@ -57,84 +43,68 @@ struct
   let count_file name =
     try Count.from_file name
     with Sys_error reason -> (Message.cannot_open name reason; raise Error)
-
-  let () = Application.Component.register comp
 end
 
 
 module Component_display =
 struct
 
-  let comp = {
-    Application.Component.
-    name = "display";
-    version = "1.0";
-    require = [];
-    provide = [];
-    description = "Display word counts";
-    config_prefix = [];
-    getopt_prefix = None;
-  }
+  let comp =
+    Application.Component.make
+      ~name:"display"
+      ~description:"Display word counts"
+      ()
 
   module Configuration =
   struct
-    open Application.Value
     open Application.Configuration
 
     let bytes =
-      make Bool comp ~flag:'c'
-	"bytes" true
-	"The number of bytes in each input file is written to the standard \
+      make_bool comp ~flag:'c' ~optarg:"true"
+        "bytes" false
+        "The number of bytes in each input file is written to the standard \
          output.  This will cancel out any prior usage of the -m option."
 
     let lines =
-      make Bool comp ~flag:'l'
-	"lines" true
-	"The number of lines in each input file is written to the standard \
+      make_bool comp ~flag:'l' ~optarg:"true"
+        "lines" false
+        "The number of lines in each input file is written to the standard \
          output."
 
     let chars =
-      make Bool comp ~flag:'m'
-	"chars" false
-	"The number of characters in each input file is written to the \
+      make_bool comp ~flag:'m' ~optarg:"true"
+        "chars" false
+        "The number of characters in each input file is written to the \
          standard output. If the current locale does not support multibyte \
          characters, this is equivalent to the -c option. This will cancel \
          out any prior usage of the -c option."
 
     let words =
-      make Bool comp ~flag:'w'
-	"words" true
-	"The number of words in each input file is written to the standard \
+      make_bool comp ~flag:'w' ~optarg:"true"
+        "words" false
+        "The number of words in each input file is written to the standard \
          output."
 
     let longest =
-      make Bool comp ~flag:'L'
-	"longest" false
-	"The number of characters in the longest input line is written to \
+      make_bool comp ~flag:'L' ~optarg:"true"
+        "longest" false
+        "The number of characters in the longest input line is written to \
          the standard output.  When more then one file argument is specified, \
          the longest input line of all files is reported as the \
          value of the final “total”."
   end
 
-
-  (* This module is only a placeholder, as it is not actually used. *)
-  module Message =
-  struct
-    open Application.Value
-    open Application.Message
-    let sink =
-      Application.Component.sink comp
-  end
-
   let spec () =
-    let open Application.Configuration in
-    let open Configuration in {
-      Display.
-      chars = get chars;
-      bytes = get bytes;
-      lines = get lines;
-      words = get words;
-      longest = get longest;
+    let open Configuration in
+    let all () =
+      not (chars () || bytes () || words ())
+    in
+    Display.{
+      chars = chars () || all ();
+      bytes = bytes () || all ();
+      lines = lines () || all ();
+      words = words () || all ();
+      longest = longest ();
     }
 
   let print_count filename stat =
@@ -142,8 +112,6 @@ struct
 
   let print_summary lst =
     Display.print (spec()) "total" (Count.total lst)
-
-  let () = Application.Component.register comp
 end
 
 
@@ -156,9 +124,6 @@ type operation =
 
 let operation =
   ref Count
-
-let help () =
-  CApplication.help ()
 
 let count_channel c =
   let stat = Component_count.count_channel c in
@@ -192,14 +157,8 @@ let main files =
   | Help -> ignore ()
   | Count -> count files
 
-(* TODO: Implement the flag logic
-
-The flag logic is the one described in `wc(1)`.
-
-This involves preventing most configuration values from being edited
-from the command line, using callbacks instead. *)
-
 let () = Application.run "wordcount"
-  "[-chlmwL] [file ...]"
+    "[-chlmwL] [file ...]"
   "Word, line, character and byte count"
+  ~configuration:Application.Configuration.Command_line
   main
