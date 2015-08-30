@@ -148,6 +148,7 @@ sig
       Component.t
 
     val make : (string -> 'a) -> component ->
+      ?optarg:string ->
       ?flag:char -> ?env:string -> ?shy:bool ->
       string -> 'a -> string -> (unit -> 'a)
 
@@ -370,7 +371,7 @@ struct
   sig
     val init : string -> string -> (string*string) list -> unit
     (* [add path name flag description] *)
-    val add : validate -> char -> unit
+    val add : ?optarg:string -> validate -> char -> unit
     val query : unit -> Configuration_Map.t Success.t
     val rest : unit -> string list Success.t
   end = struct
@@ -392,7 +393,7 @@ struct
     let init usage description notes =
       _context := Some(usage, description, notes)
 
-    let add validatekey flag =
+    let add ?optarg validatekey flag =
       let catch kindname text _ =
         match !_context with
         | None ->
@@ -410,12 +411,21 @@ struct
                              validoptarg config, rest)
       in
       let option =
-        Getopts.option
-          (fun s -> s)
-          flag
-          (fun optarg m ->
-             (Success.map2 fold (Configuration_Map.value configkey optarg) m))
-          configkey.Configuration_Map.description
+        match optarg with
+        | None ->
+            Getopts.option
+              (fun s -> s)
+              flag
+              (fun optarg m ->
+                 (Success.map2 fold (Configuration_Map.value configkey optarg) m))
+              configkey.Configuration_Map.description
+        | Some(text) ->
+            Getopts.flag
+              flag
+              (fun m ->
+                 (Success.map2 fold (Configuration_Map.value configkey text) m))
+              configkey.Configuration_Map.description
+
       in
       _table := option :: !_table
 
@@ -500,7 +510,8 @@ struct
     let query () =
       !_config
 
-    let make value_of_string comp ?flag ?env ?shy name default description =
+    let make value_of_string comp
+        ?optarg ?flag ?env ?shy name default description =
       let component_path comp =
         comp.config_prefix @ [ comp.name ]
       in
@@ -527,7 +538,7 @@ struct
       in
       let open Configuration_Map in
       (match flag with
-       | Some c -> Configuration_Getopts.add validatekey c
+       | Some c -> Configuration_Getopts.add ?optarg validatekey c
        | None -> ());
       (match env with
        | Some id -> Configuration_Environment.add validatekey id

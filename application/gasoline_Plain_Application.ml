@@ -27,9 +27,9 @@ struct
     Internal.Component.t
 
   let make value_of_string component
-      ?flag ?env ?shy name default description =
+      ?optarg ?flag ?env ?shy name default description =
     Internal.Configuration.make value_of_string component
-      ?flag ?env ?shy name default description
+      ?optarg ?flag ?env ?shy name default description
 
   let _make value_of_string name =
     make

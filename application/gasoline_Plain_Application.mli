@@ -44,7 +44,8 @@ sig
   type component =
     Component.t
 
-    val make : (string -> 'a) -> component ->
+  val make : (string -> 'a) -> component ->
+      ?optarg:string ->
       ?flag:char -> ?env:string -> ?shy:bool ->
       string -> 'a -> string -> (unit -> 'a)
     (** [make kind comp name default description] create a
@@ -58,22 +59,22 @@ sig
 
 
     val make_bool : component ->
-      ?flag:char -> ?env:string -> ?shy:bool ->
+      ?optarg:string -> ?flag:char -> ?env:string -> ?shy:bool ->
       string -> bool -> string -> (unit -> bool)
     (** A version of [make] specialised on [bool_of_string]. *)
 
     val make_int : component ->
-      ?flag:char -> ?env:string -> ?shy:bool ->
+      ?optarg:string -> ?flag:char -> ?env:string -> ?shy:bool ->
       string -> int -> string -> (unit -> int)
     (** A version of [make] specialised on [int_of_string]. *)
 
     val make_float : component ->
-      ?flag:char -> ?env:string -> ?shy:bool ->
+      ?optarg:string -> ?flag:char -> ?env:string -> ?shy:bool ->
       string -> float -> string -> (unit -> float)
     (** A version of [make] specialised on [float_of_string]. *)
 
     val make_string : component ->
-      ?flag:char -> ?env:string -> ?shy:bool ->
+      ?optarg:string -> ?flag:char -> ?env:string -> ?shy:bool ->
       string -> string -> string -> (unit -> string)
     (** A version of [make] specialised on the identitiy function. *)
 

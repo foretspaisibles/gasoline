@@ -58,6 +58,7 @@ sig
       Component.t
 
     val make : (string -> 'a) -> component ->
+      ?optarg:string ->
       ?flag:char -> ?env:string -> ?shy:bool ->
       string -> 'a -> string -> (unit -> 'a)
     (** [make value_of_string comp name default description] create a
@@ -68,6 +69,11 @@ sig
         @param flag the letter used for command line flag.
         @param env the environment variable used to get a value.
         @param shy flag governing description in the short help.
+        @param optarg is the value of an option argument
+
+        If the value optarg is set, then the generated command-line
+        flag has nor argument and uses the value of [optarg] as an
+        argument.
 
         The [value_of_string] function should raise a [Failure]
         exception when it cannot converts a string. *)
