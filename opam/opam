@@ -9,9 +9,13 @@ tags: [
   "application"
 ]
 depends: [
-  "bsdowl"
+  "broken" {>= "0.4.2"}
+  "bsdowl" {>= "3.0.0"}
+  "camomile" {>= "0.8.5"}
+  "configuration" {>= "0.4.1"}
+  "getopts" {>= "0.3.2"}
+  "lemonade" {>= "0.2.1"}
   "ocamlfind"
-  "camomile"
 ]
 build: [
   ["./configure" "--prefix" prefix]
