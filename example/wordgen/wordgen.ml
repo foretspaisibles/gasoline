@@ -15,70 +15,56 @@ are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
 
 module Application =
-  CApplication
+  Gasoline_Plain_Application
 
 exception Error
 
 (* Software components *)
 
-module Component_automaton =
+module Component_Automaton =
 struct
 
-  let comp = {
-    Application.Component.
-    name = "automaton";
-    version = "1.0";
-    require = [];
-    provide = [];
-    description = "Automaton parameters";
-    config_prefix = [];
-    getopt_prefix = Some 'A';
-  }
+  let comp =
+    Application.Component.make
+      ~name:"automaton"
+      ~description:"Automaton parameters"
+      ~getopt_prefix:'A'
+      ()
 
   module Configuration =
   struct
-    open Application.Value
     open Application.Configuration
 
     let generate_n =
-      make Int comp ~flag:'n'
+      make_int comp ~flag:'n'
         "number" 1
         "The number of generated words"
 
     let generate_min =
-      make Int comp ~flag:'a'
+      make_int comp ~flag:'a'
         "generate_min" 5
         "The shortest length a generated word can have"
 
     let generate_max =
-      make Int comp ~flag:'b'
+      make_int comp ~flag:'b'
         "generate_max" 12
         "The largest length a generated word can have"
 
     let length =
-      make Int comp ~flag:'l'
+      make_int comp ~flag:'l'
         "length" 3
         "The length of a word part"
   end
 
   module Message =
   struct
-    open Application.Value
-    open Application.Message
-    open Application.Classification
-
-    let sink =
-      Application.Component.sink comp
+    open Printf
 
     let file_not_found name reason =
-      send sink Error "${FILENAME:s}: cannot open (${REASON:s})"
-	[ "FILENAME", make String name;
-	  "REASON", make String reason;
-	]
+      eprintf "Error: %s: cannot open (%s)\n" name reason
 
     let table_mismatch reason =
-      send sink Error "table mismatch (${REASON:s})"
-	[ "REASON", make String reason; ]
+      eprintf "Error: table mismatch (%s)\n" reason
   end
 
   (* The functions compile and generate both use a local functor
@@ -90,11 +76,11 @@ struct
 
   let compile file =
     let module Parameter =
-	struct
-	  open Application.Configuration
-	  open Configuration
-	  let length = get length
-	end
+        struct
+          open Application.Configuration
+          open Configuration
+          let length = length ()
+        end
     in
     let module Table = Table.Make(Parameter) in
     try Table.to_persistant (Table.add_file Table.empty file)
@@ -102,14 +88,14 @@ struct
 
   let generate p =
     let module Parameter =
-	struct
-	  open Application.Configuration
-	  open Configuration
-	  let generate_min = get generate_min
-	  let generate_max = get generate_max
-	  let length = get length
-	  let n = get generate_n
-	end
+        struct
+          open Application.Configuration
+          open Configuration
+          let generate_min = generate_min ()
+          let generate_max = generate_max ()
+          let length = length ()
+          let n = generate_n ()
+        end
     in
     let module Table = Table.Make(Parameter) in
     let module Automaton = Automaton.Make(Parameter) in
@@ -120,70 +106,50 @@ struct
     let rec loop ax n =
       if n = 0
       then
-	ax
+        ax
       else
-	loop ((Automaton.generate a)::ax) (pred n)
+        loop ((Automaton.generate a)::ax) (pred n)
     in
     loop [] Parameter.n
-
-  let () = Application.Component.register comp
 end
 
 
-module Component_library =
+module Component_Library =
 struct
 
-  let comp = {
-    Application.Component.
-    name = "library";
-    version = "1.0";
-    require = [];
-    provide = [];
-    description = "Dictionary library";
-    config_prefix = [];
-    getopt_prefix = Some 'L';
-  }
+  let comp =
+    Application.Component.make
+      ~name:"library"
+      ~description:"Dictionary library"
+      ~getopt_prefix:'L'
+      ()
 
   module Configuration =
   struct
-    open Application.Value
     open Application.Configuration
 
     let dump =
-      make String comp ~flag:'d'
-	"dump" "/var/wordgen"
-	"The location of dictionary dumps"
+      make_string comp ~flag:'d'
+        "dump" "/var/wordgen"
+        "The location of dictionary dumps"
   end
 
   module Message =
   struct
-    open Application.Value
-    open Application.Message
-    open Application.Classification
-
-    let sink =
-      Application.Component.sink comp
+    open Printf
 
     let file_not_found name reason =
-      send sink Error "${FILENAME:s}: cannot open (${REASON:s})" [
-	"FILENAME", make String name;
-	"REASON", make String reason;
-      ]
+      eprintf "Error: %s: cannot open (%s)\n" name reason
 
     let file_not_saved name reason =
-      send sink Error "${FILENAME:s}: cannot save (${REASON:s})" [
-	"FILENAME", make String name;
-	"REASON", make String reason;
-      ]
+      eprintf "Error: %s: cannot save (%s)\n" name reason
   end
 
   let library () =
-    Library.make
-      []
-      (Application.Configuration.get Configuration.dump)
+    Library.make [] (Configuration.dump ())
 
   let infer_name file =
-    Filename.concat (Application.Configuration.get Configuration.dump) (file ^ ".wordgen")
+    Filename.concat (Configuration.dump ()) (file ^ ".wordgen")
 
   let load file =
     try Library.load (library()) (infer_name file)
@@ -197,66 +163,86 @@ struct
 
   let list () =
     Library.list (library())
-
-  let () = Application.Component.register comp
 end
 
 
+module Component_Main =
+struct
 
-type operation =
-| List
-| Help
-| Compile of string
-| Generate of string
+  let comp =
+    Application.Component.make
+      ~name:"main"
+      ~description:"Main component"
+      ()
 
-let operation =
-  ref Help
+  module Configuration =
+  struct
+    open Application.Configuration
 
-let help () =
-  Application.help ()
+    type operation =
+      | List
+      | Usage
+      | Compile of string
+      | Generate of string
 
-let usage mesg =
-  Application.usage mesg
+    let list =
+      make_bool comp ~flag:'L' ~optarg:"true"
+        "#list" false
+        "List the content of the dictionary library."
 
-let list () =
-  List.iter print_endline (Component_library.list ())
+    let compile =
+      make_string comp ~flag:'C'
+        "#compile" ""
+        "FILE\n\
+         Compile FILE and dump the result in the dictionary library."
 
-let compile file =
-  Component_library.save
-    (Component_library.infer_name file)
-    (Component_automaton.compile file)
+    let generate =
+      make_string comp ~flag:'G'
+        "#generate" ""
+        "FILE\n\
+         Generate words using dumped data FILE."
 
-let generate dump =
-  List.iter print_endline
-    (Component_automaton.generate
-       (Component_library.load dump))
+    let operation () =
+      match list (), compile (), generate () with
+      | true, "", "" -> List
+      | false, file, "" -> Compile(file)
+      | false, "", file -> Generate(file)
+      | _ -> Usage
+  end
 
-let main arglist =
-  if arglist <> [] then
-    usage "spurious argument"
-  else
-    match !operation with
-    | Help -> help ()
-    | List -> list ()
-    | Compile file -> compile file
-    | Generate dump -> generate dump
+  let list () =
+    List.iter print_endline (Component_Library.list ())
+
+  let compile file =
+    Component_Library.save
+      (Component_Library.infer_name file)
+      (Component_Automaton.compile file)
+
+  let generate dump =
+    List.iter print_endline
+      (Component_Automaton.generate
+         (Component_Library.load dump))
+
+  let help () =
+    failwith "Not implemented"
+
+  let usage mesg =
+    failwith "Not implemented"
+
+  let run arglist =
+    if arglist <> [] then
+      usage "spurious argument"
+    else
+      match Configuration.operation () with
+      | Configuration.Usage -> usage ""
+      | Configuration.List -> list ()
+      | Configuration.Compile file -> compile file
+      | Configuration.Generate dump -> generate dump
+end
 
 let () =
-  let open Application.Value in
-  let open Application.Getopt in
   Application.run "wordgen"
     "[-h]"
     "Generate words imitating a dictionary"
     ~configuration:Application.Configuration.Command_line
-    ~options:[
-      flag 'h' (fun () -> operation := Help)
-	"Display a cheerful help message and exit.";
-      flag 'L' (fun () -> operation := List)
-	"List the content of the dictionary library.";
-      make String 'C' (fun s -> operation := Compile s)
-	"FILE\n\
-         Compile FILE and dump the result in the dictionary library.";
-      make String 'G' (fun s -> operation := Generate s)
-	"FILE\n\
-         Generate words using dumped data FILE.";
-    ] main
+    Component_Main.run
