@@ -24,76 +24,13 @@
 #
 #     TESTENV=	LANG=en_US.UTF-8 LC_COLLATE=C
 
-.include "bps.init.mk"
-.include "gasoline.init.mk"
+PROGRAM+=		${TEST}
 
-
-#
-# Prepare the Gasoline-OCaml compiler
-#
-
-GASOLINEOCAMLC=	ocamlfind ocamlc -linkpkg -package "${PKGS}"
-.for dir in ${DIRS}
-GASOLINEOCAMLC+= -I ${dir}
-.endfor
-.for module in ${PROJECTMODULE}
-GASOLINELIBS+= gasoline_${module}.cma
-.endfor
-.if defined(WITH_DEBUG)&&(${WITH_DEBUG} == "yes")
-GASOLINEOCAMLC+= -g
-.endif
-
-.SUFFIXES: .cma
-.PATH.cma: ${DIRS}
-
-
-#
-# Rules for tests
-#
-
-all:
+do-install:
 	${NOP}
 
-test:
-	${NOP}
+USES+=			test:expected
 
-.for test in ${TESTS}
-CLEANFILES+= ${test}.got
-
-test: do-${test}
-
-.if !target(do-${test})
-do-${test}: ${test}.expected ${test}.got
-	diff -u ${test}.expected ${test}.got
-.endif
-
-.if !target(${test}.got) && exists(${test}.sh)
-${test}.got:
-	@sh ${test}.sh > ${test}.got
-.endif
-
-.if !target(${test}.got) && exists(${test}.ml)
-${test}.got: ${test}.byte
-.if defined(TESTENV)
-	${ENVTOOL} ${TESTENV} ./${test}.byte > ${test}.got
-.else
-	./${test}.byte > ${test}.got
-.endif
-${test}.byte: ${GASOLINELIBS} ${test}.ml
-	${GASOLINEOCAMLC} ${.ALLSRC:M*.cma} -o ${test}.byte ${test}.ml
-CLEANFILES+= ${test}.byte
-CLEANFILES+= ${test}.cmo
-CLEANFILES+= ${test}.cmi
-.endif
-
-.endfor
-
-do-clean: do-clean-log
-
-do-clean-log:
-	${RM} -f *.log
-
-
-.include "bps.clean.mk"
+.include "ocaml.prog.mk"
 
 ### End of file `gasoline.trip-trap.mk'

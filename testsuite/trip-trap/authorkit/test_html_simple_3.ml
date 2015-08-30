@@ -13,8 +13,8 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-open Unicode
-open WHTML
+open Gasoline_Unicode
+open Gasoline_Author_HTML
 
 let document contents =
   html [ body contents ]
@@ -27,6 +27,6 @@ let a_h1attr = h1
 let a_p = p [c"My first paragraph."]
 
 let testsimple contents =
-  WSGML.print (document contents)
+  Gasoline_Author_SGML.print (document contents)
 
 let () = testsimple [ a_h1attr; a_p ]

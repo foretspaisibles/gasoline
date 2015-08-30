@@ -17,9 +17,9 @@
 SUBDIR+=	unit-testing
 SUBDIR+=	trip-trap
 
-install build:
+install build doc:
 	${NOP}
 
-.include "gasoline.subdir.mk"
+.include "generic.subdir.mk"
 
 ### End of file `Makefile'

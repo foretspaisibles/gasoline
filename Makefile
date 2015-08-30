@@ -15,19 +15,26 @@
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
 PACKAGE=		gasoline
-VERSION=		0.2.1
+VERSION=		0.3.0
 OFFICER=		michipili@gmail.com
 
-MODULE+=		ocaml.lib:appkit
-MODULE+=		ocaml.lib:testkit
-MODULE+=		ocaml.lib:authorkit
+MODULE=			ocaml.lib:application
+MODULE+=		ocaml.lib:message
+MODULE+=		ocaml.lib:author
 MODULE+=		ocaml.toplevel:toplevel
 MODULE+=		ocaml.meta:meta
 MODULE+=		ocaml.manual:manual
+MODULE+=		ocaml.prog:example/punishment
+MODULE+=		ocaml.prog:example/wordcount
+MODULE+=		ocaml.prog:example/wordgen
 
+SUBDIR=			testsuite
+
+EXTERNAL=		ocaml.findlib:broken
 EXTERNAL+=		ocaml.findlib:camomile
-
-PROJECTDISTEXCLUDE=	Wiki
+EXTERNAL+=		ocaml.findlib:configuration
+EXTERNAL+=		ocaml.findlib:getopts
+EXTERNAL+=		ocaml.findlib:lemonade
 
 CONFIGURE=		meta/gasoline.in
 CONFIGURE+=		Makefile.config.in

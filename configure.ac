@@ -16,8 +16,13 @@
 
 AC_INIT([meta/gasoline.in])
 AC_CONFIG_MACRO_DIR([Library/Autoconf])
-AC_PROG_OCAML
-AC_PROG_FINDLIB
+AC_NEED_OCAML
+AC_NEED_FINDLIB
+AC_NEED_FINDLIB_PKG([broken])
+AC_NEED_FINDLIB_PKG([camomile])
+AC_NEED_FINDLIB_PKG([configuration])
+AC_NEED_FINDLIB_PKG([getopts])
+AC_NEED_FINDLIB_PKG([lemonade])
 AC_WITH_OCAML_SITE_LIB
 AC_CONFIG_FILES([Makefile.config meta/gasoline])
 AC_OUTPUT

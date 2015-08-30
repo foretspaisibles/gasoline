@@ -14,8 +14,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROGRAM=	punishment
+PROGRAM=		punishment
 
-.include "gasoline.program.mk"
+.include "ocaml.prog.mk"
 
 ### End of file `Makefile'

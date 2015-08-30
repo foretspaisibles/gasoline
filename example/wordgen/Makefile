@@ -14,19 +14,19 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-PROGRAM=	wordgen
+PROGRAM=		wordgen
 
-SRCS+=		persistant.ml
-SRCS+=		table.ml
-SRCS+=		automaton.ml
-SRCS+=		library.ml
+SRCS+=			persistant.ml
+SRCS+=			table.ml
+SRCS+=			automaton.ml
+SRCS+=			library.ml
 
-SRCS+=		wordgen.ml
+SRCS+=			wordgen.ml
 
-PKGS=		unix
+PKGS=			unix
 
-USE_ODOC=	yes
+USES+=			odoc
 
-.include "gasoline.program.mk"
+.include "ocaml.prog.mk"
 
 ### End of file `Makefile'

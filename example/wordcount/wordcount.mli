@@ -13,11 +13,12 @@ This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-open CApplication
+module Application =
+  Gasoline_Plain_Application
 
 module Component_count :
 sig
-  val comp : Component.info
+  val comp : Application.Component.t
 
   val count_channel : in_channel -> Count.t
   val count_file : string -> Count.t
@@ -27,22 +28,21 @@ end
 
 module Component_display :
 sig
-  val comp : Component.info
+  val comp : Application.Component.t
 
   module Configuration :
   sig
-    val bytes : bool Configuration.t
-    val lines : bool Configuration.t
-    val chars : bool Configuration.t
-    val words : bool Configuration.t
-    val longest : bool Configuration.t
+    val bytes : unit -> bool
+    val lines : unit -> bool
+    val chars : unit -> bool
+    val words : unit -> bool
+    val longest : unit -> bool
   end
   val print_count : string -> Count.t -> unit
   val print_summary : Count.t list -> unit
 end
 
 
-val help : unit -> unit
 val count_channel : in_channel -> unit
 val count_file : string -> unit
 val count_files : string list -> unit
