@@ -515,39 +515,23 @@ struct
       let component_path comp =
         comp.config_prefix @ [ comp.name ]
       in
-      let concrete =
-        Configuration_Map.{
-          of_string =
-            (fun text ->
-               try Parameter.of_string_kind kind text
-               with Failure(_) ->
-                 Printf.ksprintf failwith "%s" (Parameter.kind_name kind));
-          to_string = (fun x ->
-              Parameter.to_string
-                (Parameter.make kind x));
-        }
+      let of_string text =
+        try Parameter.of_string_kind kind text
+        with Failure(_) ->
+          Printf.ksprintf failwith "%s" (Parameter.kind_name kind)
       in
       let configkey =
         Configuration_Map.key
-          concrete
+          of_string
           (component_path comp)
           name
           default
           description
       in
-      let validate catch =
-        Configuration_Map.{
-          of_string =
-            (fun text ->
-               try (ignore(Parameter.of_string_kind kind text);
-                    Success.return text)
-               with Failure(mesg) -> catch (Parameter.kind_name kind) text mesg);
-          to_string = (fun x ->
-              match Success.run x
-              with
-              | Success.Success(s) -> s
-              | whatever -> "<failure>");
-        }
+      let validate catch text =
+        try (ignore(Parameter.of_string_kind kind text);
+             Success.return text)
+        with Failure(mesg) -> catch (Parameter.kind_name kind) text mesg
       in
       let validatekey catch =
         Configuration_Map.key
@@ -590,10 +574,7 @@ struct
           (Configuration_Environment.query())
         >>= fun config ->
         Success.return(get config {
-          concrete = {
-            of_string = (fun x -> x);
-            to_string = (fun x -> x);
-          };
+          of_string = (fun x -> x);
           path;
           name;
           default = "";

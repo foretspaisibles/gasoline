@@ -1,1 +1,1 @@
-punishment.byte: Failure: Bad integer value 'ten times' for 'monolith.number' in 'punishment.conf'.
+punishment.byte: Failure: Bad integer value 'ten times' for 'monolith.number' in 'punishment.conf' line 18.
