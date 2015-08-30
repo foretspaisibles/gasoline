@@ -28,17 +28,17 @@ struct
     open Application.Configuration
 
     let number =
-      make Int comp ~flag:'n' ~env:"NUMBER"
+      make_int comp ~flag:'n' ~env:"NUMBER"
         "number" 100
         "The number of times our punishment must be printed"
 
     let paragraph =
-      make String comp ~flag:'p' ~env:"PARAGRAPH"
+      make_string comp ~flag:'p' ~env:"PARAGRAPH"
         "paragraph" "I must not talk in class"
         "The paragraph we must copy as punishment"
 
     let configfile =
-      make String comp ~flag:'c' ~env:"CONFIGFILE"
+      make_string comp ~flag:'c' ~env:"CONFIGFILE"
         "#configfile" ""
         "The name of an additional configuration file to read"
   end

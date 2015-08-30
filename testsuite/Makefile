@@ -17,7 +17,7 @@
 SUBDIR+=	unit-testing
 SUBDIR+=	trip-trap
 
-install build:
+install build doc:
 	${NOP}
 
 .include "generic.subdir.mk"

@@ -17,31 +17,6 @@ http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
     This signature describes an implementation of dynamically typed values. *)
 module type P =
 sig
-  (** The type tracking ['a]. *)
-  type 'a kind
-
-  (** The abstract type of dynamically typed values. *)
-  type t
-
-  val make : 'a kind -> 'a -> t
-  (** [make kind value] create a dynamically typed value. *)
-
-  val to_string : t -> string
-  (** [to_string v] transform [v] to a string.
-
-      This string can be written in a file and read back later with
-      [of_string]. *)
-
-  val of_string : string -> t
-  (** [of_string s] convert a string to a dynamic value. *)
-
-  val of_string_kind : 'a kind -> string -> 'a
-  (** [of_string_kind k s] convert [s] to a dynamic value of kind [k].
-
-      @raise Failure if [s] cannot be converted to a value of kind [k]. *)
-
-  val kind_name : 'a kind -> string
-  (** The name of a value kind. *)
 end
 
 
@@ -78,25 +53,30 @@ sig
   (** Configuration values. *)
   module Configuration :
   sig
-
-    (** The type tracking ['a]. *)
-    type 'a kind
-
     (** The type of application components. *)
     type component =
       Component.t
 
-    val make : 'a kind -> component ->
+    val make : (string -> 'a) -> component ->
+      ?optarg:string ->
       ?flag:char -> ?env:string -> ?shy:bool ->
       string -> 'a -> string -> (unit -> 'a)
-    (** [make kind comp name default description] create a
+    (** [make value_of_string comp name default description] create a
         configuration item holding a value of type ['a] and return an
         accessor for that item.
 
         @param name the name of the parameter in configuration files.
         @param flag the letter used for command line flag.
         @param env the environment variable used to get a value.
-        @param shy flag governing description in the short help. *)
+        @param shy flag governing description in the short help.
+        @param optarg is the value of an option argument
+
+        If the value optarg is set, then the generated command-line
+        flag has nor argument and uses the value of [optarg] as an
+        argument.
+
+        The [value_of_string] function should raise a [Failure]
+        exception when it cannot converts a string. *)
 
     (** The type of configuration specifications. *)
     type spec =
@@ -123,4 +103,3 @@ end
 
 (** Functor building an implementation of a generic application. *)
 module Make(Parameter:P): S
-  with type 'a Configuration.kind = 'a Parameter.kind

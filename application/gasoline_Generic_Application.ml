@@ -122,13 +122,6 @@ let toposort graph =
 
 module type P =
 sig
-  type 'a kind
-  type t
-  val make : 'a kind -> 'a -> t
-  val to_string : t -> string
-  val of_string : string -> t
-  val of_string_kind : 'a kind -> string -> 'a
-  val kind_name : 'a kind -> string
 end
 
 module type S =
@@ -151,11 +144,11 @@ sig
 
   module Configuration :
   sig
-    type 'a kind
     type component =
       Component.t
 
-    val make : 'a kind -> component ->
+    val make : (string -> 'a) -> component ->
+      ?optarg:string ->
       ?flag:char -> ?env:string -> ?shy:bool ->
       string -> 'a -> string -> (unit -> 'a)
 
@@ -378,7 +371,7 @@ struct
   sig
     val init : string -> string -> (string*string) list -> unit
     (* [add path name flag description] *)
-    val add : validate -> char -> unit
+    val add : ?optarg:string -> validate -> char -> unit
     val query : unit -> Configuration_Map.t Success.t
     val rest : unit -> string list Success.t
   end = struct
@@ -400,7 +393,7 @@ struct
     let init usage description notes =
       _context := Some(usage, description, notes)
 
-    let add validatekey flag =
+    let add ?optarg validatekey flag =
       let catch kindname text _ =
         match !_context with
         | None ->
@@ -418,12 +411,21 @@ struct
                              validoptarg config, rest)
       in
       let option =
-        Getopts.option
-          (fun s -> s)
-          flag
-          (fun optarg m ->
-             (Success.map2 fold (Configuration_Map.value configkey optarg) m))
-          configkey.Configuration_Map.description
+        match optarg with
+        | None ->
+            Getopts.option
+              (fun s -> s)
+              flag
+              (fun optarg m ->
+                 (Success.map2 fold (Configuration_Map.value configkey optarg) m))
+              configkey.Configuration_Map.description
+        | Some(text) ->
+            Getopts.flag
+              flag
+              (fun m ->
+                 (Success.map2 fold (Configuration_Map.value configkey text) m))
+              configkey.Configuration_Map.description
+
       in
       _table := option :: !_table
 
@@ -493,9 +495,6 @@ struct
 
   module Configuration =
   struct
-    type 'a kind =
-      'a Parameter.kind
-
     type component =
       Component.t
 
@@ -511,27 +510,23 @@ struct
     let query () =
       !_config
 
-    let make kind comp ?flag ?env ?shy name default description =
+    let make value_of_string comp
+        ?optarg ?flag ?env ?shy name default description =
       let component_path comp =
         comp.config_prefix @ [ comp.name ]
       in
-      let of_string text =
-        try Parameter.of_string_kind kind text
-        with Failure(_) ->
-          Printf.ksprintf failwith "%s" (Parameter.kind_name kind)
-      in
       let configkey =
         Configuration_Map.key
-          of_string
+          value_of_string
           (component_path comp)
           name
           default
           description
       in
       let validate catch text =
-        try (ignore(Parameter.of_string_kind kind text);
+        try (ignore(value_of_string text);
              Success.return text)
-        with Failure(mesg) -> catch (Parameter.kind_name kind) text mesg
+        with Failure(mesg) -> catch mesg text mesg
       in
       let validatekey catch =
         Configuration_Map.key
@@ -543,7 +538,7 @@ struct
       in
       let open Configuration_Map in
       (match flag with
-       | Some c -> Configuration_Getopts.add validatekey c
+       | Some c -> Configuration_Getopts.add ?optarg validatekey c
        | None -> ());
       (match env with
        | Some id -> Configuration_Environment.add validatekey id
