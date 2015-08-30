@@ -1,6 +1,6 @@
 name="gasoline"
 version="@VERSION@"
 description="Rapid application development package"
-requires="broken camomile configuration"
+requires="broken camomile configuration getopts lemonade"
 archive(byte) = "gasoline_application.cma gasoline_author.cma"
 archive(native) = "gasoline_application.cmxa gasoline_author.cmxa"
