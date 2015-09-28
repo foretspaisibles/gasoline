@@ -13,7 +13,7 @@ depends: [
   "bsdowl" {>= "3.0.0"}
   "camomile" {>= "0.8.5"}
   "configuration" {>= "0.4.1"}
-  "getopts" {>= "0.3.2"}
+  "getopts" {>= "0.3.1"}
   "lemonade" {>= "0.2.1"}
   "ocamlfind"
 ]
@@ -25,4 +25,8 @@ build: [
 install: [
   ["bmake" "-I%{bsdowl:share}%" "install"] {os != "freebsd"}
   ["make" "-I%{bsdowl:share}%" "install"]  {os  = "freebsd"}
+]
+remove: [
+  ["ocamlfind" "remove" "gasoline"]
+  ["rm" "-rf" "%{share}%/doc/gasoline"]
 ]
