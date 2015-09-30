@@ -14,7 +14,7 @@ depends: [
   "camomile" {>= "0.8.5"}
   "configuration" {>= "0.4.1"}
   "getopts" {>= "0.3.1"}
-  "lemonade" {>= "0.2.1"}
+  "lemonade" {>= "0.2.0"}
   "ocamlfind"
 ]
 build: [
