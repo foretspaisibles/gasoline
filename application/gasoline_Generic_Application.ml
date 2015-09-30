@@ -605,7 +605,11 @@ struct
     let safemain rest =
       try Success.return(main rest)
       with
-      | Failure(mesg) -> error "Failure: %s" mesg
+      | Failure(mesg) ->
+          if String.length mesg >= 7 && String.sub mesg 0 7 = "Usage: " then
+            error_usage "%s" (String.sub mesg 7 (String.length mesg - 7))
+          else
+            error "Failure: %s" mesg
       | exn -> error "%s" (Printexc.to_string exn)
     in
     let program =

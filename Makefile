@@ -24,6 +24,7 @@ MODULE+=		ocaml.lib:author
 MODULE+=		ocaml.toplevel:toplevel
 MODULE+=		ocaml.meta:meta
 MODULE+=		ocaml.manual:manual
+MODULE+=		ocaml.prog:example/caesar
 MODULE+=		ocaml.prog:example/punishment
 MODULE+=		ocaml.prog:example/wordcount
 MODULE+=		ocaml.prog:example/wordgen
