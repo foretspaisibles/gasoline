@@ -26,6 +26,8 @@ SRCS+=			gasoline_Generic_Application.ml
 SRCS+=			gasoline_Plain_Definition.ml
 SRCS+=			gasoline_Plain_Application.ml
 SRCS+=			gasoline_Plain_Filter.ml
+SRCS+=			gasoline_Plain_UserTool.ml
+SRCS+=			gasoline_Plain_SecureTool.ml
 
 .include "ocaml.lib.mk"
 
