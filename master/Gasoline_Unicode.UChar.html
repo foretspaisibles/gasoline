@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Gasoline_Unicode.Encoding.html">
+<link rel="next" href="Gasoline_Unicode.UString.html">
+<link rel="Up" href="Gasoline_Unicode.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Gasoline_Unicode" rel="Chapter" href="Gasoline_Unicode.html">
+<link title="Gasoline_SysExits" rel="Chapter" href="Gasoline_SysExits.html">
+<link title="Gasoline_Generic_Definition" rel="Chapter" href="Gasoline_Generic_Definition.html">
+<link title="Gasoline_Generic_Asset" rel="Chapter" href="Gasoline_Generic_Asset.html">
+<link title="Gasoline_Generic_Application" rel="Chapter" href="Gasoline_Generic_Application.html">
+<link title="Gasoline_Plain_Definition" rel="Chapter" href="Gasoline_Plain_Definition.html">
+<link title="Gasoline_Plain_Application" rel="Chapter" href="Gasoline_Plain_Application.html">
+<link title="Gasoline_Plain_Filter" rel="Chapter" href="Gasoline_Plain_Filter.html">
+<link title="Gasoline_Plain_UserTool" rel="Chapter" href="Gasoline_Plain_UserTool.html">
+<link title="Gasoline_Plain_SecureTool" rel="Chapter" href="Gasoline_Plain_SecureTool.html">
+<link title="Gasoline_Plain_Daemon" rel="Chapter" href="Gasoline_Plain_Daemon.html">
+<link title="Gasoline_Generic_Message" rel="Chapter" href="Gasoline_Generic_Message.html">
+<link title="Gasoline_Generic_Diagnostic" rel="Chapter" href="Gasoline_Generic_Diagnostic.html">
+<link title="Gasoline_Plain_Message" rel="Chapter" href="Gasoline_Plain_Message.html">
+<link title="Gasoline_Author_SGML" rel="Chapter" href="Gasoline_Author_SGML.html">
+<link title="Gasoline_Author_HTML" rel="Chapter" href="Gasoline_Author_HTML.html">
+<link title="Gasoline_LoremIpsum" rel="Chapter" href="Gasoline_LoremIpsum.html"><link title="Output on standard structures" rel="Section" href="#2_Outputonstandardstructures">
+<title>Gasoline library : Gasoline_Unicode.UChar</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Gasoline_Unicode.Encoding.html" title="Gasoline_Unicode.Encoding">Previous</a>
+&nbsp;<a class="up" href="Gasoline_Unicode.html" title="Gasoline_Unicode">Up</a>
+&nbsp;<a class="post" href="Gasoline_Unicode.UString.html" title="Gasoline_Unicode.UString">Next</a>
+</div>
+<h1>Module <a href="type_Gasoline_Unicode.UChar.html">Gasoline_Unicode.UChar</a></h1>
+
+<pre><span class="keyword">module</span> UChar: <code class="code">sig</code> <a href="Gasoline_Unicode.UChar.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Operations on Unicode characters<br>
+</div>
+<hr width="100%">
+
+<pre><span id="EXCEPTIONOut_of_range"><span class="keyword">exception</span> Out_of_range</span></pre>
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = <code class="type"><a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code> </pre>
+<div class="info ">
+Unicode characters. All 31 bits code points are allowed.<br>
+</div>
+
+
+<pre><span id="VALto_char"><span class="keyword">val</span> to_char</span> : <code class="type"><a href="Gasoline_Unicode.UChar.html#TYPEt">t</a> -> char</code></pre><div class="info ">
+<code class="code">to_char u</code> returns the Latin-9 representation of <code class="code">u</code>.<br>
+<b>Raises</b> <code>Out_of_range</code> if <code class="code">u</code> can not be represented by Latin-9.<br>
+</div>
+
+<pre><span id="VALof_char"><span class="keyword">val</span> of_char</span> : <code class="type">char -> <a href="Gasoline_Unicode.UChar.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_char c</code> returns the Unicode character of the Latin-1 character <code class="code">c</code>.<br>
+</div>
+
+<pre><span id="VALcode"><span class="keyword">val</span> code</span> : <code class="type"><a href="Gasoline_Unicode.UChar.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">code u</code> returns the Unicode code number of <code class="code">u</code>.<br>
+<b>Raises</b> <code>Out_of_range</code> if <code class="code">u</code> cannot be represented by a positive integer.<br>
+</div>
+
+<pre><span id="VALchr"><span class="keyword">val</span> chr</span> : <code class="type">int -> <a href="Gasoline_Unicode.UChar.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">chr n</code> returns the Unicode character with the code number <code class="code">n</code>.<br>
+<b>Raises</b> <code>Invalid_arg</code> if n &gt;= 2^32 or n &lt; 0.<br>
+</div>
+
+<pre><span id="VALuint_code"><span class="keyword">val</span> uint_code</span> : <code class="type"><a href="Gasoline_Unicode.UChar.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">uint_code u</code> returns the Unicode code number of <code class="code">u</code>.
+  The returned int is unsigned, that is, on 32-bits platforms,
+  the sign bit is used for storing the 31-th bit of the code number.<br>
+</div>
+
+<pre><span id="VALuint_chr"><span class="keyword">val</span> uint_chr</span> : <code class="type">int -> <a href="Gasoline_Unicode.UChar.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">uint_chr n</code> returns the Unicode character of the code number <code class="code">n</code>.
+  <code class="code">n</code> is interpreted as unsigned, that is, on 32-bits platforms,
+  the sign bit is treated as the 31-th bit of the code number.<br>
+<b>Raises</b> <code>Invalid_arg</code> if <code class="code">n</code> exceed 31-bits values.<br>
+</div>
+
+<pre><span id="VALeq"><span class="keyword">val</span> eq</span> : <code class="type"><a href="Gasoline_Unicode.UChar.html#TYPEt">t</a> -> <a href="Gasoline_Unicode.UChar.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Equality by code point comparison<br>
+</div>
+
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Gasoline_Unicode.UChar.html#TYPEt">t</a> -> <a href="Gasoline_Unicode.UChar.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">compare u1 u2</code> returns,
+     a value &gt; 0 if <code class="code">u1</code> has a larger Unicode code number than <code class="code">u2</code>,
+     0 if <code class="code">u1</code> and <code class="code">u2</code> are the same Unicode character,
+     a value &lt; 0 if <code class="code">u1</code> has a smaller Unicode code number than <code class="code">u2</code>.<br>
+</div>
+
+<pre><span id="VALto_int"><span class="keyword">val</span> to_int</span> : <code class="type"><a href="Gasoline_Unicode.UChar.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Alias of <code class="code">uint_code</code><br>
+</div>
+
+<pre><span id="VALof_int"><span class="keyword">val</span> of_int</span> : <code class="type">int -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+Alias of <code class="code">uint_chr</code><br>
+</div>
+
+<pre><span id="VALnewline"><span class="keyword">val</span> newline</span> : <code class="type"><a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+The newline character.<br>
+</div>
+
+<pre><span id="VALspace"><span class="keyword">val</span> space</span> : <code class="type"><a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+The space character.<br>
+</div>
+
+<pre><span id="VALhtab"><span class="keyword">val</span> htab</span> : <code class="type"><a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+The horizontal tab character.<br>
+</div>
+
+<pre><span id="VALvtab"><span class="keyword">val</span> vtab</span> : <code class="type"><a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+The vertical tab character.<br>
+</div>
+
+<pre><span id="VALnextline"><span class="keyword">val</span> nextline</span> : <code class="type"><a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+The nextline character.<br>
+</div>
+
+<pre><span id="VALline"><span class="keyword">val</span> line</span> : <code class="type"><a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+The line separator character.<br>
+</div>
+
+<pre><span id="VALpar"><span class="keyword">val</span> par</span> : <code class="type"><a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+The paragraph separator character.<br>
+</div>
+<br>
+<h2 id="2_Outputonstandardstructures">Output on standard structures</h2><br>
+
+<pre><span id="VALformat"><span class="keyword">val</span> format</span> : <code class="type"><a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       Format.formatter -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a> -> unit</code></pre>
+<pre><span id="VALoutput"><span class="keyword">val</span> output</span> : <code class="type"><a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       Pervasives.out_channel -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a> -> unit</code></pre>
+<pre><span id="VALprint"><span class="keyword">val</span> print</span> : <code class="type"><a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a> -> unit</code></pre>
+<pre><span id="VALprerr"><span class="keyword">val</span> prerr</span> : <code class="type"><a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a> -> unit</code></pre>
+<pre><span id="VALprinter"><span class="keyword">val</span> printer</span> : <code class="type">Format.formatter -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a> -> unit</code></pre><div class="info ">
+A printer for the toplevel.<br>
+</div>
+</body></html>

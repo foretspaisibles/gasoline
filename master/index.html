@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Gasoline_Unicode" rel="Chapter" href="Gasoline_Unicode.html">
+<link title="Gasoline_SysExits" rel="Chapter" href="Gasoline_SysExits.html">
+<link title="Gasoline_Generic_Definition" rel="Chapter" href="Gasoline_Generic_Definition.html">
+<link title="Gasoline_Generic_Asset" rel="Chapter" href="Gasoline_Generic_Asset.html">
+<link title="Gasoline_Generic_Application" rel="Chapter" href="Gasoline_Generic_Application.html">
+<link title="Gasoline_Plain_Definition" rel="Chapter" href="Gasoline_Plain_Definition.html">
+<link title="Gasoline_Plain_Application" rel="Chapter" href="Gasoline_Plain_Application.html">
+<link title="Gasoline_Plain_Filter" rel="Chapter" href="Gasoline_Plain_Filter.html">
+<link title="Gasoline_Plain_UserTool" rel="Chapter" href="Gasoline_Plain_UserTool.html">
+<link title="Gasoline_Plain_SecureTool" rel="Chapter" href="Gasoline_Plain_SecureTool.html">
+<link title="Gasoline_Plain_Daemon" rel="Chapter" href="Gasoline_Plain_Daemon.html">
+<link title="Gasoline_Generic_Message" rel="Chapter" href="Gasoline_Generic_Message.html">
+<link title="Gasoline_Generic_Diagnostic" rel="Chapter" href="Gasoline_Generic_Diagnostic.html">
+<link title="Gasoline_Plain_Message" rel="Chapter" href="Gasoline_Plain_Message.html">
+<link title="Gasoline_Author_SGML" rel="Chapter" href="Gasoline_Author_SGML.html">
+<link title="Gasoline_Author_HTML" rel="Chapter" href="Gasoline_Author_HTML.html">
+<link title="Gasoline_LoremIpsum" rel="Chapter" href="Gasoline_LoremIpsum.html"><title>Gasoline library</title>
+</head>
+<body>
+<h1>Gasoline library</h1>
+Gasoline is an application framework for OCaml, it implements components
+and services which can be used to develop OCaml applications. It
+offers:
+<p>
+<ul>
+<li>Processing of command line arguments</li>
+<li>A simple and powerful internationalisation-friendly diagnostic facility</li>
+<li>Analyse of configuration files</li>
+<li>A cascading system for configuration values, usable to implement
+  site policies Unicode support</li>
+<li>Stock application patterns, like a Unix filter or a compiler</li>
+</ul>
+
+We call a program using the Gasoline framework a Gasoline guest.
+<p>
+
+<h2 id="application">The <code class="code">application</code> library</h2>
+<p>
+
+<br>
+<table class="indextable">
+<tr><td class="module"><a href="Gasoline_SysExits.html">Gasoline_SysExits</a></td><td><div class="info">
+System exit codes
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Unicode.html">Gasoline_Unicode</a></td><td><div class="info">
+Unicode facility.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Generic_Definition.html">Gasoline_Generic_Definition</a></td><td><div class="info">
+Definition of generic types.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Generic_Asset.html">Gasoline_Generic_Asset</a></td><td><div class="info">
+Generic assets.
+</div>
+</td></tr>
+<tr><td class="module">Gasoline_Generic_Component</td><td></td></tr>
+<tr><td class="module"><a href="Gasoline_Generic_Application.html">Gasoline_Generic_Application</a></td><td><div class="info">
+Generic application.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Plain_Definition.html">Gasoline_Plain_Definition</a></td><td><div class="info">
+Basic types for C-stylish applications.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Plain_Application.html">Gasoline_Plain_Application</a></td><td><div class="info">
+Plain General Applications.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Plain_Filter.html">Gasoline_Plain_Filter</a></td><td><div class="info">
+Plain Filter Applications.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Plain_SecureTool.html">Gasoline_Plain_SecureTool</a></td><td><div class="info">
+Plain Secure Tools Applications.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Plain_UserTool.html">Gasoline_Plain_UserTool</a></td><td><div class="info">
+Plain User Tools Applications.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Plain_Daemon.html">Gasoline_Plain_Daemon</a></td><td><div class="info">
+Plain Daemon Applications.
+</div>
+</td></tr>
+</table>
+
+<p>
+
+<h2 id="author">The <code class="code">author</code> library</h2>
+<p>
+
+This small library provides services for authoring, like production of
+simple HTML or SGML files.  It is a very primitive facility, and does
+not use the type system to enfore correction of generated documents,
+as more advanced frameworks can do.
+<p>
+
+<br>
+<table class="indextable">
+<tr><td class="module"><a href="Gasoline_Author_HTML.html">Gasoline_Author_HTML</a></td><td><div class="info">
+Simple writer for HTML files
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Author_SGML.html">Gasoline_Author_SGML</a></td><td><div class="info">
+Simple writer for SGML files
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_LoremIpsum.html">Gasoline_LoremIpsum</a></td><td><div class="info">
+Lorem Ipsum
+</div>
+</td></tr>
+</table>
+
+<p>
+
+<h2 id="message">The <code class="code">message</code> library</h2>
+<p>
+
+This small experimental library provides services
+<p>
+
+<br>
+<table class="indextable">
+<tr><td class="module"><a href="Gasoline_Generic_Diagnostic.html">Gasoline_Generic_Diagnostic</a></td><td><div class="info">
+Generic message log facilities.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Generic_Message.html">Gasoline_Generic_Message</a></td><td><div class="info">
+Generic message facility.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Gasoline_Plain_Message.html">Gasoline_Plain_Message</a></td><td><div class="info">
+Messages for C-Stylish applications.
+</div>
+</td></tr>
+</table>
+
+<p>
+
+<h1 id="1_Trailer">Trailer</h1>
+<p>
+
+<h2 id="2_Index">Index</h2>
+<p>
+
+<ul class="indexlist">
+<li><a href="index_types.html">Index of types</a></li>
+<li><a href="index_exceptions.html">Index of exceptions</a></li>
+<li><a href="index_values.html">Index of values</a></li>
+<li><a href="index_methods.html">Index of class methods</a></li>
+<li><a href="index_class_types.html">Index of class types</a></li>
+<li><a href="index_modules.html">Index of modules</a></li>
+<li><a href="index_module_types.html">Index of module types</a></li>
+</ul>
+
+<p>
+
+<h2 id="2_Authors">Authors</h2>
+<p>
+
+The Gasoline software has been initially written by Michael Grünewald.
+<p>
+
+<h2 id="2_Remarks">Remarks</h2>
+<p>
+<ul>
+<li>See <a href="https://godirepo.camlcity.org/wwwsvn/trunk/code/doc/intro.txt?rev=1852&root=lib-ocamlnet2&view=auto"> intro</a> for an example of an intro file.</li>
+</ul>
+<br>
+</body>
+</html>

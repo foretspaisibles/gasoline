@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Gasoline_Unicode.UString.html">
+<link rel="next" href="Gasoline_Unicode.UChannel_stdio.html">
+<link rel="Up" href="Gasoline_Unicode.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Gasoline_Unicode" rel="Chapter" href="Gasoline_Unicode.html">
+<link title="Gasoline_SysExits" rel="Chapter" href="Gasoline_SysExits.html">
+<link title="Gasoline_Generic_Definition" rel="Chapter" href="Gasoline_Generic_Definition.html">
+<link title="Gasoline_Generic_Asset" rel="Chapter" href="Gasoline_Generic_Asset.html">
+<link title="Gasoline_Generic_Application" rel="Chapter" href="Gasoline_Generic_Application.html">
+<link title="Gasoline_Plain_Definition" rel="Chapter" href="Gasoline_Plain_Definition.html">
+<link title="Gasoline_Plain_Application" rel="Chapter" href="Gasoline_Plain_Application.html">
+<link title="Gasoline_Plain_Filter" rel="Chapter" href="Gasoline_Plain_Filter.html">
+<link title="Gasoline_Plain_UserTool" rel="Chapter" href="Gasoline_Plain_UserTool.html">
+<link title="Gasoline_Plain_SecureTool" rel="Chapter" href="Gasoline_Plain_SecureTool.html">
+<link title="Gasoline_Plain_Daemon" rel="Chapter" href="Gasoline_Plain_Daemon.html">
+<link title="Gasoline_Generic_Message" rel="Chapter" href="Gasoline_Generic_Message.html">
+<link title="Gasoline_Generic_Diagnostic" rel="Chapter" href="Gasoline_Generic_Diagnostic.html">
+<link title="Gasoline_Plain_Message" rel="Chapter" href="Gasoline_Plain_Message.html">
+<link title="Gasoline_Author_SGML" rel="Chapter" href="Gasoline_Author_SGML.html">
+<link title="Gasoline_Author_HTML" rel="Chapter" href="Gasoline_Author_HTML.html">
+<link title="Gasoline_LoremIpsum" rel="Chapter" href="Gasoline_LoremIpsum.html"><link title="General operations" rel="Section" href="#2_Generaloperations">
+<link title="Unicode characters I/O" rel="Section" href="#2_UnicodecharactersIO">
+<title>Gasoline library : Gasoline_Unicode.UChannel</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Gasoline_Unicode.UString.html" title="Gasoline_Unicode.UString">Previous</a>
+&nbsp;<a class="up" href="Gasoline_Unicode.html" title="Gasoline_Unicode">Up</a>
+&nbsp;<a class="post" href="Gasoline_Unicode.UChannel_stdio.html" title="Gasoline_Unicode.UChannel_stdio">Next</a>
+</div>
+<h1>Module <a href="type_Gasoline_Unicode.UChannel.html">Gasoline_Unicode.UChannel</a></h1>
+
+<pre><span class="keyword">module</span> UChannel: <code class="code">sig</code> <a href="Gasoline_Unicode.UChannel.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Unicode I/O channels<br>
+</div>
+<hr width="100%">
+<br>
+<h2 id="2_Generaloperations">General operations</h2><br>
+
+<pre><span id="TYPEin_channel"><span class="keyword">type</span> <code class="type"></code>in_channel</span> </pre>
+<div class="info ">
+The type of channels for reading unicode characters.<br>
+</div>
+
+
+<pre><span id="TYPEout_channel"><span class="keyword">type</span> <code class="type"></code>out_channel</span> </pre>
+<div class="info ">
+The type of channels for writing unicode characters.<br>
+</div>
+
+
+<pre><span id="TYPEblock_out_channel"><span class="keyword">class type</span> <a href="Gasoline_Unicode.UChannel.block_out_channel-c.html">block_out_channel</a></span> = <code class="code">object</code> <a href="Gasoline_Unicode.UChannel.block_out_channel-c.html">..</a> <code class="code">end</code></pre><div class="info">
+The type encapsulating methods of an output channel.
+</div>
+
+<pre><span id="TYPEblock_in_channel"><span class="keyword">class type</span> <a href="Gasoline_Unicode.UChannel.block_in_channel-c.html">block_in_channel</a></span> = <code class="code">object</code> <a href="Gasoline_Unicode.UChannel.block_in_channel-c.html">..</a> <code class="code">end</code></pre><div class="info">
+The type encapsulating methods of an input channel.
+</div>
+
+<pre><span id="VALfrom_block_in_channel"><span class="keyword">val</span> from_block_in_channel</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       <a href="Gasoline_Unicode.UChannel.block_in_channel-c.html">block_in_channel</a> -><br>       <a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a></code></pre><div class="info ">
+Create a channel for reading unicode chars from a
+  <code class="code">block_in_channel</code>.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the input channel <code class="code">Encoding.locale</code>.</div>
+
+<pre><span id="VALfrom_block_out_channel"><span class="keyword">val</span> from_block_out_channel</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       <a href="Gasoline_Unicode.UChannel.block_out_channel-c.html">block_out_channel</a> -><br>       <a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a></code></pre><div class="info ">
+Create a channel for writing chars to a <code class="code">block_out_channel</code>.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code>.</div>
+
+<pre><span id="VALfrom_in_channel"><span class="keyword">val</span> from_in_channel</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       Pervasives.in_channel -> <a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a></code></pre><div class="info ">
+Create a channel for reading unicode chars from a
+  <code class="code">Pervasives.in_channel</code>.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the input channel <code class="code">Encoding.locale</code>.</div>
+
+<pre><span id="VALfrom_out_channel"><span class="keyword">val</span> from_out_channel</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       Pervasives.out_channel -> <a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a></code></pre><div class="info ">
+Create a channel for writing chars to a <code class="code">Pervasives.out_channel</code>.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code>.</div>
+
+<pre><span id="VALfrom_formatter"><span class="keyword">val</span> from_formatter</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       Format.formatter -> <a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a></code></pre><div class="info ">
+Create a channel for writing chars to a <code class="code">Format.formatter</code>.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code>.</div>
+
+<pre><span id="VALopen_out"><span class="keyword">val</span> open_out</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       string -> <a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a></code></pre><div class="info ">
+Open the named file for writing, and return a new output channel on that
+  file, positionned at the beginning of the file. The file is truncated to
+  zero length if it already exists. It is created if it does not already
+  exists.<br>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code>.</div>
+
+<pre><span id="VALopen_out_bin"><span class="keyword">val</span> open_out_bin</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       string -> <a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a></code></pre><div class="info ">
+Same as <code class="code">open_out</code>, but the file is opened in binary mode, so that no
+  translation takes place during writes. On operating systems that do not
+  distinguish between text mode and binary mode, this func- tion behaves like
+  <code class="code">open_out</code>.<br>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code></div>
+
+<pre><span id="VALopen_out_gen"><span class="keyword">val</span> open_out_gen</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       Pervasives.open_flag list -><br>       int -> string -> <a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a></code></pre><div class="info ">
+<code class="code">open_out_gen mode perm filename</code> opens the named file for writing. The
+  extra argument mode specify the opening mode. The extra argument perm
+  specifies the file permissions, in case the file must be created.
+  <code class="code">open_out</code> and <code class="code">open_out_bin</code> are special cases of this function.<br>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code></div>
+
+<pre><span id="VALopen_in"><span class="keyword">val</span> open_in</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       string -> <a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a></code></pre><div class="info ">
+Open the named file for reading, and return a new input channel on that
+  file, positionned at the beginning of the file.<br>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code></div>
+
+<pre><span id="VALopen_in_bin"><span class="keyword">val</span> open_in_bin</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       string -> <a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a></code></pre><div class="info ">
+Same as <code class="code">open_in</code>, but the file is opened in binary mode, so that no
+  translation takes place during reads. On operating systems that do not
+  distinguish between text mode and binary mode, this function behaves like
+  <code class="code">open_in</code>.<br>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code></div>
+
+<pre><span id="VALopen_in_gen"><span class="keyword">val</span> open_in_gen</span> : <code class="type">?enc:<a href="Gasoline_Unicode.Encoding.html#TYPEt">Gasoline_Unicode.Encoding.t</a> -><br>       Pervasives.open_flag list -><br>       int -> string -> <a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a></code></pre><div class="info ">
+<code class="code">open_in_gen mode perm filename</code> opens the named file for reading. The
+  extra arguments <code class="code">mode</code> and <code class="code">perm</code> specify the opening mode and file
+  permissions.  <code class="code">open_in</code> and <code class="code">open_in_bin</code> are special cases of this
+  function.<br>
+<b>Raises</b> <code>Sys_error</code> if the file could not be opened.<br>
+</div>
+<div class="param_info"><code class="code">enc</code> : is the encoding of the output channel <code class="code">Encoding.locale</code></div>
+
+<pre><span id="VALinput"><span class="keyword">val</span> input</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a> -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre><div class="info ">
+Input a value. May rise <code class="code">End_of_file</code>.<br>
+</div>
+
+<pre><span id="VALoutput"><span class="keyword">val</span> output</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a> -> unit</code></pre><div class="info ">
+Output a value.<br>
+</div>
+
+<pre><span id="VALclose_in"><span class="keyword">val</span> close_in</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a> -> unit</code></pre><div class="info ">
+Close the channel.<br>
+</div>
+
+<pre><span id="VALclose_out"><span class="keyword">val</span> close_out</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> unit</code></pre><div class="info ">
+Close the channel.<br>
+</div>
+
+<pre><span id="VALflush"><span class="keyword">val</span> flush</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> unit</code></pre><div class="info ">
+Flush the channel.<br>
+</div>
+<br>
+<h2 id="2_UnicodecharactersIO">Unicode characters I/O</h2><br>
+
+<pre><span id="VALoutput_uchar"><span class="keyword">val</span> output_uchar</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a> -> unit</code></pre>
+<pre><span id="VALoutput_ustring"><span class="keyword">val</span> output_ustring</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> <a href="Gasoline_Unicode.html#TYPEustring">Gasoline_Unicode.ustring</a> -> unit</code></pre>
+<pre><span id="VALoutput_line"><span class="keyword">val</span> output_line</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> <a href="Gasoline_Unicode.html#TYPEustring">Gasoline_Unicode.ustring</a> -> unit</code></pre>
+<pre><span id="VALoutput_char"><span class="keyword">val</span> output_char</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> char -> unit</code></pre>
+<pre><span id="VALoutput_string"><span class="keyword">val</span> output_string</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> string -> unit</code></pre>
+<pre><span id="VALoutput_bool"><span class="keyword">val</span> output_bool</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> bool -> unit</code></pre>
+<pre><span id="VALoutput_int"><span class="keyword">val</span> output_int</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> int -> unit</code></pre>
+<pre><span id="VALoutput_float"><span class="keyword">val</span> output_float</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> float -> unit</code></pre>
+<pre><span id="VALoutput_newline"><span class="keyword">val</span> output_newline</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> unit</code></pre>
+<pre><span id="VALoutput_space"><span class="keyword">val</span> output_space</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> unit</code></pre>
+<pre><span id="VALoutput_htab"><span class="keyword">val</span> output_htab</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> unit</code></pre>
+<pre><span id="VALoutput_vtab"><span class="keyword">val</span> output_vtab</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> unit</code></pre>
+<pre><span id="VALoutput_par"><span class="keyword">val</span> output_par</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEout_channel">out_channel</a> -> unit</code></pre>
+<pre><span id="VALinput_uchar"><span class="keyword">val</span> input_uchar</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a> -> <a href="Gasoline_Unicode.html#TYPEuchar">Gasoline_Unicode.uchar</a></code></pre>
+<pre><span id="VALinput_line"><span class="keyword">val</span> input_line</span> : <code class="type"><a href="Gasoline_Unicode.UChannel.html#TYPEin_channel">in_channel</a> -> <a href="Gasoline_Unicode.html#TYPEustring">Gasoline_Unicode.ustring</a></code></pre></body></html>
