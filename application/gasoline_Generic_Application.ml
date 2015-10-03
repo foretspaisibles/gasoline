@@ -156,7 +156,8 @@ sig
     | Empty
     | Command_line
     | Environment
-    | File of string
+    | OptionalFile of string
+    | ImportantFile of string
     | UserFile of string list * string
     | Heredoc of string
     | Alist of ((string list * string) * string) list
@@ -451,7 +452,7 @@ struct
   sig
     (* [add path name env] *)
     val add : validate -> unit
-    val parse : string -> Configuration_Map.t Success.t
+    val parse : bool -> string -> Configuration_Map.t Success.t
     val heredoc : string -> Configuration_Map.t Success.t
   end = struct
     let _table = ref []
@@ -470,7 +471,7 @@ struct
         (fun () -> config)
         (List.fold_left challenge (Success.return()) !_table)
 
-    let parse name =
+    let parse important name =
       (* Configuration values used in UserFile should be
            initialised to the empty string. *)
       let open Success.Infix in
@@ -478,7 +479,11 @@ struct
          try Success.return(Configuration_Map.from_file name)
          with
          | Failure(mesg) -> error "Failure: %s" mesg
-         | Sys_error(mesg) -> error "Error: %s" mesg
+         | Sys_error(mesg) ->
+             if important then
+               error "Error: %s" mesg
+             else
+               Success.return(Configuration_Map.empty)
          | exn -> error "%s: %s" name (Printexc.to_string exn)
        else
          Success.return(Configuration_Map.empty))
@@ -552,7 +557,8 @@ struct
       | Empty
       | Command_line
       | Environment
-      | File of string
+      | OptionalFile of string
+      | ImportantFile of string
       | UserFile of string list * string
       | Heredoc of string
       | Alist of ((string list * string) * string) list
@@ -575,13 +581,14 @@ struct
           default = "";
           description = "User configuration file";
           })
-        >>= Configuration_File.parse
+        >>= Configuration_File.parse true
       in
       match spec with
       | Empty -> Success.return Configuration_Map.empty
       | Command_line -> Configuration_Getopts.query ()
       | Environment -> Configuration_Environment.query ()
-      | File(name) -> Configuration_File.parse name
+      | OptionalFile(name) -> Configuration_File.parse false name
+      | ImportantFile(name) -> Configuration_File.parse true name
       | UserFile(path,name) -> user_file path name
       | Heredoc(doc) -> Configuration_File.heredoc doc
       | Alist(bindings) -> Success.return(Configuration_Map.from_alist bindings)
