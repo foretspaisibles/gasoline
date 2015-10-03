@@ -11,51 +11,44 @@ offers:
 
 We call a program using the Gasoline framework a Gasoline guest.
 
-
-{2:testkit The [testkit] library: testing framework}
-
-[testkit] provides testing facilties to implement a testsuite for an
-application.
-
-{!modules:
-  UnitTest
-}
-
-
-{3:testkit_blog External articles}
-- {{:https://docs.python.org/2/library/unittest.html} The Python Unit
-  testing framework} which was used as model to implement UnitTest.
-
-
 {2:application The [application] library}
 
 {!modules:
-  SysExits
-  Unicode
-  Getopt
-  CType
-  CMessage
-  CConfigurationMap
-  CApplication
-  ConfigurationMap
-  ConfigurationParser
-  Generic_type
-  Generic_message
-  Generic_diagnostic
-  Generic_asset
-  Generic_component
-  Generic_application
+Gasoline_SysExits
+Gasoline_Unicode
+Gasoline_Generic_Definition
+Gasoline_Generic_Asset
+Gasoline_Generic_Component
+Gasoline_Generic_Application
+Gasoline_Plain_Definition
+Gasoline_Plain_Application
+Gasoline_Plain_Filter
+Gasoline_Plain_SecureTool
+Gasoline_Plain_UserTool
+Gasoline_Plain_Daemon
 }
 
-{2:authorkit The [authorkit]}
+{2:author The [author] library}
 
-This small library provides service for authoring, like production of
-simple HTML or SGML files.
+This small library provides services for authoring, like production of
+simple HTML or SGML files.  It is a very primitive facility, and does
+not use the type system to enfore correction of generated documents,
+as more advanced frameworks can do.
 
 {!modules:
-  LoremIpsum
-  WSGML
-  WHTML
+Gasoline_Author_HTML
+Gasoline_Author_SGML
+Gasoline_LoremIpsum
+}
+
+{2:message The [message] library}
+
+This small experimental library provides services
+
+{!modules:
+Gasoline_Generic_Diagnostic
+Gasoline_Generic_Message
+Gasoline_Plain_Message
 }
 
 {1 Trailer}

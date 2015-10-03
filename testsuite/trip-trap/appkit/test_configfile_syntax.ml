@@ -19,7 +19,7 @@ module Application =
 let () =
   let configuration =
     let open Application.Configuration in
-    File Sys.argv.(1) in
+    ImportantFile Sys.argv.(1) in
   Application.run
     "test_config_file_syntax" "" ""
     ~configuration
