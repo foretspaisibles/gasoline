@@ -20,13 +20,15 @@ OCAMLCFLAGS+=	-warn-error +3
 ODOC_NAME=	${LIBRARY}
 ODOC_FORMAT=	odoc
 ODOC_TITLE=	Ocamldoc dump for ${LIBRARY}
-
-USE_ODOC=	no
 .endif
 
 
 .if "${THISMODULE}" == "ocaml.toplevel"
 EXTERNAL+=	ocaml.findlib:compiler-libs
 .endif
+
+# Local Variables:
+# mode: makefile
+# End:
 
 ### End of file `Makefile.inc'
