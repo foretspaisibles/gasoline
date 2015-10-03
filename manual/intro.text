@@ -25,6 +25,7 @@ Gasoline_Plain_Application
 Gasoline_Plain_Filter
 Gasoline_Plain_SecureTool
 Gasoline_Plain_UserTool
+Gasoline_Plain_Daemon
 }
 
 {2:author The [author] library}
