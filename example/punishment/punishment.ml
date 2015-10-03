@@ -21,6 +21,7 @@ struct
   let comp = Application.Component.make
       ~name:"monolith"
       ~description:"The monolithic component of our application"
+      ~getopt_prefix:'P'
       ()
 
   module Configuration =
