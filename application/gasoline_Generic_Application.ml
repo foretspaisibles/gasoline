@@ -46,6 +46,13 @@ let memoize f =
     | None -> (fun x -> m := Some(x); x) (f())
     | Some(x) -> x
 
+let maybe_append_dot s =
+  let n = String.length s in
+  if n > 0 && s.[n - 1] = '.' then
+    s
+  else
+    s ^ "."
+
 module Success =
   Lemonade_Success.Make(struct type t = error end)
 
@@ -521,7 +528,7 @@ struct
           (component_path comp)
           name
           default
-          description
+          (maybe_append_dot description)
       in
       let validate catch text =
         try (ignore(value_of_string text);
@@ -534,7 +541,7 @@ struct
           (component_path comp)
           name
           (Success.return "")
-          description
+          (maybe_append_dot description)
       in
       let open Configuration_Map in
       (match flag with
