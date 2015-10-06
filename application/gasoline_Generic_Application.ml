@@ -46,13 +46,6 @@ let memoize f =
     | None -> (fun x -> m := Some(x); x) (f())
     | Some(x) -> x
 
-let maybe_append_dot s =
-  let n = String.length s in
-  if n > 0 && s.[n - 1] = '.' then
-    s
-  else
-    s ^ "."
-
 module Success =
   Lemonade_Success.Make(struct type t = error end)
 
@@ -522,13 +515,37 @@ struct
       let component_path comp =
         comp.config_prefix @ [ comp.name ]
       in
+      let maybe_append_dot s =
+        let n = String.length s in
+        if n > 0 && s.[n - 1] = '.' then
+          s
+        else
+          s ^ "."
+      in
+      let maybe_prefix_parameter name m s =
+        let canonical_name =
+          let n = String.length name in
+          if n > 0 && name.[0] = '#' then
+            String.sub name 1 (n-1)
+          else
+            name
+        in
+        match m with
+        | Some(_) -> s
+        | None -> canonical_name ^ "\n" ^ s
+      in
+      let canonical_description =
+        description
+        |> maybe_append_dot
+        |> maybe_prefix_parameter name optarg
+      in
       let configkey =
         Configuration_Map.key
           value_of_string
           (component_path comp)
           name
           default
-          (maybe_append_dot description)
+          canonical_description
       in
       let validate catch text =
         try (ignore(value_of_string text);
@@ -541,7 +558,7 @@ struct
           (component_path comp)
           name
           (Success.return "")
-          (maybe_append_dot description)
+          canonical_description
       in
       let open Configuration_Map in
       (match flag with
