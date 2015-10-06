@@ -330,6 +330,9 @@ struct
           error
             "%s: Skept by the shutdown procedure."
             (String.concat ", " whatever)
+
+    let fold f acc =
+      Hashtbl.fold f _component_table acc
   end
 
   (* Keep trace of environment variables mapped to configurations. *)
@@ -373,11 +376,31 @@ struct
     val init : string -> string -> (string*string) list -> unit
     (* [add path name flag description] *)
     val add : ?optarg:string -> validate -> char -> unit
+    val add_long : ?optarg:string -> validate -> char -> string -> unit
     val query : unit -> Configuration_Map.t Success.t
     val rest : unit -> string list Success.t
   end = struct
     let _table = ref []
+    let _long = ref []
     let _context = ref None
+
+    let spec_short () =
+      !_table
+
+    let spec_long () =
+      let flags =
+        let module Pool = Set.Make(Char) in
+        Pool.elements
+          (List.fold_left (fun acc (c, _) -> Pool.add c acc) Pool.empty !_long)
+      in
+      let options c =
+        List.map snd (List.filter (fun (k, _) -> k = c) !_long)
+      in
+      let description _ =
+        (* Make shy options *)
+        ""
+      in
+      List.map (fun c -> Getopts.long c (options c) (description c)) flags
 
     let spec () =
       let open Success.Infix in
@@ -386,7 +409,7 @@ struct
        | None -> error "Configuration_Getopt: Context not initialised.")
       >>= fun (usage, description, notes) ->
       Success.return
-        (Getopts.spec usage description !_table
+        (Getopts.spec usage description (spec_long () @ spec_short ())
            (fun arg m ->
               (Success.map (fun (config, rest) -> (config, arg :: rest)) m))
            (List.map (fun (title, body) -> Getopts.note title body) notes))
@@ -429,6 +452,40 @@ struct
 
       in
       _table := option :: !_table
+
+    let add_long ?optarg validatekey flag name =
+      let catch kindname text _ =
+        match !_context with
+        | None ->
+            error_usage "Invalid Argument -- %c %s %S: Bad %s value."
+              flag name text kindname
+        | Some(usage,_,_) ->
+            error_getopts usage "Invalid Argument -- %c %s %S: Bad %s value."
+              flag name text kindname
+      in
+      let configkey =
+        validatekey catch
+      in
+      let fold validoptarg (config, rest) =
+        Configuration_Map.(add (configkey.path, configkey.name)
+                             validoptarg config, rest)
+      in
+      let option =
+        match optarg with
+        | None ->
+            Getopts.long_option
+              (fun s -> s)
+              name
+              (fun optarg m ->
+                 (Success.map2 fold (Configuration_Map.value configkey optarg) m))
+        | Some(text) ->
+            Getopts.long_flag
+              name
+              (fun m ->
+                 (Success.map2 fold (Configuration_Map.value configkey text) m))
+
+      in
+      _long := (flag, option) :: !_long
 
     let _parse () =
       let open Success.Infix in
@@ -544,6 +601,9 @@ struct
       let open Configuration_Map in
       (match flag with
        | Some c -> Configuration_Getopts.add ?optarg validatekey c
+       | None -> ());
+      (match comp.getopt_prefix with
+       | Some c -> Configuration_Getopts.add_long ?optarg validatekey c name
        | None -> ());
       (match env with
        | Some id -> Configuration_Environment.add validatekey id
