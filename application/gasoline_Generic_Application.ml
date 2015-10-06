@@ -395,14 +395,9 @@ struct
       let options c =
         List.map snd (List.filter (fun (k, _) -> k = c) !_long)
       in
-      let description c =
-        Component.fold (fun _ comp -> function
-            | Some(s) -> Some(s)
-            | None ->
-                if comp.getopt_prefix = Some(c) then
-                  Some(comp.description)
-                else None) None
-        |> function Some(s) -> s | None -> ""
+      let description _ =
+        (* Make shy options *)
+        ""
       in
       List.map (fun c -> Getopts.long c (options c) (description c)) flags
 
