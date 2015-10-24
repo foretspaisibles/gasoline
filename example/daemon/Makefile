@@ -1,12 +1,9 @@
-### Makefile -- Examples
+### Makefile -- Daemon
 
-# Author: Michael Grünewald
-# Date: Tue Jun  3 11:12:28 CEST 2014
-
-# GIT-Toolkit (https://github.com/michipili/gasoline)
+# Gasoline (https://github.com/michipili/gasoline)
 # This file is part of Gasoline
 #
-# Copyright © 2014 Michael Grünewald
+# Copyright © 2013–2015 Michael Grünewald
 #
 # This file must be used under the terms of the CeCILL-B.
 # This source file is licensed as described in the file COPYING, which
@@ -14,12 +11,8 @@
 # are also available at
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 
-SUBDIR+=	caesar
-SUBDIR+=	daemon
-SUBDIR+=	punishment
-SUBDIR+=	wordcount
-SUBDIR+=	wordgen
+PROGRAM=		daemon
 
-.include "gasoline.subdir.mk"
+.include "ocaml.prog.mk"
 
 ### End of file `Makefile'

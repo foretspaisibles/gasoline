@@ -53,7 +53,8 @@ struct
     | Empty
     | Command_line
     | Environment
-    | File of string
+    | OptionalFile of string
+    | ImportantFile of string
     | UserFile of string list * string
     | Heredoc of string
     | Alist of ((string list * string) * string) list

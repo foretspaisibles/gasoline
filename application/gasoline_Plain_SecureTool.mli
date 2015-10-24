@@ -1,19 +1,16 @@
-(* Gasoline_Plain_Application -- C-Stylish Applications
-
-Author: Michael Grünewald
-Date: Sat Dec 28 13:05:16 CET 2013
+(* Gasoline_Plain_UserTool -- C-Stylish Unix user tool
 
 Gasoline (https://github.com/michipili/gasoline)
 This file is part of Gasoline
 
-Copyright © 2013 Michael Grünewald
+Copyright © 2013–2015 Michael Grünewald
 
 This file must be used under the terms of the CeCILL-B.
 This source file is licensed as described in the file COPYING, which
 you should have received as part of this distribution. The terms
 are also available at
 http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt *)
-(** Plain General Applications. *)
+(** Plain Secure Tools Applications. *)
 
 (** Application components. *)
 module Component :
@@ -76,27 +73,16 @@ sig
     val make_string : component ->
       ?optarg:string -> ?flag:char -> ?env:string -> ?shy:bool ->
       string -> string -> string -> (unit -> string)
-    (** A version of [make] specialised on the identitiy function. *)
-
-    (** The type of configuration specifications. *)
-    type spec =
-    | Empty
-    | Command_line
-    | Environment
-    | OptionalFile of string
-    | ImportantFile of string
-    | UserFile of string list * string
-    | Heredoc of string
-    | Alist of ((string list * string) * string) list
-    | Merge of spec * spec
-    | Override of spec * spec
+    (** A version of [make] specialised on the identity function. *)
 end
 
 val run : string -> string -> string ->
   ?notes:((string * string) list) ->
-  ?configuration:Configuration.spec ->
+  ?system_configuration:string ->
+  ?user_configuration:string ->
   (string list -> unit) -> unit
-(** [run name usage description ?notes main] run the application.
-
-    The function [main] is passed the list of remaining arguments on the
-    command line. *)
+(** [run name usage description main] run the application. If given,
+    the system configuration and the user configuration are processed
+    as optional configuration files, system-wide values superseding
+    values found on the command-line, the environment, and the used
+    configuraiton file. *)

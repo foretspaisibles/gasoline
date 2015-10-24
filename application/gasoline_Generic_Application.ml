@@ -156,7 +156,8 @@ sig
     | Empty
     | Command_line
     | Environment
-    | File of string
+    | OptionalFile of string
+    | ImportantFile of string
     | UserFile of string list * string
     | Heredoc of string
     | Alist of ((string list * string) * string) list
@@ -329,6 +330,9 @@ struct
           error
             "%s: Skept by the shutdown procedure."
             (String.concat ", " whatever)
+
+    let fold f acc =
+      Hashtbl.fold f _component_table acc
   end
 
   (* Keep trace of environment variables mapped to configurations. *)
@@ -372,11 +376,31 @@ struct
     val init : string -> string -> (string*string) list -> unit
     (* [add path name flag description] *)
     val add : ?optarg:string -> validate -> char -> unit
+    val add_long : ?optarg:string -> validate -> char -> string -> unit
     val query : unit -> Configuration_Map.t Success.t
     val rest : unit -> string list Success.t
   end = struct
     let _table = ref []
+    let _long = ref []
     let _context = ref None
+
+    let spec_short () =
+      !_table
+
+    let spec_long () =
+      let flags =
+        let module Pool = Set.Make(Char) in
+        Pool.elements
+          (List.fold_left (fun acc (c, _) -> Pool.add c acc) Pool.empty !_long)
+      in
+      let options c =
+        List.map snd (List.filter (fun (k, _) -> k = c) !_long)
+      in
+      let description _ =
+        (* Make shy options *)
+        ""
+      in
+      List.map (fun c -> Getopts.long c (options c) (description c)) flags
 
     let spec () =
       let open Success.Infix in
@@ -385,7 +409,7 @@ struct
        | None -> error "Configuration_Getopt: Context not initialised.")
       >>= fun (usage, description, notes) ->
       Success.return
-        (Getopts.spec usage description !_table
+        (Getopts.spec usage description (spec_long () @ spec_short ())
            (fun arg m ->
               (Success.map (fun (config, rest) -> (config, arg :: rest)) m))
            (List.map (fun (title, body) -> Getopts.note title body) notes))
@@ -429,6 +453,40 @@ struct
       in
       _table := option :: !_table
 
+    let add_long ?optarg validatekey flag name =
+      let catch kindname text _ =
+        match !_context with
+        | None ->
+            error_usage "Invalid Argument -- %c %s %S: Bad %s value."
+              flag name text kindname
+        | Some(usage,_,_) ->
+            error_getopts usage "Invalid Argument -- %c %s %S: Bad %s value."
+              flag name text kindname
+      in
+      let configkey =
+        validatekey catch
+      in
+      let fold validoptarg (config, rest) =
+        Configuration_Map.(add (configkey.path, configkey.name)
+                             validoptarg config, rest)
+      in
+      let option =
+        match optarg with
+        | None ->
+            Getopts.long_option
+              (fun s -> s)
+              name
+              (fun optarg m ->
+                 (Success.map2 fold (Configuration_Map.value configkey optarg) m))
+        | Some(text) ->
+            Getopts.long_flag
+              name
+              (fun m ->
+                 (Success.map2 fold (Configuration_Map.value configkey text) m))
+
+      in
+      _long := (flag, option) :: !_long
+
     let _parse () =
       let open Success.Infix in
       spec () >>= fun s ->
@@ -451,7 +509,7 @@ struct
   sig
     (* [add path name env] *)
     val add : validate -> unit
-    val parse : string -> Configuration_Map.t Success.t
+    val parse : bool -> string -> Configuration_Map.t Success.t
     val heredoc : string -> Configuration_Map.t Success.t
   end = struct
     let _table = ref []
@@ -470,7 +528,7 @@ struct
         (fun () -> config)
         (List.fold_left challenge (Success.return()) !_table)
 
-    let parse name =
+    let parse important name =
       (* Configuration values used in UserFile should be
            initialised to the empty string. *)
       let open Success.Infix in
@@ -478,7 +536,11 @@ struct
          try Success.return(Configuration_Map.from_file name)
          with
          | Failure(mesg) -> error "Failure: %s" mesg
-         | Sys_error(mesg) -> error "Error: %s" mesg
+         | Sys_error(mesg) ->
+             if important then
+               error "Error: %s" mesg
+             else
+               Success.return(Configuration_Map.empty)
          | exn -> error "%s: %s" name (Printexc.to_string exn)
        else
          Success.return(Configuration_Map.empty))
@@ -515,13 +577,37 @@ struct
       let component_path comp =
         comp.config_prefix @ [ comp.name ]
       in
+      let maybe_append_dot s =
+        let n = String.length s in
+        if n > 0 && s.[n - 1] = '.' then
+          s
+        else
+          s ^ "."
+      in
+      let maybe_prefix_parameter name m s =
+        let canonical_name =
+          let n = String.length name in
+          if n > 0 && name.[0] = '#' then
+            String.sub name 1 (n-1)
+          else
+            name
+        in
+        match m with
+        | Some(_) -> s
+        | None -> canonical_name ^ "\n" ^ s
+      in
+      let canonical_description =
+        description
+        |> maybe_append_dot
+        |> maybe_prefix_parameter name optarg
+      in
       let configkey =
         Configuration_Map.key
           value_of_string
           (component_path comp)
           name
           default
-          description
+          canonical_description
       in
       let validate catch text =
         try (ignore(value_of_string text);
@@ -534,11 +620,14 @@ struct
           (component_path comp)
           name
           (Success.return "")
-          description
+          canonical_description
       in
       let open Configuration_Map in
       (match flag with
        | Some c -> Configuration_Getopts.add ?optarg validatekey c
+       | None -> ());
+      (match comp.getopt_prefix with
+       | Some c -> Configuration_Getopts.add_long ?optarg validatekey c name
        | None -> ());
       (match env with
        | Some id -> Configuration_Environment.add validatekey id
@@ -552,7 +641,8 @@ struct
       | Empty
       | Command_line
       | Environment
-      | File of string
+      | OptionalFile of string
+      | ImportantFile of string
       | UserFile of string list * string
       | Heredoc of string
       | Alist of ((string list * string) * string) list
@@ -575,13 +665,14 @@ struct
           default = "";
           description = "User configuration file";
           })
-        >>= Configuration_File.parse
+        >>= Configuration_File.parse true
       in
       match spec with
       | Empty -> Success.return Configuration_Map.empty
       | Command_line -> Configuration_Getopts.query ()
       | Environment -> Configuration_Environment.query ()
-      | File(name) -> Configuration_File.parse name
+      | OptionalFile(name) -> Configuration_File.parse false name
+      | ImportantFile(name) -> Configuration_File.parse true name
       | UserFile(path,name) -> user_file path name
       | Heredoc(doc) -> Configuration_File.heredoc doc
       | Alist(bindings) -> Success.return(Configuration_Map.from_alist bindings)
@@ -605,7 +696,11 @@ struct
     let safemain rest =
       try Success.return(main rest)
       with
-      | Failure(mesg) -> error "Failure: %s" mesg
+      | Failure(mesg) ->
+          if String.length mesg >= 7 && String.sub mesg 0 7 = "Usage: " then
+            error_usage "%s" (String.sub mesg 7 (String.length mesg - 7))
+          else
+            error "Failure: %s" mesg
       | exn -> error "%s" (Printexc.to_string exn)
     in
     let program =
