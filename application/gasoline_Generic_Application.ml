@@ -68,7 +68,7 @@ let die code fmt =
   Printf.ksprintf (quit $ wlog) fmt
 
 let _error error fmt =
-  Printf.ksprintf (fun mesg -> wlog mesg; Success.throw error) fmt
+  Printf.ksprintf (fun mesg -> wlog mesg; Success.error error) fmt
 
 let error fmt =
   _error Software fmt
@@ -87,7 +87,7 @@ let error_getopts usage fmt =
     (fun mesg ->
        wlog mesg;
        Printf.eprintf "Usage: %s %s\n" (progname()) usage;
-       Success.throw Usage)
+       Success.error Usage)
     fmt
 
 let dfs graph visited startnode =
@@ -315,12 +315,12 @@ struct
         | exn -> error_shutdown comp.name pending "Shutdown: %s: %s" comp.name (Printexc.to_string exn)
       in
       let rec loop lst =
-        Success.catch
+        Success.recover
           (process f lst lst)
           (function
             | Shutdown(name, pending) as error ->
-                (loop pending >>= fun _ -> Success.throw error)
-            | whatever -> Success.throw whatever)
+                (loop pending >>= fun _ -> Success.error error)
+            | whatever -> Success.error whatever)
       in
       rcorder ()
       >>= loop
@@ -708,9 +708,9 @@ struct
        Configuration.init configuration)
       >>= Component.bootstrap
       >>= fun () ->
-      (Success.catch
+      (Success.recover
          (Configuration_Getopts.rest() >>= safemain)
-         (fun error -> Component.shutdown () >>= fun () -> Success.throw error))
+         (fun error -> Component.shutdown () >>= fun () -> Success.error error))
       >>= Component.shutdown
     in
     let open Gasoline_SysExits in
