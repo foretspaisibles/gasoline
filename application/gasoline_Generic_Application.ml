@@ -19,8 +19,8 @@ type component = {
   provide : string list;
   config_prefix : string list;
   getopt_prefix : char option;
-  bootstrap: unit -> unit;
-  shutdown: unit -> unit;
+  mutable bootstrap: unit -> unit;
+  mutable shutdown: unit -> unit;
 }
 
 type error =
@@ -140,6 +140,11 @@ sig
       name:string ->
       description:string ->
       unit -> t
+
+    val set_callbacks :
+      ?bootstrap:(unit -> unit) ->
+      ?shutdown:(unit -> unit) ->
+      t -> unit
   end
 
   module Configuration :
@@ -209,6 +214,15 @@ struct
       }
       in
       (Hashtbl.add _component_table name comp; comp)
+
+    let set_callbacks ?bootstrap ?shutdown comp =
+      (match bootstrap with
+       | None -> ()
+       | Some(callback) -> comp.bootstrap <- callback);
+      (match shutdown with
+       | None -> ()
+       | Some(callback) -> comp.shutdown <- callback)
+
 
     module NodeSet =
       Set.Make(String)

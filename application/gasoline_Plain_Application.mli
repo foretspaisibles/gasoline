@@ -34,6 +34,13 @@ sig
     name:string ->
     description:string ->
     unit -> t
+
+
+  (** Set the callbacks [boostrap] and [shutodown] of a component. *)
+  val set_callbacks :
+    ?bootstrap:(unit -> unit) ->
+    ?shutdown:(unit -> unit) ->
+    t -> unit
 end
 
 (** Configuration values. *)
