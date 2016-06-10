@@ -51,6 +51,9 @@ sig
   type component =
     Component.t
 
+  val read : unit -> ((string list * string) * string) list
+  (** Read the actual configuration of the application. *)
+
   val make : (string -> 'a) -> component ->
       ?optarg:string ->
       ?flag:char -> ?env:string -> ?shy:bool ->

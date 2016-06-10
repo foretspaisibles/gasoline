@@ -26,6 +26,9 @@ struct
   type component =
     Internal.Component.t
 
+  let read =
+    Internal.Configuration.read
+
   let make value_of_string component
       ?optarg ?flag ?env ?shy name default description =
     Internal.Configuration.make value_of_string component

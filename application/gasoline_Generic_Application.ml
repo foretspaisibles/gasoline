@@ -152,6 +152,8 @@ sig
     type component =
       Component.t
 
+    val read : unit -> ((string list * string) * string) list
+
     val make : (string -> 'a) -> component ->
       ?optarg:string ->
       ?flag:char -> ?env:string -> ?shy:bool ->
@@ -592,8 +594,8 @@ struct
         answer
       with exn -> _config := saved_config; raise exn
 
-    let query () =
-      !_config
+    let read () =
+      Configuration_Map.to_alist (!_config)
 
     let make value_of_string comp
         ?optarg ?flag ?env ?shy name default description =
