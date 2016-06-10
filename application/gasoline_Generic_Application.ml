@@ -595,7 +595,13 @@ struct
       with exn -> _config := saved_config; raise exn
 
     let read () =
-      Configuration_Map.to_alist (!_config)
+      let starts_with_sharp s =
+        String.length s > 0 && s.[0] = '#'
+      in
+      let is_public ((path,key), _) =
+        not(List.exists starts_with_sharp (key::path))
+      in
+      List.filter is_public (Configuration_Map.to_alist (!_config))
 
     let make value_of_string comp
         ?optarg ?flag ?env ?shy name default description =
