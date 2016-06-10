@@ -55,7 +55,7 @@ struct
     | Environment
     | OptionalFile of string
     | ImportantFile of string
-    | UserFile of string list * string
+    | UserFile of (unit -> string)
     | Heredoc of string
     | Alist of ((string list * string) * string) list
     | Merge of spec * spec

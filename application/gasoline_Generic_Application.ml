@@ -163,7 +163,7 @@ sig
     | Environment
     | OptionalFile of string
     | ImportantFile of string
-    | UserFile of string list * string
+    | UserFile of (unit -> string)
     | Heredoc of string
     | Alist of ((string list * string) * string) list
     | Merge of spec * spec
@@ -583,6 +583,15 @@ struct
       let count = ref 0 in
       fun () -> (incr count; Printf.sprintf "#%12d" !count)
 
+    let with_config config f x =
+      let saved_config = !_config in
+      let () = _config := config in
+      try
+        let answer = f x in
+        _config := saved_config;
+        answer
+      with exn -> _config := saved_config; raise exn
+
     let query () =
       !_config
 
@@ -657,28 +666,21 @@ struct
       | Environment
       | OptionalFile of string
       | ImportantFile of string
-      | UserFile of string list * string
+      | UserFile of (unit -> string)
       | Heredoc of string
       | Alist of ((string list * string) * string) list
       | Merge of spec * spec
       | Override of spec * spec
 
     let rec _map spec =
-      let user_file path name =
+      let user_file path =
         let open Configuration_Map in
         let open Success.Infix in
         Success.map2
           merge
           (Configuration_Getopts.query())
           (Configuration_Environment.query())
-        >>= fun config ->
-        Success.return(get config {
-          of_string = (fun x -> x);
-          path;
-          name;
-          default = "";
-          description = "User configuration file";
-          })
+        >>= fun config -> Success.return (with_config config path ())
         >>= Configuration_File.parse true
       in
       match spec with
@@ -687,7 +689,7 @@ struct
       | Environment -> Configuration_Environment.query ()
       | OptionalFile(name) -> Configuration_File.parse false name
       | ImportantFile(name) -> Configuration_File.parse true name
-      | UserFile(path,name) -> user_file path name
+      | UserFile(path) -> user_file path
       | Heredoc(doc) -> Configuration_File.heredoc doc
       | Alist(bindings) -> Success.return(Configuration_Map.from_alist bindings)
       | Merge(a,b) -> Success.map2 Configuration_Map.merge (_map a) (_map b)
