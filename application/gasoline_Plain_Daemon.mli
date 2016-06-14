@@ -87,7 +87,7 @@ end
 
 val run : string -> string -> string ->
   ?notes:((string * string) list) ->
-  ?system_configuration:string ->
+  ?system_configuration:(unit -> string) ->
   ?chdir:string ->
   ?stdout:string ->
   ?stderr:string ->

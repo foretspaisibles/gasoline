@@ -87,8 +87,8 @@ end
 
 val run : string -> string -> string ->
   ?notes:((string * string) list) ->
-  ?system_configuration:string ->
-  ?user_configuration:string ->
+  ?system_configuration:(unit -> string) ->
+  ?user_configuration:(unit -> string) ->
   (string list -> unit) -> unit
 (** [run name usage description main] run the application. If given,
     the system configuration and the user configuration are processed
