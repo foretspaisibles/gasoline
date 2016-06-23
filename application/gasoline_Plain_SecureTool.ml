@@ -21,11 +21,11 @@ module Configuration =
 
 let run name usage description ?notes ?system_configuration ?user_configuration main =
   let maybe_important_file = function
-    | Some(name) -> Some(Configuration.ImportantFile(name()))
+    | Some(name) -> Some(Configuration.ImportantFile(name))
     | None -> None
   in
   let maybe_optional_file = function
-    | Some(name) -> Some(Configuration.OptionalFile(name()))
+    | Some(name) -> Some(Configuration.OptionalFile(name))
     | None -> None
   in
   Gasoline_Plain_Application.run
