@@ -62,7 +62,7 @@ let detach chdir stdout stderr =
 
 let run name usage description ?notes ?system_configuration ?chdir ?stdout ?stderr main =
   let maybe_important_file = function
-    | Some(name) -> Some(Configuration.ImportantFile(name()))
+    | Some(name) -> Some(Configuration.ImportantFile(name))
     | None -> None
   in
   let actual_main rest =
