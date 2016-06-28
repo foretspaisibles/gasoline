@@ -1,5 +1,5 @@
 opam-version: "1.2"
-version: "0.3.0-current"
+version: "0.5.0"
 maintainer: "michipili@gmail.com"
 authors: "Michael Grünewald"
 license: "CeCILL-B"
@@ -14,17 +14,15 @@ depends: [
   "camomile" {>= "0.8.5"}
   "configuration" {>= "0.4.0"}
   "getopts" {>= "0.3.1"}
-  "lemonade" {>= "0.2.0"}
+  "lemonade" {>= "0.4.0"}
   "ocamlfind"
 ]
 build: [
   ["./configure" "--prefix" prefix]
-  ["bmake" "-I%{bsdowl:share}%" "all"] {os != "freebsd"}
-  ["make" "-I%{bsdowl:share}%" "all"]  {os  = "freebsd"}
+  [conf-bmake:path "-I%{bsdowl:share}%" "all"]
 ]
 install: [
-  ["bmake" "-I%{bsdowl:share}%" "install"] {os != "freebsd"}
-  ["make" "-I%{bsdowl:share}%" "install"]  {os  = "freebsd"}
+  [conf-bmake:path "-I%{bsdowl:share}%" "install"]
 ]
 remove: [
   ["ocamlfind" "remove" "gasoline"]

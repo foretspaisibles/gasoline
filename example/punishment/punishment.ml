@@ -63,7 +63,7 @@ let () =
     let open Application.Configuration in
     Merge(
         Merge(Environment, Command_line),
-        UserFile(["monolith"], "#configfile"))
+        UserFile(Monolith.Configuration.configfile))
   in
   Application.run
     "punishment"

@@ -19,8 +19,8 @@ type component = {
   provide : string list;
   config_prefix : string list;
   getopt_prefix : char option;
-  bootstrap: unit -> unit;
-  shutdown: unit -> unit;
+  mutable bootstrap: unit -> unit;
+  mutable shutdown: unit -> unit;
 }
 
 type error =
@@ -68,7 +68,7 @@ let die code fmt =
   Printf.ksprintf (quit $ wlog) fmt
 
 let _error error fmt =
-  Printf.ksprintf (fun mesg -> wlog mesg; Success.throw error) fmt
+  Printf.ksprintf (fun mesg -> wlog mesg; Success.error error) fmt
 
 let error fmt =
   _error Software fmt
@@ -87,7 +87,7 @@ let error_getopts usage fmt =
     (fun mesg ->
        wlog mesg;
        Printf.eprintf "Usage: %s %s\n" (progname()) usage;
-       Success.throw Usage)
+       Success.error Usage)
     fmt
 
 let dfs graph visited startnode =
@@ -140,12 +140,19 @@ sig
       name:string ->
       description:string ->
       unit -> t
+
+    val set_callbacks :
+      ?bootstrap:(unit -> unit) ->
+      ?shutdown:(unit -> unit) ->
+      t -> unit
   end
 
   module Configuration :
   sig
     type component =
       Component.t
+
+    val read : unit -> ((string list * string) * string) list
 
     val make : (string -> 'a) -> component ->
       ?optarg:string ->
@@ -158,7 +165,7 @@ sig
     | Environment
     | OptionalFile of string
     | ImportantFile of string
-    | UserFile of string list * string
+    | UserFile of (unit -> string)
     | Heredoc of string
     | Alist of ((string list * string) * string) list
     | Merge of spec * spec
@@ -209,6 +216,15 @@ struct
       }
       in
       (Hashtbl.add _component_table name comp; comp)
+
+    let set_callbacks ?bootstrap ?shutdown comp =
+      (match bootstrap with
+       | None -> ()
+       | Some(callback) -> comp.bootstrap <- callback);
+      (match shutdown with
+       | None -> ()
+       | Some(callback) -> comp.shutdown <- callback)
+
 
     module NodeSet =
       Set.Make(String)
@@ -315,12 +331,12 @@ struct
         | exn -> error_shutdown comp.name pending "Shutdown: %s: %s" comp.name (Printexc.to_string exn)
       in
       let rec loop lst =
-        Success.catch
+        Success.recover
           (process f lst lst)
           (function
             | Shutdown(name, pending) as error ->
-                (loop pending >>= fun _ -> Success.throw error)
-            | whatever -> Success.throw whatever)
+                (loop pending >>= fun _ -> Success.error error)
+            | whatever -> Success.error whatever)
       in
       rcorder ()
       >>= loop
@@ -569,8 +585,23 @@ struct
       let count = ref 0 in
       fun () -> (incr count; Printf.sprintf "#%12d" !count)
 
-    let query () =
-      !_config
+    let with_config config f x =
+      let saved_config = !_config in
+      let () = _config := config in
+      try
+        let answer = f x in
+        _config := saved_config;
+        answer
+      with exn -> _config := saved_config; raise exn
+
+    let read () =
+      let starts_with_sharp s =
+        String.length s > 0 && s.[0] = '#'
+      in
+      let is_public ((path,key), _) =
+        not(List.exists starts_with_sharp (key::path))
+      in
+      List.filter is_public (Configuration_Map.to_alist (!_config))
 
     let make value_of_string comp
         ?optarg ?flag ?env ?shy name default description =
@@ -643,28 +674,21 @@ struct
       | Environment
       | OptionalFile of string
       | ImportantFile of string
-      | UserFile of string list * string
+      | UserFile of (unit -> string)
       | Heredoc of string
       | Alist of ((string list * string) * string) list
       | Merge of spec * spec
       | Override of spec * spec
 
     let rec _map spec =
-      let user_file path name =
+      let user_file path =
         let open Configuration_Map in
         let open Success.Infix in
         Success.map2
           merge
           (Configuration_Getopts.query())
           (Configuration_Environment.query())
-        >>= fun config ->
-        Success.return(get config {
-          of_string = (fun x -> x);
-          path;
-          name;
-          default = "";
-          description = "User configuration file";
-          })
+        >>= fun config -> Success.return (with_config config path ())
         >>= Configuration_File.parse true
       in
       match spec with
@@ -673,7 +697,7 @@ struct
       | Environment -> Configuration_Environment.query ()
       | OptionalFile(name) -> Configuration_File.parse false name
       | ImportantFile(name) -> Configuration_File.parse true name
-      | UserFile(path,name) -> user_file path name
+      | UserFile(path) -> user_file path
       | Heredoc(doc) -> Configuration_File.heredoc doc
       | Alist(bindings) -> Success.return(Configuration_Map.from_alist bindings)
       | Merge(a,b) -> Success.map2 Configuration_Map.merge (_map a) (_map b)
@@ -708,9 +732,9 @@ struct
        Configuration.init configuration)
       >>= Component.bootstrap
       >>= fun () ->
-      (Success.catch
+      (Success.recover
          (Configuration_Getopts.rest() >>= safemain)
-         (fun error -> Component.shutdown () >>= fun () -> Success.throw error))
+         (fun error -> Component.shutdown () >>= fun () -> Success.error error))
       >>= Component.shutdown
     in
     let open Gasoline_SysExits in

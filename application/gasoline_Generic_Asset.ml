@@ -71,29 +71,29 @@ let setup f ~package ~version ?(prefix = "/usr/local")
     f
   end
 
-let bin =
-  Filename.concat !_bindir
+let bin name =
+  Filename.concat !_bindir name
 
-let sbin =
-  Filename.concat !_sbindir
+let sbin name =
+  Filename.concat !_sbindir name
 
-let libexec =
-  Filename.concat !_libexecdir
+let libexec name =
+  Filename.concat !_libexecdir name
 
-let data =
-  Filename.concat !_datadir
+let data name =
+  Filename.concat !_datadir name
 
-let sysconf =
-  Filename.concat !_sysconfdir
+let sysconf name =
+  Filename.concat !_sysconfdir name
 
-let usrconf =
-  Filename.concat !_usrconfdir
+let usrconf name =
+  Filename.concat !_usrconfdir name
 
-let sharedstate =
-  Filename.concat !_sharedstatedir
+let sharedstate name =
+  Filename.concat !_sharedstatedir name
 
-let localstate =
-  Filename.concat !_localstatedir
+let localstate name =
+  Filename.concat !_localstatedir name
 
 let usrconffile () =
   usrconf (sprintf ".%s" !_package)

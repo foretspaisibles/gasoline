@@ -34,6 +34,13 @@ sig
     name:string ->
     description:string ->
     unit -> t
+
+
+  (** Set the callbacks [boostrap] and [shutodown] of a component. *)
+  val set_callbacks :
+    ?bootstrap:(unit -> unit) ->
+    ?shutdown:(unit -> unit) ->
+    t -> unit
 end
 
 (** Configuration values. *)
@@ -43,6 +50,9 @@ sig
   (** The type of application components. *)
   type component =
     Component.t
+
+  val read : unit -> ((string list * string) * string) list
+  (** Read the actual configuration of the application. *)
 
   val make : (string -> 'a) -> component ->
       ?optarg:string ->
@@ -85,7 +95,7 @@ sig
     | Environment
     | OptionalFile of string
     | ImportantFile of string
-    | UserFile of string list * string
+    | UserFile of (unit -> string)
     | Heredoc of string
     | Alist of ((string list * string) * string) list
     | Merge of spec * spec

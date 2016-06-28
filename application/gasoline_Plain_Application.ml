@@ -26,6 +26,9 @@ struct
   type component =
     Internal.Component.t
 
+  let read =
+    Internal.Configuration.read
+
   let make value_of_string component
       ?optarg ?flag ?env ?shy name default description =
     Internal.Configuration.make value_of_string component
@@ -55,7 +58,7 @@ struct
     | Environment
     | OptionalFile of string
     | ImportantFile of string
-    | UserFile of string list * string
+    | UserFile of (unit -> string)
     | Heredoc of string
     | Alist of ((string list * string) * string) list
     | Merge of spec * spec
