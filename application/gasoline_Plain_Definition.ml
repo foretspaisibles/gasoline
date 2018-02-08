@@ -18,7 +18,7 @@ struct
   type block = string
   type out_channel = Pervasives.out_channel
   let output_word = Pervasives.output_char
-  let output_block = Pervasives.output
+  let output_block oc buf pos len = Pervasives.output oc (Bytes.of_string buf) pos len
   let flush = Pervasives.flush
 end
 

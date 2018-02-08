@@ -870,14 +870,14 @@ sig
   object
     method close_out : unit -> unit
     method flush : unit -> unit
-    method output : string -> int -> int -> int
+    method output : Bytes.t -> int -> int -> int
   end
 
   (** The type encapsulating methods of an input channel. *)
   class type block_in_channel =
   object
     method close_in : unit -> unit
-    method input : string -> int -> int -> int
+    method input : Bytes.t -> int -> int -> int
   end
 
 

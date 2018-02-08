@@ -72,6 +72,7 @@ module Camomile_buffer = Camomile_text.Buf
 module Camomile_information = Camomile.UCharInfo
 module Camomile_table = Camomile.UCharTbl
 module Camomile_channel = Camomile.OOChannel
+
 module Camomile_encoding = Camomile.CharEncoding
 module Camomile_transcode = Camomile.CharEncoding.Make(Camomile_text)
 module Camomile_casemap = Camomile.CaseMap.Make(Camomile_text)
@@ -235,7 +236,6 @@ struct
 
   let printer ppt c =
     Format.fprintf ppt "U+%04X" (to_int c)
-
 end
 
 module type UTABLE =
@@ -935,13 +935,13 @@ struct
   object
     method close_out : unit -> unit
     method flush : unit -> unit
-    method output : string -> int -> int -> int
+    method output : Bytes.t -> int -> int -> int
   end
 
   class type block_in_channel =
   object
     method close_in : unit -> unit
-    method input : string -> int -> int -> int
+    method input : Bytes.t -> int -> int -> int
   end
 
   let with_finalise f a =
@@ -986,7 +986,7 @@ struct
 
     method output s a b =
       for i = 0 to b - 1 do
-          Format.pp_print_char f s.[a + i]
+          Format.pp_print_char f (Bytes.get s (a + i))
       done; b
 
     method flush () =
